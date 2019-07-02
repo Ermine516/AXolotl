@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/Problembutton"
+        android:icon="@drawable/unieqhdpi"
+        android:title="Problem" />
+    <item
+        android:id="@+id/RuleSelectButton"
+        android:icon="@drawable/rulebuttonhlpdi"
+        android:title="Rule Select" />
+    <item
+        android:id="@+id/TermConstructButton"
+        android:icon="@drawable/termbuttonhldpi"
+        android:title="Term Construct" />
+    <item
+        android:id="@+id/SubstitutionConstructButton"
+        android:icon="@drawable/subcreatebuttonhldpi"
+        android:title="Substitution Construct" />
+    <item
+        android:id="@+id/SubstitutionSelectButton"
+        android:icon="@drawable/unionsubhldpi"
+        android:title="Substitution Select" />
+    <item
+        android:id="@+id/ViewProof"
+        android:icon="@drawable/proofxxxhdpi"
+        android:title="View Proof" />
+
+</menu>

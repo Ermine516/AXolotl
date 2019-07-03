@@ -40,6 +40,7 @@ import java.util.HashSet;
         if (intent != null) {
             intent.putExtra(PASSPROBLEMSTATE, PS);
             ctx.startActivity(intent);
+	    ctx.finish();
         }
     }
 
@@ -198,10 +199,12 @@ import java.util.HashSet;
             Intent intent = new Intent(ctx, HelpActivity.class);
             ctx.startActivity(intent);
             Toast.makeText(ctx, "Help", Toast.LENGTH_SHORT).show();
+	    ctx.finish();
         } else if (id == R.id.about) {
             Intent intent = new Intent(ctx, AboutActivity.class);
             ctx.startActivity(intent);
             Toast.makeText(ctx, "About", Toast.LENGTH_SHORT).show();
+            ctx.finish();
         }
     }
 

@@ -3,36 +3,41 @@ package com.example.axolotltouch;
 import android.app.Activity;
 import android.content.Intent;
 import android.widget.Toast;
+
+import androidx.core.util.Pair;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
-  class AuxFunctionality {
+class AuxFunctionality {
       static final String PASSPROBLEMSTATE = "com.example.android.AXolotlTouch.extra.problemstate";
-      static final int READ_REQUEST_CODE = 42;
+    static final int READ_REQUEST_CODE = 42;
+    private static final String nameParseRegex = "[a-zA-Z&\\u2227\\u2228\\u00AC\\u21D2\\u21D4\\u2284\\u2285\\u22A4\\u25A1\\u25C7]+";
 
      static void SideMenuItems(int id, Activity ctx, ProblemState PS) {
         Intent intent = null;
         if (id == R.id.Problembutton) {
             Toast.makeText(ctx, "Problem", Toast.LENGTH_SHORT).show();
             intent = new Intent(ctx, MainActivity.class);
-        } else if (id == R.id.RuleSelectButton) {
-            Toast.makeText(ctx, "Rule Select", Toast.LENGTH_SHORT).show();
-            intent = new Intent(ctx, RuleSelectionActivity.class);
-        } else if (id == R.id.TermConstructButton) {
-            intent = new Intent(ctx, TermConstructActivity.class);
-            Toast.makeText(ctx, "Term Construct", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.SubstitutionConstructButton) {
-            intent = new Intent(ctx, SubstitutionConstructActivity.class);
-
-            Toast.makeText(ctx, "Substitution Construct", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.SubstitutionSelectButton) {
-            intent = new Intent(ctx, SubstitutionSelectionActivity.class);
-            Toast.makeText(ctx, "Substitution Select", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.propositional01) {
+            ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.prop1), "prop1.txt", ctx);
+            intent = new Intent(ctx, MainActivity.class);
+            PS = newPS;
+        } else if (id == R.id.propositional02) {
+            ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.prop2), "prop2.txt", ctx);
+            intent = new Intent(ctx, MainActivity.class);
+            PS = newPS;
+        } else if (id == R.id.propositional03) {
+            ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.prop3), "prop3.txt", ctx);
+            intent = new Intent(ctx, MainActivity.class);
+            PS = newPS;
+        } else if (id == R.id.modalProblem01) {
+            ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.modal1), "modal1.txt", ctx);
+            intent = new Intent(ctx, MainActivity.class);
+            PS = newPS;
         } else if (id == R.id.ViewProof) {
             intent = new Intent(ctx, ProofDisplayActivity.class);
             Toast.makeText(ctx, "View Proof", Toast.LENGTH_SHORT).show();
@@ -44,153 +49,7 @@ import java.util.HashSet;
         }
     }
 
-     private static void performFileSearch(Activity ctx) {
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("text/plain");
-        ctx.startActivityForResult(intent, READ_REQUEST_CODE);
-    }
-
-     static ProblemState loadFile(InputStream IS, String file, Activity ctx) {
-        ProblemState newPS = new ProblemState();
-        String line;
-        int lineCount = 0;
-         boolean foundProblemOrRule = false;
-         try (BufferedReader br = new BufferedReader(new InputStreamReader(IS))) {
-             while ((line = br.readLine()) != null) {
-                 System.out.println(line);
-                 if (line.matches("\\s+")) continue;
-                 lineCount++;
-                 String[] parts = line.split("\\s+");
-//**********************************************Parsing functions from file***************************************************
-                 if (parts[0].compareTo("Function:") == 0) {
-                     if (foundProblemOrRule) throw new IOException();
-                     StringBuilder name = new StringBuilder();
-                     StringBuilder arity = new StringBuilder();
-                     for (int i = 1; i < parts.length; i++)
-                         if (parts[i].matches("[a-zA-Z]+")) name.append(parts[i]);
-                     for (int i = 2; i < parts.length; i++)
-                         if (parts[i].matches("[0-9]+")) arity.append(parts[i]);
-                     if (name.toString().matches("[a-zA-Z]+")
-                             && arity.toString().matches("[0-9]+")
-                             && !newPS.Variables.contains(name.toString())
-                             && !newPS.Constants.contains(name.toString())
-                             && !newPS.Functions.containsKey(name.toString()))
-                         if (Integer.parseInt(arity.toString()) == 0)
-                             newPS.Constants.add(name.toString());
-                         else
-                             newPS.Functions.put(name.toString(), Integer.parseInt(arity.toString()));
-                     else throw new TermHelper().new FormatException();
-//**********************************************Parsing Rules from file***************************************************
-                 } else if (parts[0].compareTo("Rule:") == 0) {
-                     foundProblemOrRule = true;
-                     boolean aTerm = false;
-                     String posTermOne = parts[1];
-                     int i = 2;
-                     while (!aTerm && i < parts.length) {
-                         try {
-                             newPS.rSequent[0] = TermHelper.parse(posTermOne);
-                         } catch (TermHelper.FormatException ex) {
-                             posTermOne += parts[i];
-                             i++;
-                             continue;
-                         }
-                         aTerm = true;
-                     }
-                     if (i == parts.length) throw new TermHelper().new FormatException();
-                     String posTermTwo = parts[i];
-                     i++;
-                     aTerm = false;
-                     while (!aTerm) {
-                         try {
-                             newPS.rSequent[1] = TermHelper.parse(posTermTwo);
-                         } catch (TermHelper.FormatException ex) {
-                             if (i == parts.length) throw new TermHelper().new FormatException();
-                             posTermTwo += parts[i];
-                             i++;
-                             continue;
-                         }
-                         aTerm = true;
-                     }
-                     if (i < parts.length) throw new TermHelper().new FormatException();
-                     if (posTermOne.matches("\\s*") || !newPS.isIndexed(newPS.rSequent[0]))
-                         throw new TermHelper().new FormatException();
-                     if (posTermTwo.matches("\\s*") || !newPS.isIndexed(newPS.rSequent[1]))
-                         throw new TermHelper().new FormatException();
-                     ArrayList<Term> newRule = new ArrayList<>();
-                     newRule.add(newPS.rSequent[0]);
-                     newRule.add(newPS.rSequent[1]);
-                     newPS.Rules.add(newRule);
-//**********************************************Parsing Problems from file***************************************************
-                 } else if (parts[0].compareTo("Problem:") == 0) {
-                     foundProblemOrRule = true;
-                     boolean aTerm = false;
-                     String posTermOne = parts[1];
-                     int i = 2;
-                     while (!aTerm && i < parts.length) {
-                         try {
-                             newPS.sSequent[0] = TermHelper.parse(posTermOne);
-                         } catch (TermHelper.FormatException ex) {
-                             posTermOne += parts[i];
-                             i++;
-                             continue;
-                         }
-                         aTerm = true;
-                     }
-                     if (i == parts.length) throw new TermHelper().new FormatException();
-                     String posTermTwo = parts[i];
-                     i++;
-                     aTerm = false;
-                     while (!aTerm) {
-                         try {
-                             newPS.sSequent[1] = TermHelper.parse(posTermTwo);
-                         } catch (TermHelper.FormatException ex) {
-                             if (i == parts.length) throw new TermHelper().new FormatException();
-                             posTermTwo += parts[i];
-                             i++;
-                             continue;
-                         }
-                         aTerm = true;
-                     }
-                     if (i < parts.length) throw new TermHelper().new FormatException();
-                     if (parts[1].matches("\\s*") || !newPS.ProperProblemTerm(newPS.sSequent[0]) || !newPS.isIndexed(newPS.sSequent[0]))
-                         throw new TermHelper().new FormatException();
-                     if (parts[2].matches("\\s*") || !newPS.ProperProblemTerm(newPS.sSequent[1]) || !newPS.isIndexed(newPS.sSequent[1]))
-                         throw new TermHelper().new FormatException();
-                     if (newPS.sSequent[0].Print().compareTo(newPS.sSequent[1].Print()) != 0) {
-                         ArrayList<Term> newProblem = new ArrayList<>();
-                         newProblem.add(newPS.sSequent[0]);
-                         newProblem.add(newPS.sSequent[1]);
-                         newPS.OpenProblems.add(newProblem);
-                         ArrayList<Term[]> newProblemHistory = new ArrayList<>();
-                         newProblemHistory.add(new Term[]{newPS.sSequent[0], newPS.sSequent[1]});
-                         newPS.History.add(newProblemHistory);
-                     }
-                 } else if (parts[0].compareTo("Variable:") == 0 && !foundProblemOrRule) {
-                     StringBuilder name = new StringBuilder();
-                     for (int i = 1; i < parts.length; i++)
-                         if (parts[i].matches("[a-zA-Z]+")) name.append(parts[i]);
-                     if (name.toString().matches("[a-zA-Z]+")
-                             && !newPS.Variables.contains(name.toString())
-                             && !newPS.Constants.contains(name.toString())
-                             && !newPS.Functions.containsKey(name.toString()))
-                         newPS.Variables.add(name.toString());
-                     else throw new TermHelper().new FormatException();
-                 } else throw new IOException();
-             }
-//**********************************************Parsing Variables from file***************************************************
-         } catch (Exception ex) {
-             Toast.makeText(ctx, "Syntax error on line " + lineCount + " of " + file + ".", Toast.LENGTH_SHORT).show();
-             newPS = new ProblemState();
-         }
-        newPS.rSequent = new Term[]{Const.HoleSelected, Const.HoleSelected};
-        newPS.sSequent = newPS.OpenProblems.get(0).toArray(new Term[]{Const.Hole, Const.Hole});
-
-        return newPS;
-    }
-
-
-     static void OverflowMenuSelected(int id, Activity ctx) {
+    static void OverflowMenuSelected(int id, Activity ctx) {
         if (id == R.id.load) {
             AuxFunctionality.performFileSearch(ctx);
         } else if (id == R.id.save) {
@@ -199,7 +58,7 @@ import java.util.HashSet;
             Intent intent = new Intent(ctx, HelpActivity.class);
             ctx.startActivity(intent);
             Toast.makeText(ctx, "Help", Toast.LENGTH_SHORT).show();
-	    ctx.finish();
+            ctx.finish();
         } else if (id == R.id.about) {
             Intent intent = new Intent(ctx, AboutActivity.class);
             ctx.startActivity(intent);
@@ -208,56 +67,137 @@ import java.util.HashSet;
         }
     }
 
-     static Term[] StringRuleToTerms(String rule) {
-        String[] parts = rule.split(" ⇒ ");
-        Term[] terms;
-        if (parts.length != 2) return null;
-        if (parts[0].contains("∀")) {
-            int fp = parts[0].indexOf("(");
-            parts[0] = parts[0].substring(fp + 1);
-            parts[1] = parts[1].substring(0, parts[1].length() - 1);
-        }
-        try {
-            terms = new Term[]{TermHelper.parse(parts[0]), TermHelper.parse(parts[1])};
-        } catch (TermHelper.FormatException e) {
-            return null;
-        }
-        return terms;
+     private static void performFileSearch(Activity ctx) {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/plain");
+        ctx.startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
-     static String RuleTermstoString(ArrayList<Term> rule, ProblemState PS) {
-        if(rule != null && rule.size()==2 && rule.get(0)!= null && rule.get(1) != null) {
+     static ProblemState loadFile(InputStream IS, String file, Activity ctx) {
+         ProblemState newPS = new ProblemState();
+         newPS.observe = ((DisplayUpdateHelper) ctx).PS.observe;
+         String line;
+         int lineCount = 0;
+         boolean foundProblemOrRule = false;
+         try (BufferedReader br = new BufferedReader(new InputStreamReader(IS))) {
+             while ((line = br.readLine()) != null) {
+                 if (line.matches("\\s+")) continue;
+                 lineCount++;
+                 String[] parts = line.split("\\s+");
+                 if (parts[0].compareTo("Function:") == 0 && !foundProblemOrRule)
+                     parseFunctionSymbol(newPS, parts);
+                 else if (parts[0].compareTo("Rule:") == 0)
+                     foundProblemOrRule = parseRuleDefinition(newPS, parts);
+                 else if (parts[0].compareTo("Problem:") == 0 && newPS.anteProblem[0].getSym().compareTo(Const.Hole.getSym()) == 0)
+                     foundProblemOrRule = parseProblemDefinition(newPS, parts);
+                 else if (parts[0].compareTo("Variable:") == 0 && !foundProblemOrRule)
+                     parsevariableSymbol(newPS, parts);
+                 else throw new IOException();
+             }
+//**********************************************Parsing Variables from file***************************************************
+         } catch (Exception ex) {
+             Toast.makeText(ctx, "Syntax error on line " + lineCount + " of " + file + ".", Toast.LENGTH_SHORT).show();
+             newPS = new ProblemState();
+             newPS.observe = ((DisplayUpdateHelper) ctx).PS.observe;
+         }
+         newPS.anteCurrentRule = new Term[]{Const.HoleSelected, Const.HoleSelected};
+         return newPS;
+     }
+
+    private static void parsevariableSymbol(ProblemState newPS, String[] parts) throws TermHelper.FormatException {
+        StringBuilder name = new StringBuilder();
+        for (int i = 1; i < parts.length; i++)
+            if (parts[i].matches("[a-zA-Z]+")) name.append(parts[i]);
+        if (name.toString().matches("[a-zA-Z]+")
+                && !newPS.Variables.contains(name.toString())
+                && !newPS.Constants.contains(name.toString())
+                && !newPS.containsFunctionsymbol(name.toString()))
+            newPS.Variables.add(name.toString());
+        else throw new TermHelper().new FormatException();
+    }
+
+    private static boolean parseProblemDefinition(ProblemState newPS, String[] parts) throws TermHelper.FormatException {
+        if (parts.length < 3) throw new TermHelper().new FormatException();
+        int anteSize = new Integer(parts[1]);
+        int succSize = new Integer(parts[1]);
+        if (parts.length != anteSize + succSize + 3) throw new TermHelper().new FormatException();
+        newPS.anteProblem = new Term[anteSize];
+        newPS.succProblem = new Term[succSize];
+        for (int i = 3; i < anteSize + 3; i++) {
+            newPS.anteProblem[i - 3] = TermHelper.parse(parts[i], newPS);
+            if (!newPS.isIndexed(newPS.anteProblem[i - 3]))
+                throw new TermHelper().new FormatException();
+        }
+        for (int i = anteSize + 3; i < parts.length; i++) {
+            newPS.succProblem[i - (anteSize + 3)] = TermHelper.parse(parts[i], newPS);
+            if (!newPS.isIndexed(newPS.succProblem[i - (anteSize + 3)]))
+                throw new TermHelper().new FormatException();
+        }
+        return true;
+    }
+
+    private static boolean parseRuleDefinition(ProblemState newPS, String[] parts) throws TermHelper.FormatException {
+        if (parts.length < 2) throw new TermHelper().new FormatException();
+        int anteSize = new Integer(parts[1]);
+        if (parts.length != anteSize + 3) throw new TermHelper().new FormatException();
+        Term[] anteRule = new Term[anteSize];
+        Term succRule = Const.HoleSelected;
+        for (int i = 2; i < parts.length; i++) {
+            succRule = TermHelper.parse(parts[i], newPS);
+            if (!newPS.isIndexed(succRule)) throw new TermHelper().new FormatException();
+            else if (i != parts.length - 1) anteRule[i - 2] = TermHelper.parse(parts[i], newPS);
+        }
+        newPS.Rules.add(new Pair<>(anteRule, succRule));
+        return true;
+    }
+
+    private static void parseFunctionSymbol(ProblemState PS, String[] parts) throws TermHelper.FormatException {
+        StringBuilder name = new StringBuilder();
+        StringBuilder arity = new StringBuilder();
+        boolean infix = false;
+        for (int i = 1; i < parts.length; i++)
+            if (parts[i].matches(nameParseRegex) && !parts[i].matches("infix"))
+                name.append(parts[i]);
+        for (int i = 2; i < parts.length; i++)
+            if (parts[i].matches("[0-9]+")) arity.append(parts[i]);
+        for (int i = 2; i < parts.length; i++)
+            if (parts[i].matches("infix") && Integer.decode(arity.toString()) == 2) infix = true;
+            else if (parts[i].matches("infix") && Integer.decode(arity.toString()) != 2)
+                throw new TermHelper().new FormatException();
+        if (name.toString().matches(nameParseRegex)
+                && arity.toString().matches("[0-9]+")
+                && !PS.Variables.contains(name.toString())
+                && !PS.Constants.contains(name.toString())
+                && !PS.containsFunctionsymbol(name.toString())) {
+            if (Integer.parseInt(arity.toString()) == 0) PS.Constants.add(name.toString());
+            else
+                PS.Functions.add(new Pair<>(name.toString(), new Pair<>(Integer.parseInt(arity.toString()), infix)));
+        } else throw new TermHelper().new FormatException();
+    }
+
+
+    static String RuleTermstoString(Pair<Term[], Term> rule, ProblemState PS) {
+        if (rule != null && rule.first != null && rule.second != null) {
             StringBuilder prefix = new StringBuilder();
-            HashSet<String> vl = PS.VarList(rule.get(0));
-            vl.addAll(PS.VarList(rule.get(1)));
+            HashSet<String> vl = new HashSet<>();
+            for (Term t : rule.first) vl.addAll(PS.VarList(t));
+            vl.addAll(PS.VarList(rule.second));
             for (String t : vl) prefix.append("∀").append(t);
-            return ((prefix.toString().compareTo("") != 0) ? prefix + "( " : "") + rule.get(0).Print() + " ⇒ " + rule.get(1).Print() + ((prefix.toString().compareTo("") != 0) ? " )" : "");
+            String retString = (prefix.toString().compareTo("") != 0) ? prefix + "(Δ " : "Δ ";
+            if (rule.first.length > 0)
+                for (int i = 0; i < rule.first.length; i++)
+                    if (i == 0 && i != rule.first.length - 1)
+                        retString += ", " + rule.first[i].Print() + " , ";
+                    else if (0 == rule.first.length - 1)
+                        retString += ", " + rule.first[i].Print() + " ⊢ Δ , ";
+                    else if (i == rule.first.length - 1)
+                        retString += rule.first[i].Print() + " ⊢ Δ , ";
+                    else retString += rule.first[i].Print() + " , ";
+            else retString += "⊢ Δ , ";
+            return retString + rule.second.Print() + ((prefix.toString().compareTo("") != 0) ? " )" : "");
         }
         else return "";
     }
 
-    static Term  ApplySubstitution(Term t,ArrayList<String> sub){
-
-        if(sub.size()!=0){
-            HashMap<String,String> parsedselections = new HashMap<>();
-            for(int i = 0; i< sub.size();i++){
-                String subsub =sub.get(i);
-                String prunedSub = subsub.substring(1,subsub.length()-1);
-                String[] subSplit = prunedSub.split(" ← ");
-                if(!parsedselections.keySet().contains(subSplit[0]))
-                    parsedselections.put(subSplit[0],subSplit[1]);
-            }
-            for(String var: parsedselections.keySet()) {
-                String subterm = parsedselections.get(var);
-                Term replacement;
-                try {
-                    replacement =    TermHelper.parse(subterm);
-                }catch (TermHelper.FormatException e) { replacement = null; }
-                if(replacement!= null){
-                    t = t.replace(new Const(var),replacement);
-                }
-            }
-        }
-        return t;
-    }
 }

@@ -14,11 +14,11 @@
     <string name="VariableX">x</string>
     <string name="VariableY">y</string>
     <string name="variableZ">z</string>
-    <string name="RuleAppliedTag">Rule To Be Applied</string>
+    <string name="RuleAppliedTag">Matching Substitution</string>
     <string name="CurrentTermConstructionTag">Term State</string>
     <string name="AllowedFunctionSymbolsTag">Function Symbols</string>
 
-    <string name="UnifyTag">Terms To Equate</string>
+    <string name="UnifyTag">Terms To Match</string>
     <string name="SubstitutionTag">Current Substitution</string>
     <string name="RightBacket">}</string>
     <string name="LeftBrack">{</string>
@@ -35,6 +35,17 @@
     <string name="ConstructedTermTag">Constructed Term</string>
     <string name="VariableListTag">Variable List</string>
     <string name="SubstitutionList">Substitution List</string>
+    <string name="ProblemTag">Problem and Rules</string>
+    <string name="FutureState">Resulting Problem State</string>
+    <string name="ObserveMode">Observation Mode</string>
+    <string name="Options">Options</string>
+    <string name="problemmenu">Problems</string>
+    <string name="PropLogic">Propositional Logic</string>
+    <string name="Prop01">Prop 01</string>
+    <string name="Problem1">Problem 1</string>
+    <string name="problem2">problem 2</string>
+    <string name="Problem3">Problem 3</string>
+    <string name="ModalLogic">Modal Logic</string>
 
 </resources>
 

@@ -1,0 +1,24 @@
+Function: ∧ 2 infix
+Function: & 2 infix
+Function: ⇒ 2 infix
+Function: □ 1
+Function: p 0
+Function: q 0
+Function: ⊤ 0
+Variable: x
+Variable: y
+Variable: z
+Variable: w
+Problem: ⊤ ⇒(∧(□(p),□(q)), □(∧(p,q)))
+Rule: z &(⊤,z)
+Rule: &(⊤,z) z
+Rule: &(x,y) &(y,x)
+Rule: &(x,⇒(x,y)) y
+Rule: x □(x)
+Rule: □(⇒(x,y)) ⇒(□(x),□(y))
+Rule: &(⊤,z) &(⇒(x,⇒(y,∧(x,y))),z)
+Rule: &(⇒(x,y),⇒(y,z)) ⇒(x,z)
+Rule: &(⊤,z) &(⇒(⇒(∧(x,y),x),y),z)
+Rule: &(⊤,z) &(⇒(⇒(∧(x,y),y),x),z)
+Rule: &(⊤,z) &(⇒(x,⇒(y,x)),z)
+Rule: &(⊤,w) &(⇒(⇒(x,⇒(y,z)),⇒(⇒(x,y),⇒(x,z))),w)

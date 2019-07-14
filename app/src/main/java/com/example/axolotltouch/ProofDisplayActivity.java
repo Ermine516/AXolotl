@@ -11,7 +11,7 @@ public class ProofDisplayActivity extends DisplayUpdateHelper{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_proof_bar_layout);
-        PS = ConstructActivity();
+        PS = ConstructActivity(savedInstanceState);
         ActivityDecorate();
     }
 

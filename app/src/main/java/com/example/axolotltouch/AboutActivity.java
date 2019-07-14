@@ -8,7 +8,7 @@ public class AboutActivity extends DisplayUpdateHelper{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_about_bar_layout);
-        PS = ConstructActivity();
+        PS = ConstructActivity(savedInstanceState);
         ActivityDecorate();
     }
     void setPS(ProblemState ps){ PS = ps; }

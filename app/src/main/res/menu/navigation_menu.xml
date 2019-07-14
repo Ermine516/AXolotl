@@ -1,29 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/Problembutton"
-        android:icon="@drawable/unieqhdpi"
-        android:title="Problem" />
+        android:id="@+id/optionsmenu"
+        android:title="@string/Options">
+        <menu>
+            <item
+                android:id="@+id/Problembutton"
+                android:icon="@drawable/unieqhdpi"
+                android:title="Problem" />
+            <item
+                android:id="@+id/ViewProof"
+                android:icon="@drawable/proofxxxhdpi"
+                android:title="View Proof" />
+            <item
+                android:id="@+id/observeswitch"
+                android:actionLayout="@layout/switch_item"
+                android:paddingTop="16dp"
+                app:actionLayout="@layout/switch_item"
+                app:showAsAction="always" />
+        </menu>
+    </item>
+    <item android:title="@string/PropLogic">
+        <menu>
+            <item
+                android:id="@+id/propositional01"
+                android:title="@string/Problem1" />
+            <item
+                android:id="@+id/propositional02"
+                android:title="@string/problem2" />
+            <item
+                android:id="@+id/propositional03"
+                android:title="@string/Problem3" />
+        </menu>
+    </item>
     <item
-        android:id="@+id/RuleSelectButton"
-        android:icon="@drawable/rulebuttonhlpdi"
-        android:title="Rule Select" />
-    <item
-        android:id="@+id/TermConstructButton"
-        android:icon="@drawable/termbuttonhldpi"
-        android:title="Term Construct" />
-    <item
-        android:id="@+id/SubstitutionConstructButton"
-        android:icon="@drawable/subcreatebuttonhldpi"
-        android:title="Substitution Construct" />
-    <item
-        android:id="@+id/SubstitutionSelectButton"
-        android:icon="@drawable/unionsubhldpi"
-        android:title="Substitution Select" />
-    <item
-        android:id="@+id/ViewProof"
-        android:icon="@drawable/proofxxxhdpi"
-        android:title="View Proof" />
+        android:id="@+id/modalMenu"
+        android:title="@string/ModalLogic">
+        <menu>
+            <item
+                android:id="@+id/modalProblem01"
+                android:title="@string/Problem1" />
+        </menu>
+    </item>
 
 </menu>

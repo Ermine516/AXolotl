@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RuleSelectionActivity">
+    tools:context=".MatchDisplayActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -20,8 +20,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/activity_rule_selection" />
-
+    <include layout="@layout/activity_match_display" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -17,13 +17,7 @@
             android:name=".TermConstructActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SubstitutionSelectionActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".RuleSelectionActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".SubstitutionConstructActivity"
+            android:name=".MatchDisplayActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ProofDisplayActivity"

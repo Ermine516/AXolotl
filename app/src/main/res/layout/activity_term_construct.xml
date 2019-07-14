@@ -11,9 +11,10 @@
     tools:showIn="@layout/app_term_bar_layout">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/OuterLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".RuleSelectionActivity">
+        tools:context=".MatchDisplayActivity">
 
         <View
             android:id="@+id/rightSiderRuleInstanceTagDivider2"
@@ -121,7 +122,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/LeftSideProblem"
+                    android:id="@+id/LeftSideTerm"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:freezesText="true"
@@ -187,10 +188,10 @@
 
         <TextView
             android:id="@+id/problemTag3"
-            android:layout_width="140dp"
+            android:layout_width="200dp"
             android:layout_height="22dp"
             android:layout_marginTop="8dp"
-            android:text="@string/UnifyTag"
+            android:text="@string/FutureState"
             android:textColor="#000001"
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@+id/unificationSymbol3"
@@ -251,15 +252,15 @@
             android:id="@+id/TermInstanceDisplay"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="16dp"
+            android:foregroundGravity="fill"
             android:isScrollContainer="true"
             android:keepScreenOn="true"
             app:layout_constraintBottom_toTopOf="@+id/FunctionSymbolTag"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ruleInstanceTag2">
 
@@ -267,15 +268,18 @@
                 android:id="@+id/TermInstancceLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center"
+                android:layout_gravity="fill_horizontal"
+                android:layout_marginEnd="8dp"
                 android:minWidth="75dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/TermDisplay"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
                     android:gravity="center"
+                    android:layoutDirection="inherit"
                     android:minWidth="75dp"
                     android:scrollbars="none"
                     android:text="@string/SelectedHole"

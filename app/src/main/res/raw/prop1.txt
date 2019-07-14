@@ -1,5 +1,6 @@
 Function: ∧ 2 infix
 Function: ⇒ 2 infix
+Function: ¬ 1
 Function: p 0
 Function: q 0
 Function: ⊤ 0
@@ -7,7 +8,10 @@ Variable: x
 Variable: y
 Variable: z
 Variable: w
-Problem: ⊤ ⇒(⊤,⊤)
-Rule: 2 x ⇒(x,y)  y
-Rule: 0  ⇒(x,⇒(y,x))
-Rule: 0  ⇒(⇒(x,⇒(y,z)),⇒(⇒(x,y),⇒(x,z)))
+Problem: ⊤ ⇒(p,p)
+Rule: z ∧(⊤,z)
+Rule: ∧(⊤,z) z
+Rule: ∧(x,y) ∧(y,z)
+Rule: ∧(x,⇒(x,y)) y
+Rule: ∧(⊤,z) ∧(⇒(x,⇒(y,x)),z)
+Rule: ∧(⊤,w) ∧(⇒(⇒(x,⇒(y,z)),⇒(⇒(x,y),⇒(x,z))),w)

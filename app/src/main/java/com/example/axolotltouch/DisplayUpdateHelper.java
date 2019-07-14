@@ -89,18 +89,18 @@ public abstract class DisplayUpdateHelper extends AppCompatActivity implements N
     }
 
     protected void swipeRightProblemStateUpdate() {
-        PS.History.add(new Pair<>(PS.selectedSide, new Pair<>(PS.Substitutions, new Pair<>(PS.anteCurrentRule[0].Dup(), PS.anteCurrentRule[1].Dup()))));
+        PS.History.add(new Pair<>(PS.selectedSide, new Pair<>(PS.Substitutions, new Pair<>(PS.rsequent[0].Dup(), PS.rsequent[1].Dup()))));
         int anti = (PS.selectedSide == 1) ? 0 : 1;
-        Term temp = PS.anteCurrentRule[anti].Dup();
+        Term temp = PS.rsequent[anti].Dup();
         for (Pair<String, Term> s : PS.Substitutions)
             temp = temp.replace(new Const(s.first), s.second);
-        PS.anteProblem[PS.selectedSide] = temp;
+        PS.ssequent[PS.selectedSide] = temp;
         PS.selectedSide = -1;
         PS.subPos = -1;
-        PS.anteCurrentRule = new Term[]{Const.HoleSelected, Const.HoleSelected};
+        PS.rsequent = new Term[]{Const.HoleSelected, Const.HoleSelected};
         PS.Substitutions = new ArrayList<>();
         PS.SubHistory = new HashMap<>();
-        if (PS.anteProblem[0].Print().compareTo(PS.anteProblem[1].Print()) == 0)
+        if (PS.ssequent[0].Print().compareTo(PS.ssequent[1].Print()) == 0)
             Toast.makeText(DisplayUpdateHelper.this, "Congratulations! Problem Solved! ", Toast.LENGTH_SHORT).show();
         else Toast.makeText(DisplayUpdateHelper.this, "Rule Applied", Toast.LENGTH_SHORT).show();
     }

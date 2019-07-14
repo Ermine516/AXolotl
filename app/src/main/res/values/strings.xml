@@ -14,27 +14,6 @@
     <string name="VariableX">x</string>
     <string name="VariableY">y</string>
     <string name="variableZ">z</string>
-    <string name="RuleAppliedTag">Matching Substitution</string>
-    <string name="CurrentTermConstructionTag">Term State</string>
-    <string name="AllowedFunctionSymbolsTag">Function Symbols</string>
-
-    <string name="UnifyTag">Terms To Match</string>
-    <string name="SubstitutionTag">Current Substitution</string>
-    <string name="RightBacket">}</string>
-    <string name="LeftBrack">{</string>
-    <string name="RuleList">Rule List</string>
-    <string name="SubstitutionTerm">Substitution Term</string>
-    <string name="FunctionSymbols">Function Symbols</string>
-    <string name="ApplyRule">Apply</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="Open">open</string>
-    <string name="Close">close</string>
-    <string name="SelectedHole">⚫</string>
-    <string name="ConstructedTermTag">Constructed Term</string>
-    <string name="VariableListTag">Variable List</string>
-    <string name="SubstitutionList">Substitution List</string>
     <string name="ProblemTag">Problem and Rules</string>
     <string name="FutureState">Resulting Problem State</string>
     <string name="ObserveMode">Observation Mode</string>
@@ -46,6 +25,23 @@
     <string name="problem2">problem 2</string>
     <string name="Problem3">Problem 3</string>
     <string name="ModalLogic">Modal Logic</string>
-
+    <string name="RuleAppliedTag">Matching Substitution</string>
+    <string name="CurrentTermConstructionTag">Term State</string>
+    <string name="AllowedFunctionSymbolsTag">Function Symbols</string>
+    <string name="UnifyTag">Terms To Match</string>
+    <string name="SubstitutionTag">Current Substitution</string>
+    <string name="RightBacket">}</string>
+    <string name="LeftBrack">{</string>
+    <string name="RuleList">Rule List</string>
+    <string name="SubstitutionTerm">Substitution Term</string>
+    <string name="FunctionSymbols">Function Symbols</string>
+    <string name="ApplyRule">Apply</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Open">open</string>
+    <string name="Close">close</string>
+    <string name="SelectedHole">⚫</string>
+    <string name="ConstructedTermTag">Constructed Term</string>
+    <string name="VariableListTag">Variable List</string>
+    <string name="SubstitutionList">Substitution List</string>
 </resources>
 

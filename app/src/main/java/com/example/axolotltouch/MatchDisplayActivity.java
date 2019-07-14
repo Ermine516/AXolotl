@@ -34,8 +34,8 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
         TextView varDisplay = this.findViewById(R.id.VarTextview);
         TextView subDisplay = this.findViewById(R.id.SubTermTextView);
         String var = PS.Substitutions.get(PS.subPos).first;
-        lhs.setText(Html.fromHtml(PS.anteCurrentRule[MatchDisplayActivity.this.PS.selectedSide].Print(new Const(var))));
-        rhs.setText(Html.fromHtml(PS.anteProblem[MatchDisplayActivity.this.PS.selectedSide].Print(PS.Substitutions.get(PS.subPos).second)));
+        lhs.setText(Html.fromHtml(PS.rsequent[MatchDisplayActivity.this.PS.selectedSide].Print(new Const(var))));
+        rhs.setText(Html.fromHtml(PS.ssequent[MatchDisplayActivity.this.PS.selectedSide].Print(PS.Substitutions.get(PS.subPos).second)));
         varDisplay.setText(var);
         try {
             subDisplay.setText(PS.Substitutions.get(PS.subPos).second.Print());

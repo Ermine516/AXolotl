@@ -31,7 +31,7 @@ public class MainActivity extends DisplayUpdateHelper {
             }
         });
         PS = ConstructActivity(savedInstanceState);
-        if (PS.anteProblem[0].Print().compareTo(PS.succProblem[1].Print()) == 0) {
+        if (PS.ssequent[0].Print().compareTo(PS.ssequent[1].Print()) == 0) {
             boolean passobseve = PS.observe;
             PS = new ProblemState();
             PS.observe = passobseve;
@@ -59,8 +59,8 @@ public class MainActivity extends DisplayUpdateHelper {
     }
 
     protected void UpdateProblemDisplay() {
-        ((TextView) this.findViewById(R.id.LeftSideProblem)).setText(PS.anteProblem[0].Print());
-        ((TextView) this.findViewById(R.id.RightSideProblem)).setText(PS.anteProblem[1].Print());
+        ((TextView) this.findViewById(R.id.LeftSideProblem)).setText(PS.ssequent[0].Print());
+        ((TextView) this.findViewById(R.id.RightSideProblem)).setText(PS.ssequent[1].Print());
     }
 
     private void RuleDisplayUpdate() {
@@ -98,10 +98,10 @@ public class MainActivity extends DisplayUpdateHelper {
                     Term ruleside = (laststep.first == 0) ? rule.first : rule.second;
                     for (Pair<String, Term> s : laststep.second.first)
                         ruleside = ruleside.replace(new Const(s.first), s.second);
-                    PS.anteProblem[laststep.first] = ruleside;
+                    PS.ssequent[laststep.first] = ruleside;
                     PS.selectedSide = -1;
                     PS.subPos = -1;
-                    PS.anteCurrentRule = new Term[]{Const.HoleSelected, Const.HoleSelected};
+                    PS.rsequent = new Term[]{Const.HoleSelected, Const.HoleSelected};
                     PS.Substitutions = new ArrayList<>();
                     Intent intent = new Intent(MainActivity.this, MainActivity.class);
                     intent.putExtra(PASSPROBLEMSTATE, PS);
@@ -120,9 +120,9 @@ public class MainActivity extends DisplayUpdateHelper {
             Intent intent;
             try {
                 if (PS.selectedSide > -1) {
-                    if (PS.anteCurrentRule[PS.selectedSide].getSym().compareTo(Const.HoleSelected.getSym()) != 0) {
-                        if (TermHelper.TermMatch(PS.anteProblem[PS.selectedSide], PS.anteCurrentRule[PS.selectedSide], PS)) {
-                            PS.Substitutions = TermHelper.varTermMatch(PS.anteProblem[PS.selectedSide], PS.anteCurrentRule[PS.selectedSide], PS);
+                    if (PS.rsequent[PS.selectedSide].getSym().compareTo(Const.HoleSelected.getSym()) != 0) {
+                        if (TermHelper.TermMatch(PS.ssequent[PS.selectedSide], PS.rsequent[PS.selectedSide], PS)) {
+                            PS.Substitutions = TermHelper.varTermMatch(PS.ssequent[PS.selectedSide], PS.rsequent[PS.selectedSide], PS);
                             HashSet<String> occurences = new HashSet<>();
                             ArrayList<Pair<String, Term>> subCleaned = new ArrayList<>();
                             for (Pair<String, Term> p : PS.Substitutions)
@@ -131,8 +131,8 @@ public class MainActivity extends DisplayUpdateHelper {
                                     occurences.add(p.first);
                                 }
                             PS.Substitutions = subCleaned;
-                            HashSet<String> vars = PS.VarList(PS.anteCurrentRule[PS.selectedSide]);
-                            for (String s : PS.VarList(PS.anteCurrentRule[(PS.selectedSide == 1) ? 0 : 1]))
+                            HashSet<String> vars = PS.VarList(PS.rsequent[PS.selectedSide]);
+                            for (String s : PS.VarList(PS.rsequent[(PS.selectedSide == 1) ? 0 : 1]))
                                 if (!vars.contains(s))
                                     PS.Substitutions.add(new Pair<>(s, Const.HoleSelected.Dup()));
                             PS.subPos = 0;
@@ -175,8 +175,8 @@ public class MainActivity extends DisplayUpdateHelper {
             for (int i = 0; i < rlvv.getChildCount(); i++) {
                 TextView theText = ((TextView) ((LinearLayout) ((HorizontalScrollView) rlvv.getChildAt(i)).getChildAt(0)).getChildAt(0));
                 if (theText.getText().toString().compareTo(((TextView) view).getText().toString()) == 0) {
-                    MainActivity.this.PS.anteCurrentRule = MainActivity.this.PS.Rules.get(i).first;
-                    MainActivity.this.PS.succCurrentRule = MainActivity.this.PS.Rules.get(i).second;
+                    MainActivity.this.PS.rsequent[0] = MainActivity.this.PS.Rules.get(i).first;
+                    MainActivity.this.PS.rsequent[1] = MainActivity.this.PS.Rules.get(i).second;
                     textViewSelected(((TextView) view));
                 } else textViewUnselected(theText);
             }

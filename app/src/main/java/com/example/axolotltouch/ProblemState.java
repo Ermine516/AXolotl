@@ -13,10 +13,8 @@ import java.util.HashSet;
 //This contains all information concerning the problem rules and substitutions 
 //as well as functions providing important features. 
 public class ProblemState implements Parcelable {
-    Term[] anteProblem;
-    Term[] succProblem;
-    Term[] anteCurrentRule;
-    Term succCurrentRule;
+    Term[] ssequent;
+    Term[] rsequent;
     int selectedSide;
     int subPos;
     boolean observe;
@@ -24,15 +22,13 @@ public class ProblemState implements Parcelable {
     ArrayList<String> Constants;
     ArrayList<Pair<String, Pair<Integer, Boolean>>> Functions;
     ArrayList<Pair<String, Term>> Substitutions;
-    ArrayList<Pair<Term[], Term>> Rules;
+    ArrayList<Pair<Term, Term>> Rules;
     ArrayList<Pair<Integer, Pair<ArrayList<Pair<String, Term>>, Pair<Term, Term>>>> History;
     HashMap<String, ArrayList<Term>> SubHistory;
 
     public ProblemState() {
-        anteCurrentRule = new Term[]{Const.HoleSelected};
-        succCurrentRule = Const.HoleSelected.Dup();
-        anteProblem = new Term[]{Const.Hole};
-        succProblem = new Term[]{Const.Hole};
+        rsequent = new Term[]{Const.HoleSelected, Const.HoleSelected};
+        ssequent = new Term[]{Const.Hole, Const.Hole};
         selectedSide = -1;
         subPos = -1;
         observe = true;
@@ -48,13 +44,10 @@ public class ProblemState implements Parcelable {
         observe = in.readInt() == 1;
         selectedSide = in.readInt();
         subPos = in.readInt();
-        anteProblem = new Term[in.readInt()];
-        in.readTypedArray(anteProblem, Term.CREATOR);
-        succProblem = new Term[in.readInt()];
-        in.readTypedArray(succProblem, Term.CREATOR);
-        anteCurrentRule = new Term[in.readInt()];
-        in.readTypedArray(anteCurrentRule, Term.CREATOR);
-        succCurrentRule = in.readTypedObject(Term.CREATOR);
+        ssequent = new Term[in.readInt()];
+        in.readTypedArray(ssequent, Term.CREATOR);
+        rsequent = new Term[in.readInt()];
+        in.readTypedArray(rsequent, Term.CREATOR);
 		String[] tempVar = new String[in.readInt()];
         in.readStringArray(tempVar);
         Variables = new HashSet<>();
@@ -82,14 +75,7 @@ public class ProblemState implements Parcelable {
 		Rules = new ArrayList<>();
         if (rulesSize > 0)
         	while( rulesSize>0){
-                int ruleSize = in.readInt();
-                Term[] rule;
-                if (ruleSize > 0) {
-                    rule = new Term[ruleSize];
-                    for (int ri = 0; ri < ruleSize; ri++)
-                        rule[ri] = in.readTypedObject(Term.CREATOR);
-                } else rule = new Term[0];
-                Rules.add(new Pair<>(rule, in.readTypedObject(Term.CREATOR)));
+                Rules.add(new Pair<>(in.readTypedObject(Term.CREATOR), in.readTypedObject(Term.CREATOR)));
 				rulesSize--;
 			}
 
@@ -126,7 +112,7 @@ public class ProblemState implements Parcelable {
     }
 
     public void setProblem(Term[] problem) {
-        if (problem.length == 2) anteProblem = new Term[]{problem[0].Dup(), problem[1].Dup()};
+        if (problem.length == 2) ssequent = new Term[]{problem[0].Dup(), problem[1].Dup()};
     }
 //This method checks if the given problem Term is properly constructed
 //i.e. variable free and functions and constants are used correctly
@@ -187,13 +173,10 @@ HashSet<String> VarList(Term ti) {
         out.writeInt((observe) ? 1 : 0);
         out.writeInt(selectedSide);
         out.writeInt(subPos);
-        out.writeInt(anteProblem.length);
-        out.writeTypedArray(anteProblem, flags);
-        out.writeInt(succProblem.length);
-        out.writeTypedArray(succProblem, flags);
-        out.writeInt(anteCurrentRule.length);
-        out.writeTypedArray(anteCurrentRule, flags);
-        out.writeTypedObject(succCurrentRule, flags);
+        out.writeInt(ssequent.length);
+        out.writeTypedArray(ssequent, flags);
+        out.writeInt(rsequent.length);
+        out.writeTypedArray(rsequent, flags);
 		out.writeInt(Variables.size());
 		out.writeStringArray(Variables.toArray(new String[0]));
     	out.writeInt(Constants.size());
@@ -210,10 +193,8 @@ HashSet<String> VarList(Term ti) {
             out.writeTypedObject(Substitutions.get(i).second, flags);
 		}
 		out.writeInt(Rules.size());
-        for (Pair<Term[], Term> rule : Rules) {
-            out.writeInt(rule.first.length);
-            for (int i = 0; i < rule.first.length; i++)
-                out.writeTypedObject(rule.first[i], flags);
+        for (Pair<Term, Term> rule : Rules) {
+            out.writeTypedObject(rule.first, flags);
             out.writeTypedObject(rule.second, flags);
         }
 		out.writeInt(History.size());

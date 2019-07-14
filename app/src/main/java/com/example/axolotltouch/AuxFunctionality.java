@@ -89,7 +89,7 @@ class AuxFunctionality {
                      parseFunctionSymbol(newPS, parts);
                  else if (parts[0].compareTo("Rule:") == 0)
                      foundProblemOrRule = parseRuleDefinition(newPS, parts);
-                 else if (parts[0].compareTo("Problem:") == 0 && newPS.anteProblem[0].getSym().compareTo(Const.Hole.getSym()) == 0)
+                 else if (parts[0].compareTo("Problem:") == 0 && newPS.ssequent[0].getSym().compareTo(Const.Hole.getSym()) == 0)
                      foundProblemOrRule = parseProblemDefinition(newPS, parts);
                  else if (parts[0].compareTo("Variable:") == 0 && !foundProblemOrRule)
                      parsevariableSymbol(newPS, parts);
@@ -101,7 +101,7 @@ class AuxFunctionality {
              newPS = new ProblemState();
              newPS.observe = ((DisplayUpdateHelper) ctx).PS.observe;
          }
-         newPS.anteCurrentRule = new Term[]{Const.HoleSelected, Const.HoleSelected};
+         newPS.rsequent = new Term[]{Const.HoleSelected, Const.HoleSelected};
          return newPS;
      }
 
@@ -118,37 +118,21 @@ class AuxFunctionality {
     }
 
     private static boolean parseProblemDefinition(ProblemState newPS, String[] parts) throws TermHelper.FormatException {
-        if (parts.length < 3) throw new TermHelper().new FormatException();
-        int anteSize = new Integer(parts[1]);
-        int succSize = new Integer(parts[1]);
-        if (parts.length != anteSize + succSize + 3) throw new TermHelper().new FormatException();
-        newPS.anteProblem = new Term[anteSize];
-        newPS.succProblem = new Term[succSize];
-        for (int i = 3; i < anteSize + 3; i++) {
-            newPS.anteProblem[i - 3] = TermHelper.parse(parts[i], newPS);
-            if (!newPS.isIndexed(newPS.anteProblem[i - 3]))
-                throw new TermHelper().new FormatException();
-        }
-        for (int i = anteSize + 3; i < parts.length; i++) {
-            newPS.succProblem[i - (anteSize + 3)] = TermHelper.parse(parts[i], newPS);
-            if (!newPS.isIndexed(newPS.succProblem[i - (anteSize + 3)]))
-                throw new TermHelper().new FormatException();
-        }
+        if (parts.length != 3) throw new TermHelper().new FormatException();
+        newPS.ssequent[0] = TermHelper.parse(parts[1], newPS);
+        newPS.ssequent[1] = TermHelper.parse(parts[2], newPS);
+        if (!newPS.isIndexed(newPS.ssequent[0]) || !newPS.isIndexed(newPS.ssequent[1]))
+            throw new TermHelper().new FormatException();
         return true;
     }
 
     private static boolean parseRuleDefinition(ProblemState newPS, String[] parts) throws TermHelper.FormatException {
-        if (parts.length < 2) throw new TermHelper().new FormatException();
-        int anteSize = new Integer(parts[1]);
-        if (parts.length != anteSize + 3) throw new TermHelper().new FormatException();
-        Term[] anteRule = new Term[anteSize];
-        Term succRule = Const.HoleSelected;
-        for (int i = 2; i < parts.length; i++) {
-            succRule = TermHelper.parse(parts[i], newPS);
-            if (!newPS.isIndexed(succRule)) throw new TermHelper().new FormatException();
-            else if (i != parts.length - 1) anteRule[i - 2] = TermHelper.parse(parts[i], newPS);
-        }
-        newPS.Rules.add(new Pair<>(anteRule, succRule));
+        if (parts.length != 3) throw new TermHelper().new FormatException();
+        newPS.rsequent[0] = TermHelper.parse(parts[1], newPS);
+        newPS.rsequent[1] = TermHelper.parse(parts[2], newPS);
+        if (!newPS.isIndexed(newPS.rsequent[0]) || !newPS.isIndexed(newPS.rsequent[1]))
+            throw new TermHelper().new FormatException();
+        newPS.Rules.add(new Pair<>(newPS.rsequent[0], newPS.rsequent[1]));
         return true;
     }
 
@@ -177,24 +161,16 @@ class AuxFunctionality {
     }
 
 
-    static String RuleTermstoString(Pair<Term[], Term> rule, ProblemState PS) {
+    static String RuleTermstoString(Pair<Term, Term> rule, ProblemState PS) {
         if (rule != null && rule.first != null && rule.second != null) {
             StringBuilder prefix = new StringBuilder();
             HashSet<String> vl = new HashSet<>();
-            for (Term t : rule.first) vl.addAll(PS.VarList(t));
+            vl.addAll(PS.VarList(rule.first));
             vl.addAll(PS.VarList(rule.second));
             for (String t : vl) prefix.append("∀").append(t);
-            String retString = (prefix.toString().compareTo("") != 0) ? prefix + "(Δ " : "Δ ";
-            if (rule.first.length > 0)
-                for (int i = 0; i < rule.first.length; i++)
-                    if (i == 0 && i != rule.first.length - 1)
-                        retString += ", " + rule.first[i].Print() + " , ";
-                    else if (0 == rule.first.length - 1)
-                        retString += ", " + rule.first[i].Print() + " ⊢ Δ , ";
-                    else if (i == rule.first.length - 1)
-                        retString += rule.first[i].Print() + " ⊢ Δ , ";
-                    else retString += rule.first[i].Print() + " , ";
-            else retString += "⊢ Δ , ";
+            String retString = (prefix.toString().compareTo("") != 0) ? prefix + "(" : "";
+            retString += "" + rule.first.Print() + " ⊢  ";
+
             return retString + rule.second.Print() + ((prefix.toString().compareTo("") != 0) ? " )" : "");
         }
         else return "";

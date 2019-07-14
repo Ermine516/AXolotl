@@ -53,8 +53,8 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
         TextView lhs = this.findViewById(R.id.LeftSideProblem);
         TextView rhs = this.findViewById(R.id.RightSideProblem);
         if (PS.selectedSide == 1) {
-            lhs.setText(PS.anteProblem[0].Print());
-            Term temp = PS.anteCurrentRule[0].Dup();
+            lhs.setText(PS.ssequent[0].Print());
+            Term temp = PS.rsequent[0].Dup();
             for (Pair<String, Term> s : PS.Substitutions)
                 temp = temp.replace(new Const(s.first), s.second);
             rhs.setText(Html.fromHtml(temp.Print(PS.Substitutions.get(PS.subPos).second)));

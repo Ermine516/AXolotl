@@ -4,6 +4,7 @@ package com.example.axolotltouch;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,13 +29,21 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
     }
 
     protected void ActivityDecorate() {
-        TextView lhs = this.findViewById(R.id.LeftSideTerm);
+        System.out.println(PS.Substitutions.get(PS.subPos).first + "  " + PS.Substitutions.get(PS.subPos).second.Print());
+
+        TextView lhs = this.findViewById(R.id.LeftSideProblem);
         TextView rhs = this.findViewById(R.id.RightSideProblem);
         TextView varDisplay = this.findViewById(R.id.VarTextview);
         TextView subDisplay = this.findViewById(R.id.SubTermTextView);
         String var = PS.Substitutions.get(PS.subPos).first;
-        //    lhs.setText(Html.fromHtml(PS.anteCurrentRule[MatchDisplayActivity.this.PS.selectedSide].Print(new Const(var))));
-        //     rhs.setText(Html.fromHtml(PS.anteProblem[MatchDisplayActivity.this.PS.selectedSide].Print(PS.Substitutions.get(PS.subPos).second)));
+        if (MatchDisplayActivity.this.PS.anteSelectedPositions.size() == 0) {
+            Term succTerm = PS.getSelectedSuccTerm();
+            lhs.setText(Html.fromHtml(succTerm.Print(new Const(var))));
+            rhs.setText(Html.fromHtml(PS.succCurrentRule.Print(PS.Substitutions.get(PS.subPos).second)));
+        } else {
+            ArrayList<Term> anteTerm = PS.getSelectedAnteTerm();
+        }
+
         varDisplay.setText(var);
         try {
             subDisplay.setText(PS.Substitutions.get(PS.subPos).second.Print());

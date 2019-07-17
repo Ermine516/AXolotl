@@ -305,6 +305,22 @@ HashSet<String> VarList(Term ti) {
         }
     }
 
+    public Term getSelectedSuccTerm() {
+        for (Term t : succProblem) if (t.Print().compareTo(succSelectedPosition) == 0) return t;
+        return null;
+
+
+    }
+
+    public ArrayList<Term> getSelectedAnteTerm() {
+        ArrayList<Term> termlist = new ArrayList<>();
+        for (Term t : anteProblem)
+            for (String s : anteSelectedPositions)
+                if (t.Print().compareTo(s) == 0) termlist.add(t);
+        return termlist;
+
+
+    }
     // this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
     public static final Parcelable.Creator<ProblemState> CREATOR = new Parcelable.Creator<ProblemState>() {
         public ProblemState createFromParcel(Parcel in) {

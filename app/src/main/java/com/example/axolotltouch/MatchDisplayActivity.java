@@ -4,7 +4,6 @@ package com.example.axolotltouch;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,8 +33,8 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
         TextView varDisplay = this.findViewById(R.id.VarTextview);
         TextView subDisplay = this.findViewById(R.id.SubTermTextView);
         String var = PS.Substitutions.get(PS.subPos).first;
-        lhs.setText(Html.fromHtml(PS.anteCurrentRule[MatchDisplayActivity.this.PS.selectedSide].Print(new Const(var))));
-        rhs.setText(Html.fromHtml(PS.anteProblem[MatchDisplayActivity.this.PS.selectedSide].Print(PS.Substitutions.get(PS.subPos).second)));
+        //    lhs.setText(Html.fromHtml(PS.anteCurrentRule[MatchDisplayActivity.this.PS.selectedSide].Print(new Const(var))));
+        //     rhs.setText(Html.fromHtml(PS.anteProblem[MatchDisplayActivity.this.PS.selectedSide].Print(PS.Substitutions.get(PS.subPos).second)));
         varDisplay.setText(var);
         try {
             subDisplay.setText(PS.Substitutions.get(PS.subPos).second.Print());

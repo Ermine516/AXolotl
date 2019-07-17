@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 class AuxFunctionality {
@@ -102,7 +103,8 @@ class AuxFunctionality {
              newPS = new ProblemState();
              newPS.observe = ((DisplayUpdateHelper) ctx).PS.observe;
          }
-         newPS.anteCurrentRule = new Term[]{Const.HoleSelected, Const.HoleSelected};
+         newPS.anteCurrentRule = new ArrayList<>();
+         newPS.anteCurrentRule.add(Const.HoleSelected);
          return newPS;
      }
 
@@ -121,7 +123,7 @@ class AuxFunctionality {
     private static boolean parseProblemDefinition(ProblemState newPS, String[] parts) throws TermHelper.FormatException {
         if (parts.length < 3) throw new TermHelper().new FormatException();
         int anteSize = new Integer(parts[1]);
-        int succSize = new Integer(parts[1]);
+        int succSize = new Integer(parts[2]);
         if (parts.length != anteSize + succSize + 3) throw new TermHelper().new FormatException();
         newPS.anteProblem = new HashSet<>();
         newPS.succProblem = new HashSet<>();
@@ -144,12 +146,12 @@ class AuxFunctionality {
         if (parts.length < 2) throw new TermHelper().new FormatException();
         int anteSize = new Integer(parts[1]);
         if (parts.length != anteSize + 3) throw new TermHelper().new FormatException();
-        Term[] anteRule = new Term[anteSize];
+        ArrayList<Term> anteRule = new ArrayList<>();
         Term succRule = Const.HoleSelected;
         for (int i = 2; i < parts.length; i++) {
             succRule = TermHelper.parse(parts[i], newPS);
             if (!newPS.isIndexed(succRule)) throw new TermHelper().new FormatException();
-            else if (i != parts.length - 1) anteRule[i - 2] = TermHelper.parse(parts[i], newPS);
+            else if (i != parts.length - 1) anteRule.add(TermHelper.parse(parts[i], newPS));
         }
         newPS.Rules.add(new Pair<>(anteRule, succRule));
         return true;
@@ -180,7 +182,7 @@ class AuxFunctionality {
     }
 
 
-    static String RuleTermstoString(Pair<Term[], Term> rule, ProblemState PS) {
+    static String RuleTermstoString(Pair<ArrayList<Term>, Term> rule, ProblemState PS) {
         if (rule != null && rule.first != null && rule.second != null) {
             StringBuilder prefix = new StringBuilder();
             HashSet<String> vl = new HashSet<>();
@@ -188,15 +190,15 @@ class AuxFunctionality {
             vl.addAll(PS.VarList(rule.second));
             for (String t : vl) prefix.append("∀").append(t);
             String retString = (prefix.toString().compareTo("") != 0) ? prefix + "(Δ " : "Δ ";
-            if (rule.first.length > 0)
-                for (int i = 0; i < rule.first.length; i++)
-                    if (i == 0 && i != rule.first.length - 1)
-                        retString += ", " + rule.first[i].Print() + " , ";
-                    else if (0 == rule.first.length - 1)
-                        retString += ", " + rule.first[i].Print() + " ⊢ Δ , ";
-                    else if (i == rule.first.length - 1)
-                        retString += rule.first[i].Print() + " ⊢ Δ , ";
-                    else retString += rule.first[i].Print() + " , ";
+            if (rule.first.size() > 0)
+                for (int i = 0; i < rule.first.size(); i++)
+                    if (i == 0 && i != rule.first.size() - 1)
+                        retString += ", " + rule.first.get(i).Print() + " , ";
+                    else if (0 == rule.first.size() - 1)
+                        retString += ", " + rule.first.get(i).Print() + " ⊢ Δ , ";
+                    else if (i == rule.first.size() - 1)
+                        retString += rule.first.get(i).Print() + " ⊢ Δ , ";
+                    else retString += rule.first.get(i).Print() + " , ";
             else retString += "⊢ Δ , ";
             return retString + rule.second.Print() + ((prefix.toString().compareTo("") != 0) ? " )" : "");
         }

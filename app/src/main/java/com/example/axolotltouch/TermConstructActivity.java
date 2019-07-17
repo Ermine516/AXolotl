@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
@@ -52,12 +51,12 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
     private void FurtureProblemDisplay() {
         TextView lhs = this.findViewById(R.id.LeftSideTerm);
         TextView rhs = this.findViewById(R.id.RightSideProblem);
-        if (PS.selectedSide == 1) {
-            lhs.setText(PS.anteProblem[0].Print());
+        if (PS.anteSelectedPositions.size() == 0) {
+         /*   lhs.setText(PS.anteProblem[0].Print());
             Term temp = PS.anteCurrentRule[0].Dup();
             for (Pair<String, Term> s : PS.Substitutions)
                 temp = temp.replace(new Const(s.first), s.second);
-            rhs.setText(Html.fromHtml(temp.Print(PS.Substitutions.get(PS.subPos).second)));
+            rhs.setText(Html.fromHtml(temp.Print(PS.Substitutions.get(PS.subPos).second)));*/
         }
 
     }
@@ -117,7 +116,8 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
             try {
                 if (TermConstructActivity.this.PS.subPos == -1 || !PS.observe) {
                     TermConstructActivity.this.PS.subPos = -1;
-                    PS.selectedSide = -1;
+                    PS.anteSelectedPositions = new ArrayList<>();
+                    PS.succSelectedPosition = "";
                     PS.Substitutions = new ArrayList<>();
                     intent = new Intent(TermConstructActivity.this, MainActivity.class);
                     Toast.makeText(TermConstructActivity.this, "Select Rule and Problem Side", Toast.LENGTH_SHORT).show();

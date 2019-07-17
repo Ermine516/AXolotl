@@ -4,6 +4,7 @@ package com.example.axolotltouch;
 import androidx.core.util.Pair;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 class TermHelper {
@@ -96,6 +97,16 @@ class TermHelper {
             else if (left.subTerms().size() == right.subTerms().size() && left.subTerms().size() != 0)
                 for (int i = 0; i < left.subTerms().size(); i++)
                     ret.addAll(varTermMatch(left.subTerms().get(i), right.subTerms().get(i), PS));
+        return ret;
+    }
+
+    static HashMap<String, Term> varTermMatchMap(Term left, Term right, ProblemState PS) {
+        HashMap<String, Term> ret = new HashMap<>();
+        if (PS.VarList(left).size() == 0)
+            if (PS.Variables.contains(right.getSym())) ret.put(right.getSym(), left);
+            else if (left.subTerms().size() == right.subTerms().size() && left.subTerms().size() != 0)
+                for (int i = 0; i < left.subTerms().size(); i++)
+                    ret.putAll(varTermMatchMap(left.subTerms().get(i), right.subTerms().get(i), PS));
         return ret;
     }
 }

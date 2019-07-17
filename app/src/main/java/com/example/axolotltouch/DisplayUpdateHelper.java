@@ -30,6 +30,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Objects;
 
 import static com.example.axolotltouch.AuxFunctionality.PASSPROBLEMSTATE;
@@ -96,21 +97,44 @@ public abstract class DisplayUpdateHelper extends AppCompatActivity implements N
     }
 
     protected void swipeRightProblemStateUpdate() {
-        PS.History.add(new Pair<>(PS.selectedSide, new Pair<>(PS.Substitutions, new Pair<>(PS.anteCurrentRule[0].Dup(), PS.anteCurrentRule[1].Dup()))));
-        int anti = (PS.selectedSide == 1) ? 0 : 1;
-        Term temp = PS.anteCurrentRule[anti].Dup();
-        for (Pair<String, Term> s : PS.Substitutions)
-            temp = temp.replace(new Const(s.first), s.second);
-        PS.anteProblem[PS.selectedSide] = temp;
+        PS.History.add(new Pair<>(new Pair<>(PS.anteSelectedPositions, PS.succSelectedPosition), new Pair<>(PS.Substitutions, new Pair<>(PS.anteCurrentRule, PS.succCurrentRule.Dup()))));
+        if ((PS.anteSelectedPositions.size() != 0) ? true : false) {
+            Term temp = PS.succCurrentRule.Dup();
+            for (Pair<String, Term> s : PS.Substitutions)
+                temp = temp.replace(new Const(s.first), s.second);
+            HashSet<Term> newProblemAnte = new HashSet<>();
+            for (Term t : PS.anteProblem) {
+                boolean selectedTerm = false;
+                for (String s : PS.anteSelectedPositions)
+                    if (t.Print().compareTo(s) == 0) selectedTerm = true;
+                if (!selectedTerm) newProblemAnte.add(t.Dup());
+            }
+            newProblemAnte.add(temp);
+            PS.anteProblem = newProblemAnte;
+        } else {
+            ArrayList<Term> temp = new ArrayList<>();
+            for (Term t : PS.anteCurrentRule) temp.add(t.Dup());
+            for (Pair<String, Term> s : PS.Substitutions)
+                for (int i = 0; i < temp.size(); i++)
+                    temp.set(i, temp.get(i).replace(new Const(s.first), s.second));
+            HashSet<Term> newProblemsucc = new HashSet<>();
+            for (Term t : PS.anteProblem)
+                if (t.Print().compareTo(PS.succSelectedPosition) != 0) newProblemsucc.add(t);
+            for (Term t : temp) newProblemsucc.add(t);
+            PS.succProblem = newProblemsucc;
+        }
         PS.anteSelectedPositions = new ArrayList<>();
         PS.succSelectedPosition = "";
         PS.subPos = -1;
-        PS.anteCurrentRule = new Term[]{Const.HoleSelected, Const.HoleSelected};
+        PS.anteCurrentRule = new ArrayList<>();
+        PS.anteCurrentRule.add(Const.HoleSelected);
+        PS.succCurrentRule = Const.HoleSelected;
         PS.Substitutions = new ArrayList<>();
         PS.SubHistory = new HashMap<>();
-        if (PS.anteProblem[0].Print().compareTo(PS.anteProblem[1].Print()) == 0)
+        if (PS.anteProblem.containsAll(PS.succProblem) && PS.succProblem.containsAll(PS.anteProblem))
             Toast.makeText(DisplayUpdateHelper.this, "Congratulations! Problem Solved! ", Toast.LENGTH_SHORT).show();
         else Toast.makeText(DisplayUpdateHelper.this, "Rule Applied", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override

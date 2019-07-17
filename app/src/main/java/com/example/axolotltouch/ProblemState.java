@@ -19,15 +19,15 @@ public class ProblemState implements Parcelable {
     ArrayList<String> anteSelectedPositions;
     HashSet<Term> succProblem;
     String succSelectedPosition;
-    Term[] anteCurrentRule;
+    ArrayList<Term> anteCurrentRule;
     Term succCurrentRule;
 
     HashSet<String> Variables;
     ArrayList<String> Constants;
     ArrayList<Pair<String, Pair<Integer, Boolean>>> Functions;
     ArrayList<Pair<String, Term>> Substitutions;
-    ArrayList<Pair<Term[], Term>> Rules;
-    ArrayList<Pair<Integer, Pair<ArrayList<Pair<String, Term>>, Pair<Term, Term>>>> History;
+    ArrayList<Pair<ArrayList<Term>, Term>> Rules;
+    ArrayList<Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Pair<ArrayList<Term>, Term>>>> History;
     HashMap<String, ArrayList<Term>> SubHistory;
 
     public ProblemState() {
@@ -39,7 +39,8 @@ public class ProblemState implements Parcelable {
         succProblem = new HashSet<>();
         succProblem.add(Const.Hole);
         succSelectedPosition = "";
-        anteCurrentRule = new Term[]{Const.HoleSelected};
+        anteCurrentRule = new ArrayList<>();
+        anteCurrentRule.add(Const.HoleSelected);
         succCurrentRule = Const.HoleSelected.Dup();
 
         SubHistory = new HashMap<>();
@@ -71,8 +72,12 @@ public class ProblemState implements Parcelable {
             succProblemsize--;
         }
         succSelectedPosition = in.readString();
-        anteCurrentRule = new Term[in.readInt()];
-        in.readTypedArray(anteCurrentRule, Term.CREATOR);
+        int anteCurrentRuleSize = in.readInt();
+        anteCurrentRule = new ArrayList<>();
+        while (anteCurrentRuleSize > 0) {
+            anteCurrentRule.add(in.readTypedObject(Term.CREATOR));
+            anteCurrentRuleSize--;
+        }
         succCurrentRule = in.readTypedObject(Term.CREATOR);
         String[] tempVar = new String[in.readInt()];
         in.readStringArray(tempVar);
@@ -102,12 +107,12 @@ public class ProblemState implements Parcelable {
         if (rulesSize > 0)
         	while( rulesSize>0){
                 int ruleSize = in.readInt();
-                Term[] rule;
+                ArrayList<Term> rule;
                 if (ruleSize > 0) {
-                    rule = new Term[ruleSize];
+                    rule = new ArrayList<>();
                     for (int ri = 0; ri < ruleSize; ri++)
-                        rule[ri] = in.readTypedObject(Term.CREATOR);
-                } else rule = new Term[0];
+                        rule.add(in.readTypedObject(Term.CREATOR));
+                } else rule = new ArrayList<>();
                 Rules.add(new Pair<>(rule, in.readTypedObject(Term.CREATOR)));
 				rulesSize--;
 			}
@@ -116,21 +121,54 @@ public class ProblemState implements Parcelable {
 		History = new ArrayList<>();
 		if(hisSize!= 0){
 			while( hisSize>0){
-                int side = in.readInt();
-                int subhissize = in.readInt();
-                ArrayList<Pair<String, Term>> hissubs = new ArrayList<>();
-                if (subhissize != 0) {
-                    while (subhissize > 0) {
-                        String hisvar = in.readString();
-                        Term hissubterm = in.readTypedObject(Term.CREATOR);
-                        hissubs.add(new Pair<>(hisvar, hissubterm));
-                        subhissize--;
+                int side = in.readInt(); //either zero or one
+                if (side == 0) {
+                    int antesize = in.readInt();
+                    ArrayList<String> anteselected = new ArrayList<>();
+                    while (antesize > 0) anteselected.add(in.readString());
+
+                    int subhissize = in.readInt();
+                    ArrayList<Pair<String, Term>> hissubs = new ArrayList<>();
+                    if (subhissize != 0) {
+                        while (subhissize > 0) {
+                            String hisvar = in.readString();
+                            Term hissubterm = in.readTypedObject(Term.CREATOR);
+                            hissubs.add(new Pair<>(hisvar, hissubterm));
+                            subhissize--;
+                        }
                     }
+                    int hisruleleftsize = in.readInt();
+                    ArrayList<Term> hisruleleft = new ArrayList<>();
+                    while (hisruleleftsize > 0) {
+                        hisruleleft.add(in.readTypedObject(Term.CREATOR));
+                        hisruleleftsize--;
+                    }
+                    Term hisruleright = in.readTypedObject(Term.CREATOR);
+                    History.add(new Pair<>(new Pair<>(anteselected, ""), new Pair<>(hissubs, new Pair<>(hisruleleft, hisruleright))));
+                    hisSize--;
+                } else {
+                    String succside = in.readString();
+                    int subhissize = in.readInt();
+                    ArrayList<Pair<String, Term>> hissubs = new ArrayList<>();
+                    if (subhissize != 0) {
+                        while (subhissize > 0) {
+                            String hisvar = in.readString();
+                            Term hissubterm = in.readTypedObject(Term.CREATOR);
+                            hissubs.add(new Pair<>(hisvar, hissubterm));
+                            subhissize--;
+                        }
+                    }
+                    int hisruleleftsize = in.readInt();
+                    ArrayList<Term> hisruleleft = new ArrayList<>();
+                    while (hisruleleftsize > 0) {
+                        hisruleleft.add(in.readTypedObject(Term.CREATOR));
+                        hisruleleftsize--;
+                    }
+                    Term hisruleright = in.readTypedObject(Term.CREATOR);
+                    History.add(new Pair<>(new Pair<>(new ArrayList<String>(), succside), new Pair<>(hissubs, new Pair<>(hisruleleft, hisruleright))));
+                    hisSize--;
+
                 }
-                Term hisruleleft = in.readTypedObject(Term.CREATOR);
-                Term hisruleright = in.readTypedObject(Term.CREATOR);
-                History.add(new Pair<>(side, new Pair<>(hissubs, new Pair<>(hisruleleft, hisruleright))));
-				hisSize--;
 			}
 		}
         SubHistory = new HashMap<>();
@@ -216,8 +254,8 @@ HashSet<String> VarList(Term ti) {
         out.writeInt(succProblem.size());
         for (Term t : succProblem) out.writeTypedObject(t, flags);
         out.writeString(succSelectedPosition);
-        out.writeInt(anteCurrentRule.length);
-        out.writeTypedArray(anteCurrentRule, flags);
+        out.writeInt(anteCurrentRule.size());
+        for (Term t : anteCurrentRule) out.writeTypedObject(t, flags);
         out.writeTypedObject(succCurrentRule, flags);
 		out.writeInt(Variables.size());
 		out.writeStringArray(Variables.toArray(new String[0]));
@@ -235,21 +273,29 @@ HashSet<String> VarList(Term ti) {
             out.writeTypedObject(Substitutions.get(i).second, flags);
 		}
 		out.writeInt(Rules.size());
-        for (Pair<Term[], Term> rule : Rules) {
-            out.writeInt(rule.first.length);
-            for (int i = 0; i < rule.first.length; i++)
-                out.writeTypedObject(rule.first[i], flags);
+        for (Pair<ArrayList<Term>, Term> rule : Rules) {
+            out.writeInt(rule.first.size());
+            for (int i = 0; i < rule.first.size(); i++)
+                out.writeTypedObject(rule.first.get(i), flags);
             out.writeTypedObject(rule.second, flags);
         }
 		out.writeInt(History.size());
-        for (Pair<Integer, Pair<ArrayList<Pair<String, Term>>, Pair<Term, Term>>> his : History) {
-            out.writeInt(his.first);
+        for (Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Pair<ArrayList<Term>, Term>>> his : History) {
+            if (his.first.first.size() != 0) {
+                out.writeInt(0);
+                out.writeInt(his.first.first.size());
+                for (String s : his.first.first) out.writeString(s);
+            } else if (his.first.second.compareTo("") != 0) {
+                out.writeInt(1);
+                out.writeString(succSelectedPosition);
+            }
             out.writeInt(his.second.first.size());
             for (int i = 0; i < his.second.first.size(); i++) {
                 out.writeString(his.second.first.get(i).first);
                 out.writeTypedObject(his.second.first.get(i).second, flags);
             }
-            out.writeTypedObject(his.second.second.first, flags);
+            out.writeInt(his.second.second.first.size());
+            for (Term t : his.second.second.first) out.writeTypedObject(t, flags);
             out.writeTypedObject(his.second.second.second, flags);
         }
         out.writeInt(SubHistory.size());

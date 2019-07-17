@@ -45,6 +45,12 @@ public final class Const implements Term, Parcelable {
         else return Print();
     }
 
+    public String Print(String var, Term compare, Term t) {
+        if (compare.subTerms().size() == 0 && compare.getSym().compareTo(var) == 0 && t.subTerms().size() == 0 && t.getSym().compareTo(this.getSym()) == 0)
+            return "<font color=#ff0000>" + Print() + "</font>";
+        else return Print();
+    }
+
     public String toString() {
         return this.Sym;
     }

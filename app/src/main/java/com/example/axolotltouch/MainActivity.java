@@ -2,14 +2,10 @@ package com.example.axolotltouch;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,50 +62,15 @@ public class MainActivity extends DisplayUpdateHelper {
     }
 
     private void updateProblemSideDisplay(LinearLayout sl, Term[] t) {
-        for (int i = 0; i < t.length; i++) {
-            String Text = t[i].Print();
-            TextView TermText = new TextView(this);
-            TermText.setTextSize(40);
-            TermText.setText(Text);
-            TermText.setGravity(Gravity.CENTER);
-            TermText.setFreezesText(true);
-            TermText.setTextColor(Color.BLACK);
-            TermText.setBackgroundColor(Color.WHITE);
-            TermText.setLayoutParams(new FrameLayout.LayoutParams(Math.max(((int) TermText.getPaint().measureText(TermText.getText().toString()) + 20), 300), FrameLayout.LayoutParams.WRAP_CONTENT));
-            TermText.setOnClickListener(new SideSelectionListener());
-            LinearLayout problemScrollLayout = new LinearLayout(this);
-            problemScrollLayout.setLayoutParams(new FrameLayout.LayoutParams(Math.max(((int) TermText.getPaint().measureText(TermText.getText().toString()) + 20), 300), FrameLayout.LayoutParams.MATCH_PARENT, Gravity.CENTER));
-            problemScrollLayout.setOrientation(LinearLayout.VERTICAL);
-            problemScrollLayout.addView(TermText);
-            HorizontalScrollView ruleHScroll = new HorizontalScrollView(this);
-            ruleHScroll.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
-            ruleHScroll.addView(problemScrollLayout);
-            sl.addView(ruleHScroll);
-        }
-
+        for (int i = 0; i < t.length; i++)
+            sl.addView(scrollTextSelectConstruct(t[i].Print(), new SideSelectionListener(), this));
     }
 
     private void RuleDisplayUpdate() {
         LinearLayout RLVV = this.findViewById(R.id.RuleListVerticalLayout);
         RLVV.removeAllViewsInLayout();
-        for (int i = 0; i < PS.Rules.size(); i++) {
-            String Text = AuxFunctionality.RuleTermstoString(PS.Rules.get(i), PS);
-            TextView ruleText = new TextView(this);
-            ruleText.setTextSize(30);
-            ruleText.setText(Text);
-            ruleText.setGravity(Gravity.CENTER);
-            ruleText.setFreezesText(true);
-            ruleText.setLayoutParams(new TableRow.LayoutParams(((int) ruleText.getPaint().measureText(ruleText.getText().toString())) + 20, TableRow.LayoutParams.WRAP_CONTENT));
-            ruleText.setOnClickListener(new RuleSelectionListener());
-            LinearLayout ruleScrollLayout = new LinearLayout(this);
-            ruleScrollLayout.setLayoutParams(new FrameLayout.LayoutParams(((int) ruleText.getPaint().measureText(ruleText.getText().toString())) + 20, FrameLayout.LayoutParams.MATCH_PARENT, Gravity.NO_GRAVITY));
-            ruleScrollLayout.setOrientation(LinearLayout.VERTICAL);
-            ruleScrollLayout.addView(ruleText);
-            HorizontalScrollView ruleHScroll = new HorizontalScrollView(this);
-            ruleHScroll.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.NO_GRAVITY));
-            ruleHScroll.addView(ruleScrollLayout);
-            RLVV.addView(ruleHScroll);
-        }
+        for (int i = 0; i < PS.Rules.size(); i++)
+            RLVV.addView(scrollTextSelectConstruct(AuxFunctionality.RuleTermstoString(PS.Rules.get(i), PS), new RuleSelectionListener(), this));
     }
 
     protected class MainSwipeListener extends OnSwipeTouchListener {

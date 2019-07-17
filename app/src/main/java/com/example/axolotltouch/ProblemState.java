@@ -61,6 +61,7 @@ public class ProblemState implements Parcelable {
             anteProblemsize--;
         }
         int anteSelectedPositionssize = in.readInt();
+        anteSelectedPositions = new ArrayList<>();
         while (anteSelectedPositionssize > 0) {
             anteSelectedPositions.add(in.readString());
             anteSelectedPositionssize--;

@@ -38,8 +38,8 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
         String var = PS.Substitutions.get(PS.subPos).first;
         if (MatchDisplayActivity.this.PS.anteSelectedPositions.size() == 0) {
             Term succTerm = PS.getSelectedSuccTerm();
-            lhs.setText(Html.fromHtml(succTerm.Print(new Const(var))));
-            rhs.setText(Html.fromHtml(PS.succCurrentRule.Print(PS.Substitutions.get(PS.subPos).second)));
+            lhs.setText(Html.fromHtml(PS.succCurrentRule.Print(new Const(var))));
+            rhs.setText(Html.fromHtml(succTerm.Print(var, PS.succCurrentRule, PS.Substitutions.get(PS.subPos).second)));
         } else {
             ArrayList<Term> anteTerm = PS.getSelectedAnteTerm();
         }

@@ -6,11 +6,15 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -163,6 +167,27 @@ public abstract class DisplayUpdateHelper extends AppCompatActivity implements N
         DrawerLayout drawer = findViewById(R.id.Drawer);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public HorizontalScrollView scrollTextSelectConstruct(String text, View.OnClickListener lis, Context ctx) {
+        TextView TermText = new TextView(ctx);
+        TermText.setTextSize(40);
+        TermText.setText(text);
+        TermText.setGravity(Gravity.CENTER);
+        TermText.setFreezesText(true);
+        TermText.setTextColor(Color.BLACK);
+        TermText.setBackgroundColor(Color.WHITE);
+        TermText.setLayoutParams(new FrameLayout.LayoutParams(((int) TermText.getPaint().measureText(TermText.getText().toString()) + 20), FrameLayout.LayoutParams.WRAP_CONTENT));
+        TermText.setOnClickListener(lis);
+        LinearLayout scrollLayout = new LinearLayout(this);
+        scrollLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.MATCH_PARENT, Gravity.CENTER));
+        scrollLayout.setOrientation(LinearLayout.VERTICAL);
+        scrollLayout.addView(TermText);
+        HorizontalScrollView HScroll = new HorizontalScrollView(this);
+        HScroll.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
+        HScroll.addView(scrollLayout);
+
+        return HScroll;
     }
 
     protected abstract class OnSwipeTouchListener implements View.OnTouchListener {

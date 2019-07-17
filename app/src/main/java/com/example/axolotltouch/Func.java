@@ -84,7 +84,6 @@ public final class Func implements Term, Parcelable {
         }
 
     }
-
     public String Print(Term t) {
         if (TermHelper.TermMatch(this, t)) return "<font color=#ff0000>" + this.Print() + "</font>";
         else {
@@ -101,6 +100,46 @@ public final class Func implements Term, Parcelable {
                 String ss = tt.Print(t);
                 if (this.Args.size() > 0) s.append(ss).append(")");
                 return s.toString();
+            }
+        }
+    }
+
+    public String Print(String var, Term compare, Term t) {
+        System.out.println(var + "  " + compare.Print() + "  " + t.Print());
+        if (compare.subTerms().size() == 0 && compare.getSym().compareTo(var) == 0 && TermHelper.TermMatch(this, t))
+            return "<font color=#ff0000>" + this.Print() + "</font>";
+        else {
+            if (this.Args.size() == 2 && infix) {
+                if (compare.subTerms().size() != 0) {
+                    String s = "(";
+                    s += this.Args.get(0).Print(var, compare.subTerms().get(0), t) + " " + this.getSym() + " " + this.Args.get(1).Print(var, compare.subTerms().get(1), t);
+                    return s + ")";
+                } else {
+                    String s = "(";
+                    s += this.Args.get(0).Print(var, compare, t) + " " + this.getSym() + " " + this.Args.get(1).Print(var, compare, t);
+                    return s + ")";
+                }
+            } else {
+                if (compare.subTerms().size() != 0) {
+                    StringBuilder s = new StringBuilder(Sym + "(");
+                    int i = 0;
+                    for (; i < (this.Args.size() - 1); i++)
+                        s.append(this.Args.get(i).Print(var, compare.subTerms().get(i), t)).append(",");
+                    Term tt = this.Args.get(i);
+                    String ss = tt.Print(var, compare.subTerms().get(i), t);
+                    if (this.Args.size() > 0) s.append(ss).append(")");
+                    return s.toString();
+                } else {
+                    StringBuilder s = new StringBuilder(Sym + "(");
+                    int i = 0;
+                    for (; i < (this.Args.size() - 1); i++)
+                        s.append(this.Args.get(i).Print(var, compare, t)).append(",");
+                    Term tt = this.Args.get(i);
+                    String ss = tt.Print(var, compare, t);
+                    if (this.Args.size() > 0) s.append(ss).append(")");
+                    return s.toString();
+                }
+
             }
         }
     }

@@ -23,8 +23,9 @@ public interface Term extends Parcelable {
 			return new Term[size];
 		}
     };
-
     String Print(Term t);
+
+    String Print(String var, Term compare, Term t);
 
     HashMap<String, HashSet<Integer>> basicTerms();
 

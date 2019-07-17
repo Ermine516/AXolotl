@@ -44,5 +44,15 @@
                 android:title="@string/Problem1" />
         </menu>
     </item>
+    <item android:title="Miscellaneous">
+        <menu>
+            <item
+                android:id="@+id/misc01"
+                android:title="Misc01" />
+            <item
+                android:id="@+id/misc02"
+                android:title="Misc02" />
+        </menu>
+    </item>
 
 </menu>

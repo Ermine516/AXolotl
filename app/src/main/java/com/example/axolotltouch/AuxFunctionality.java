@@ -15,7 +15,7 @@ import java.util.HashSet;
 class AuxFunctionality {
       static final String PASSPROBLEMSTATE = "com.example.android.AXolotlTouch.extra.problemstate";
     static final int READ_REQUEST_CODE = 42;
-    private static final String nameParseRegex = "[a-zA-Z&\\u2227\\u2228\\u00AC\\u21D2\\u21D4\\u2284\\u2285\\u22A4\\u25A1\\u25C7]+";
+    private static final String nameParseRegex = "[a-zA-Z&\\u2227\\u2228\\u00AC\\u21D2\\u21D4\\u2284\\u2285\\u22A4\\u25A1\\u25C7\\u25E6]+";
 
      static void SideMenuItems(int id, Activity ctx, ProblemState PS) {
         Intent intent = null;
@@ -36,6 +36,14 @@ class AuxFunctionality {
             PS = newPS;
         } else if (id == R.id.modalProblem01) {
             ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.modal1), "modal1.txt", ctx);
+            intent = new Intent(ctx, MainActivity.class);
+            PS = newPS;
+        } else if (id == R.id.misc01) {
+            ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.misc1), "misc1.txt", ctx);
+            intent = new Intent(ctx, MainActivity.class);
+            PS = newPS;
+        } else if (id == R.id.misc02) {
+            ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.misc2), "misc2.txt", ctx);
             intent = new Intent(ctx, MainActivity.class);
             PS = newPS;
         } else if (id == R.id.ViewProof) {

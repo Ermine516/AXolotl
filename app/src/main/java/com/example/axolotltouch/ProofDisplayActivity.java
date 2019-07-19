@@ -14,9 +14,6 @@ public class ProofDisplayActivity extends DisplayUpdateHelper{
         PS = ConstructActivity(savedInstanceState);
         ActivityDecorate();
     }
-
-    void setPS(ProblemState ps){ PS = ps; }
-    ProblemState getPS(){ return PS;}
     protected void ActivityDecorate() {
        return;
     }

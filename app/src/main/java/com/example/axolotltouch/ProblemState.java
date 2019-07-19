@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import androidx.core.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -83,17 +84,17 @@ public class ProblemState implements Parcelable {
         String[] tempVar = new String[in.readInt()];
         in.readStringArray(tempVar);
         Variables = new HashSet<>();
-        for (String t: tempVar) Variables.add(t);
+        Variables.addAll(Arrays.asList(tempVar));
         String[] tempConst = new String[in.readInt()];
         in.readStringArray(tempConst);
         Constants = new ArrayList<>();
-        for (String t: tempConst) Constants.add(t);
+        Constants.addAll(Arrays.asList(tempConst));
         Functions = new ArrayList<>();
         int funcSize = in.readInt();
         for (int i = 0; i < funcSize; i++) {
             String key = in.readString();
             int arity = in.readInt();
-            boolean infix = (in.readInt() == 1) ? true : false;
+            boolean infix = in.readInt() == 1;
             Functions.add(new Pair<>(key, new Pair<>(arity, infix)));
         }
         Substitutions = new ArrayList<>();
@@ -171,7 +172,6 @@ public class ProblemState implements Parcelable {
                     Term hisruleright = in.readTypedObject(Term.CREATOR);
                     History.add(new Pair<>(new Pair<>(new ArrayList<String>(), succside), new Pair<>(hissubs, new Pair<>(hisruleleft, hisruleright))));
                     hisSize--;
-
                 }
 			}
 		}
@@ -186,68 +186,15 @@ public class ProblemState implements Parcelable {
         }
     }
 
-    public void setProblem(HashSet<Term> ante, HashSet<Term> succ) {
-        anteProblem = new HashSet<>();
-        for (Term t : ante) anteProblem.add(t.Dup());
-        succProblem = new HashSet<>();
-        for (Term t : succ) succProblem.add(t.Dup());
-
-    }
-//This method checks if the given problem Term is properly constructed
-//i.e. variable free and functions and constants are used correctly
-boolean ProperProblemTerm(Term prob) {
-		boolean ret = true;
-		for (String t: this.Constants) if(t.compareTo(prob.getSym())==0 && prob.Print().contains("(")) ret =false;
-		if(ret) for (String t: this.Variables) if(t.compareTo(prob.getSym())==0) ret =false;
-    if (ret) for (Pair<String, Pair<Integer, Boolean>> t : this.Functions)
-        if (t.first.compareTo(prob.getSym()) == 0 && prob.Print().contains("(") && prob.subTerms().size() != t.second.first)
-            ret = false;
-		if(prob instanceof Func)
-            for (Term t : prob.subTerms()) ret &= ProperProblemTerm(t);
-		return ret;
-	}
-
-//Checks if every symbol within a term is indexed
-boolean isIndexed(Term ti) {
-		boolean result = true;
-		if(ti instanceof Func) {
-            for (Term t : ti.subTerms()) result &= isIndexed(t);
-            boolean contained = false;
-            boolean sameArity = false;
-            for (Pair<String, Pair<Integer, Boolean>> p : Functions) {
-                if (ti.getSym().compareTo(p.first) == 0) {
-                    contained = true;
-                    if (p.second.first == ti.subTerms().size()) sameArity = true;
-                }
-
-            }
-            return contained && sameArity && result;
-		}
-		else return Constants.contains(ti.getSym()) || Variables.contains(ti.getSym());
-	}
-
-    public boolean containsFunctionsymbol(String func) {
-        boolean contained = false;
-        for (Pair<String, Pair<Integer, Boolean>> p : Functions)
-            if (func.compareTo(p.first) == 0) contained = true;
-        return contained;
-    }
-//Finds all variables within a term
-HashSet<String> VarList(Term ti) {
-    HashSet<String> vl = new HashSet<>();
-    if (ti instanceof Func) for (Term t : ti.subTerms()) vl.addAll(VarList(t));
-		else for (String t: this.Variables) if(t.compareTo(ti.getSym())==0) vl.add(ti.getSym());
-	    return vl;
-
-	}
-
-    @Override
-    public int describeContents() {
-        return 0;
+    static Term getTermByString(String succSelectedPosition, HashSet<Term> succProblem) {
+        for (Term t : succProblem)
+            if (t.Print().compareTo(succSelectedPosition) == 0) return t.Dup();
+        return null;
     }
 
     // write your object's data to the passed-in Parcel
     @Override
+    @SuppressWarnings("ConstantConditions")
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(subPos);
         out.writeInt((observe) ? 1 : 0);
@@ -312,20 +259,20 @@ HashSet<String> VarList(Term ti) {
         }
     }
 
-    public Term getSelectedSuccTerm() {
+    Term getSelectedSuccTerm() {
         for (Term t : succProblem) if (t.Print().compareTo(succSelectedPosition) == 0) return t;
         return null;
     }
 
-    public HashSet<Term> replaceSelectedSuccTerm(ArrayList<Term> replacement) {
+    HashSet<Term> replaceSelectedSuccTerm(ArrayList<Term> replacement) {
         HashSet<Term> succupdate = new HashSet<>();
         for (Term t : succProblem)
             if (t.Print().compareTo(succSelectedPosition) != 0) succupdate.add(t);
-            else for (Term s : replacement) succupdate.add(s);
+            else succupdate.addAll(replacement);
         return succupdate;
     }
 
-    public HashSet<Term> replaceSelectedAnteTerms(Term replacement) {
+    HashSet<Term> replaceSelectedAnteTerms(Term replacement) {
         HashSet<Term> anteUpdate = new HashSet<>();
         boolean replaced = false;
         for (Term t : anteProblem)
@@ -337,8 +284,7 @@ HashSet<String> VarList(Term ti) {
         return anteUpdate;
     }
 
-
-    public ArrayList<Term> getSelectedAnteTerm() {
+    ArrayList<Term> getSelectedAnteTerm() {
         ArrayList<Term> termlist = new ArrayList<>();
         for (Term t : anteProblem)
             for (String s : anteSelectedPositions)
@@ -347,7 +293,71 @@ HashSet<String> VarList(Term ti) {
 
 
     }
-    // this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
+
+    String RuleTermstoString(Pair<ArrayList<Term>, Term> rule) {
+        if (rule != null && rule.first != null && rule.second != null) {
+            StringBuilder prefix = new StringBuilder();
+            HashSet<String> vl = new HashSet<>();
+            for (Term t : rule.first) vl.addAll(this.VarList(t));
+            vl.addAll(this.VarList(rule.second));
+            for (String t : vl) prefix.append("∀").append(t);
+            StringBuilder retString = new StringBuilder((prefix.toString().compareTo("") != 0) ? prefix + "(Δ " : "Δ ");
+            if (rule.first.size() > 0)
+                for (int i = 0; i < rule.first.size(); i++)
+                    if (i == 0 && i != rule.first.size() - 1)
+                        retString.append(", ").append(rule.first.get(i).Print()).append(" , ");
+                    else if (0 == rule.first.size() - 1)
+                        retString.append(", ").append(rule.first.get(i).Print()).append(" ⊢ Δ , ");
+                    else if (i == rule.first.size() - 1)
+                        retString.append(rule.first.get(i).Print()).append(" ⊢ Δ , ");
+                    else retString.append(rule.first.get(i).Print()).append(" , ");
+            else retString.append("⊢ Δ , ");
+            return retString + rule.second.Print() + ((prefix.toString().compareTo("") != 0) ? " )" : "");
+        } else return "";
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    boolean containsFunctionsymbol(String func) {
+        boolean contained = true;
+        for (Pair<String, Pair<Integer, Boolean>> p : Functions)
+            if (func.compareTo(p.first) == 0) contained = false;
+        return contained;
+    }
+
+    //Finds all variables within a term
+    HashSet<String> VarList(Term ti) {
+        HashSet<String> vl = new HashSet<>();
+        if (ti instanceof Func) for (Term t : ti.subTerms()) vl.addAll(VarList(t));
+        else for (String t : this.Variables) if (t.compareTo(ti.getSym()) == 0) vl.add(ti.getSym());
+        return vl;
+
+    }
+
+    //Checks if every symbol within a term is indexed
+    @SuppressWarnings("ConstantConditions")
+    boolean isIndexed(Term ti) {
+        boolean result = true;
+        if (ti instanceof Func) {
+            for (Term t : ti.subTerms()) result &= isIndexed(t);
+            boolean contained = false;
+            boolean sameArity = false;
+            for (Pair<String, Pair<Integer, Boolean>> p : Functions) {
+                if (ti.getSym().compareTo(p.first) == 0) {
+                    contained = true;
+                    if (p.second.first == ti.subTerms().size()) sameArity = true;
+                }
+
+            }
+            return contained && sameArity && result;
+        } else return Constants.contains(ti.getSym()) || Variables.contains(ti.getSym());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+
     public static final Parcelable.Creator<ProblemState> CREATOR = new Parcelable.Creator<ProblemState>() {
         public ProblemState createFromParcel(Parcel in) {
             return new ProblemState(in);

@@ -28,6 +28,7 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
         ActivityDecorate();
     }
 
+    @SuppressWarnings("ConstantConditions")
     protected void ActivityDecorate() {
         TextView varDisplay = this.findViewById(R.id.VarTextview);
         TextView subDisplay = this.findViewById(R.id.SubTermTextView);
@@ -45,10 +46,10 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
             for (Term t : PS.anteCurrentRule)
                 leftTerm.addView(scrollTextSelectConstruct(t.Print(new Const(var)), null, this, true));
             for (Term t : anteTerm)
-                one:for (Term s : PS.anteCurrentRule)
+                for (Term s : PS.anteCurrentRule)
                     if (PS.VarList(s).contains(var)) {
                         rightTerm.addView(scrollTextSelectConstruct(t.Print(var, s, PS.Substitutions.get(PS.subPos).second), null, this, true));
-                        break one;
+                        break;
                     }
         }
 
@@ -90,6 +91,7 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
             return true;
         }
 
+        @SuppressWarnings("ConstantConditions")
         public boolean onSwipeRight() {
             ProblemState PS = MatchDisplayActivity.this.PS;
             Intent intent;

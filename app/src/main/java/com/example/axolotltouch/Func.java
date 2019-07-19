@@ -155,6 +155,7 @@ public final class Func implements Term, Parcelable {
     }
 
     //Finds all the term symbols in the term tree
+    @SuppressWarnings("ConstantConditions")
     public HashMap<String, HashSet<Integer>> basicTerms() {
         HashMap<String, HashSet<Integer>> result = new HashMap<>();
         HashSet<Integer> temp3 = new HashSet<>();

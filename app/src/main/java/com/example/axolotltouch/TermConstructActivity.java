@@ -49,6 +49,7 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
         TermDisplayUpdate();
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void FurtureProblemDisplay() {
         ProblemState PS = TermConstructActivity.this.PS;
         ArrayList<Pair<String, Term>> localSubstitution = new ArrayList<>();
@@ -77,6 +78,7 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
 
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void UpdateTermDisplay() {
         TextView td = this.findViewById(R.id.TermDisplay);
         LinearLayout ltd = this.findViewById(R.id.TermInstancceLayout);
@@ -86,6 +88,7 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
         ltd.setMinimumWidth((width > 75) ? width : 75);
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void TermDisplayUpdate() {
         LinearLayout RLVV = this.findViewById(R.id.TermSelectionLayout);
         RLVV.removeAllViewsInLayout();
@@ -126,6 +129,7 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
             super(ctx);
         }
 
+        @SuppressWarnings("ConstantConditions")
         public boolean onSwipeLeft() {
             PS.subPos--;
             Intent intent;
@@ -154,6 +158,7 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
             return true;
         }
 
+        @SuppressWarnings("ConstantConditions")
         public boolean onSwipeRight() {
             ProblemState PS = TermConstructActivity.this.PS;
             Intent intent;
@@ -185,6 +190,7 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private class SymbolSelectionListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
@@ -209,6 +215,7 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private class UndoSubstitutionListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {

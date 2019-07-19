@@ -37,8 +37,8 @@ import static com.example.axolotltouch.AuxFunctionality.PASSPROBLEMSTATE;
 
 public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
     Switch switcher;
-     protected abstract void ActivityDecorate();
 
+    protected abstract void ActivityDecorate();
 
     protected ProblemState ConstructActivity(Bundle in) {
          Toolbar toolbar = findViewById(R.id.toolbar);
@@ -62,7 +62,6 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
         return PS;
      }
 
-
     protected void swipeRightProblemStateUpdate() {
         PS.History.add(new Pair<>(new Pair<>(PS.anteSelectedPositions, PS.succSelectedPosition), new Pair<>(PS.Substitutions, new Pair<>(PS.anteCurrentRule, PS.succCurrentRule.Dup()))));
         if ((PS.anteSelectedPositions.size() != 0)) {
@@ -84,10 +83,11 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
             for (Pair<String, Term> s : PS.Substitutions)
                 for (int i = 0; i < temp.size(); i++)
                     temp.set(i, temp.get(i).replace(new Const(s.first), s.second));
-            HashSet<Term> newProblemsucc = new HashSet<>();
+            HashSet<Term> newProblemsucc;
+            newProblemsucc = new HashSet<>();
             for (Term t : PS.succProblem)
                 if (t.Print().compareTo(PS.succSelectedPosition) != 0) newProblemsucc.add(t);
-            for (Term t : temp) newProblemsucc.add(t);
+            newProblemsucc.addAll(temp);
             PS.succProblem = newProblemsucc;
 
         }
@@ -106,6 +106,7 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
     }
 
     @Override
+    @SuppressWarnings("ConstantConditions")
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
         if (requestCode == AuxFunctionality.READ_REQUEST_CODE) {
@@ -170,7 +171,7 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
         LinearLayout RLVV = this.findViewById(R.id.RuleListVerticalLayout);
         RLVV.removeAllViewsInLayout();
         for (int i = 0; i < PS.Rules.size(); i++)
-            RLVV.addView(scrollTextSelectConstruct(AuxFunctionality.RuleTermstoString(PS.Rules.get(i), PS), new DisplayUpdateHelper.RuleSelectionListener(), this, false));
+            RLVV.addView(scrollTextSelectConstruct(PS.RuleTermstoString(PS.Rules.get(i)), new DisplayUpdateHelper.RuleSelectionListener(), this, false));
     }
 
 

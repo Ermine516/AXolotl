@@ -97,7 +97,6 @@ class AuxFunctionality {
                      parsevariableSymbol(newPS, parts);
                  else throw new IOException();
              }
-//**********************************************Parsing Variables from file***************************************************
          } catch (Exception ex) {
              Toast.makeText(ctx, "Syntax error on line " + lineCount + " of " + file + ".", Toast.LENGTH_SHORT).show();
              newPS = new ProblemState();
@@ -115,7 +114,7 @@ class AuxFunctionality {
         if (name.toString().matches("[a-zA-Z]+")
                 && !newPS.Variables.contains(name.toString())
                 && !newPS.Constants.contains(name.toString())
-                && !newPS.containsFunctionsymbol(name.toString()))
+                && newPS.containsFunctionsymbol(name.toString()))
             newPS.Variables.add(name.toString());
         else throw new TermHelper().new FormatException();
     }
@@ -177,35 +176,12 @@ class AuxFunctionality {
                 && arity.toString().matches("[0-9]+")
                 && !PS.Variables.contains(name.toString())
                 && !PS.Constants.contains(name.toString())
-                && !PS.containsFunctionsymbol(name.toString())) {
+                && PS.containsFunctionsymbol(name.toString())) {
             if (Integer.parseInt(arity.toString()) == 0) PS.Constants.add(name.toString());
             else
                 PS.Functions.add(new Pair<>(name.toString(), new Pair<>(Integer.parseInt(arity.toString()), infix)));
         } else throw new TermHelper().new FormatException();
     }
 
-
-    static String RuleTermstoString(Pair<ArrayList<Term>, Term> rule, ProblemState PS) {
-        if (rule != null && rule.first != null && rule.second != null) {
-            StringBuilder prefix = new StringBuilder();
-            HashSet<String> vl = new HashSet<>();
-            for (Term t : rule.first) vl.addAll(PS.VarList(t));
-            vl.addAll(PS.VarList(rule.second));
-            for (String t : vl) prefix.append("∀").append(t);
-            StringBuilder retString = new StringBuilder((prefix.toString().compareTo("") != 0) ? prefix + "(Δ " : "Δ ");
-            if (rule.first.size() > 0)
-                for (int i = 0; i < rule.first.size(); i++)
-                    if (i == 0 && i != rule.first.size() - 1)
-                        retString.append(", ").append(rule.first.get(i).Print()).append(" , ");
-                    else if (0 == rule.first.size() - 1)
-                        retString.append(", ").append(rule.first.get(i).Print()).append(" ⊢ Δ , ");
-                    else if (i == rule.first.size() - 1)
-                        retString.append(rule.first.get(i).Print()).append(" ⊢ Δ , ");
-                    else retString.append(rule.first.get(i).Print()).append(" , ");
-            else retString.append("⊢ Δ , ");
-            return retString + rule.second.Print() + ((prefix.toString().compareTo("") != 0) ? " )" : "");
-        }
-        else return "";
-    }
 
 }

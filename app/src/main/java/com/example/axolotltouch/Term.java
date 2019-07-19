@@ -42,5 +42,9 @@ public interface Term extends Parcelable {
     Term Dup();
 
     String toString();
+
+    boolean equals(Object o);
+
+    int hashCode();
 }
 

@@ -3,15 +3,12 @@ package com.example.axolotltouch;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.GestureDetector;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
@@ -20,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.util.Pair;
 import androidx.core.view.GravityCompat;
@@ -39,25 +35,9 @@ import java.util.Objects;
 
 import static com.example.axolotltouch.AuxFunctionality.PASSPROBLEMSTATE;
 
-public abstract class DisplayUpdateHelper extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-    ProblemState PS;
+public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
     Switch switcher;
      protected abstract void ActivityDecorate();
-
-    public void textViewSelected(TextView v) {
-        v.setBackgroundColor(Color.BLACK);
-        v.setTextColor(Color.WHITE);
-    }
-
-    public void textViewUnselected(TextView v) {
-        v.setBackgroundColor(Color.WHITE);
-        v.setTextColor(Color.BLACK);
-    }
-
-    public boolean isNotSelected(TextView v) {
-        if (((ColorDrawable) v.getBackground()).getColor() == Color.BLACK) return false;
-        else return true;
-    }
 
 
     protected ProblemState ConstructActivity(Bundle in) {
@@ -81,28 +61,11 @@ public abstract class DisplayUpdateHelper extends AppCompatActivity implements N
         switcher.setOnCheckedChangeListener(new ObservationListener());
         return PS;
      }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.overflowmenu, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        AuxFunctionality.OverflowMenuSelected(item.getItemId(),this);
-        return super.onOptionsItemSelected(item);
-    }
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.Drawer);
-        if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START);
-        else super.onBackPressed();
-
-    }
 
     protected void swipeRightProblemStateUpdate() {
         PS.History.add(new Pair<>(new Pair<>(PS.anteSelectedPositions, PS.succSelectedPosition), new Pair<>(PS.Substitutions, new Pair<>(PS.anteCurrentRule, PS.succCurrentRule.Dup()))));
-        if ((PS.anteSelectedPositions.size() != 0) ? true : false) {
+        if ((PS.anteSelectedPositions.size() != 0)) {
             Term temp = PS.succCurrentRule.Dup();
             for (Pair<String, Term> s : PS.Substitutions)
                 temp = temp.replace(new Const(s.first), s.second);
@@ -122,7 +85,7 @@ public abstract class DisplayUpdateHelper extends AppCompatActivity implements N
                 for (int i = 0; i < temp.size(); i++)
                     temp.set(i, temp.get(i).replace(new Const(s.first), s.second));
             HashSet<Term> newProblemsucc = new HashSet<>();
-            for (Term t : PS.anteProblem)
+            for (Term t : PS.succProblem)
                 if (t.Print().compareTo(PS.succSelectedPosition) != 0) newProblemsucc.add(t);
             for (Term t : temp) newProblemsucc.add(t);
             PS.succProblem = newProblemsucc;
@@ -169,65 +132,45 @@ public abstract class DisplayUpdateHelper extends AppCompatActivity implements N
         return true;
     }
 
-    public HorizontalScrollView scrollTextSelectConstruct(String text, View.OnClickListener lis, Context ctx) {
+    public HorizontalScrollView scrollTextSelectConstruct(String text, View.OnClickListener lis, Context ctx, boolean gravity) {
         TextView TermText = new TextView(ctx);
         TermText.setTextSize(40);
-        TermText.setText(text);
-        TermText.setGravity(Gravity.CENTER);
+        TermText.setText(Html.fromHtml(text));
+        if (gravity) TermText.setGravity(Gravity.CENTER);
         TermText.setFreezesText(true);
         TermText.setTextColor(Color.BLACK);
         TermText.setBackgroundColor(Color.WHITE);
         TermText.setLayoutParams(new FrameLayout.LayoutParams(((int) TermText.getPaint().measureText(TermText.getText().toString()) + 20), FrameLayout.LayoutParams.WRAP_CONTENT));
-        TermText.setOnClickListener(lis);
+        if (lis != null) TermText.setOnClickListener(lis);
         LinearLayout scrollLayout = new LinearLayout(this);
-        scrollLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.MATCH_PARENT, Gravity.CENTER));
+        scrollLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.MATCH_PARENT, (gravity) ? Gravity.CENTER : Gravity.NO_GRAVITY));
         scrollLayout.setOrientation(LinearLayout.VERTICAL);
         scrollLayout.addView(TermText);
         HorizontalScrollView HScroll = new HorizontalScrollView(this);
-        HScroll.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
+        HScroll.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT, (gravity) ? Gravity.CENTER : Gravity.NO_GRAVITY));
         HScroll.addView(scrollLayout);
 
         return HScroll;
     }
 
-    protected abstract class OnSwipeTouchListener implements View.OnTouchListener {
-        private final GestureDetector gestureDetector;
-
-        OnSwipeTouchListener(Context context) {
-            gestureDetector = new GestureDetector(context, new GestureListener());
-        }
-
-        public abstract boolean onSwipeLeft();
-
-        public abstract boolean onSwipeRight();
-
-        public boolean onTouch(View v, MotionEvent event) {
-            return gestureDetector.onTouchEvent(event);
-        }
-
-        private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
-            private static final int SWIPE_DISTANCE_THRESHOLD = 75;
-            private static final int SWIPE_VELOCITY_THRESHOLD = 1000;
-
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                float distanceX = e2.getX() - e1.getX(), distanceY = e2.getY() - e1.getY();
-                if (Math.abs(distanceX) > Math.abs(distanceY) && Math.abs(distanceX) > SWIPE_DISTANCE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD)
-                    if (distanceX > 0) return onSwipeRight();
-                    else return onSwipeLeft();
-                else return false;
-            }
-        }
+    protected void updateProblemSideDisplay(LinearLayout sl, Term[] t) {
+        sl.removeAllViewsInLayout();
+        for (int i = 0; i < t.length; i++)
+            sl.addView(scrollTextSelectConstruct(t[i].Print(), new DisplayUpdateHelper.SideSelectionListener(), this, true));
     }
 
-    protected class ObservationListener implements CompoundButton.OnCheckedChangeListener {
-        ObservationListener() {
-            super();
-        }
-
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            DisplayUpdateHelper.this.PS.observe = isChecked;
-        }
+    protected void updatefutureProblemSideDisplay(LinearLayout sl, Term[] t) {
+        sl.removeAllViewsInLayout();
+        for (int i = 0; i < t.length; i++)
+            sl.addView(scrollTextSelectConstruct(t[i].Print(), null, this, false));
     }
+
+    protected void RuleDisplayUpdate() {
+        LinearLayout RLVV = this.findViewById(R.id.RuleListVerticalLayout);
+        RLVV.removeAllViewsInLayout();
+        for (int i = 0; i < PS.Rules.size(); i++)
+            RLVV.addView(scrollTextSelectConstruct(AuxFunctionality.RuleTermstoString(PS.Rules.get(i), PS), new DisplayUpdateHelper.RuleSelectionListener(), this, false));
+    }
+
 
 }

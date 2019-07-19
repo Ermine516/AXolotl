@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.util.Pair;
@@ -58,20 +56,8 @@ public class MainActivity extends DisplayUpdateHelper {
     private void UpdateProblemDisplay() {
         updateProblemSideDisplay((LinearLayout) this.findViewById(R.id.LeftSideTermLayout), PS.anteProblem.toArray(new Term[1]));
         updateProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), PS.succProblem.toArray(new Term[1]));
-
     }
 
-    private void updateProblemSideDisplay(LinearLayout sl, Term[] t) {
-        for (int i = 0; i < t.length; i++)
-            sl.addView(scrollTextSelectConstruct(t[i].Print(), new SideSelectionListener(), this));
-    }
-
-    private void RuleDisplayUpdate() {
-        LinearLayout RLVV = this.findViewById(R.id.RuleListVerticalLayout);
-        RLVV.removeAllViewsInLayout();
-        for (int i = 0; i < PS.Rules.size(); i++)
-            RLVV.addView(scrollTextSelectConstruct(AuxFunctionality.RuleTermstoString(PS.Rules.get(i), PS), new RuleSelectionListener(), this));
-    }
 
     protected class MainSwipeListener extends OnSwipeTouchListener {
         MainSwipeListener(Context ctx) {
@@ -143,12 +129,17 @@ public class MainActivity extends DisplayUpdateHelper {
                                     occurences.add(p.first);
                                 }
                             PS.Substitutions = subCleaned;
+                            HashSet<String> singleSide = new HashSet<>();
                             for (Term t : PS.anteCurrentRule) {
                                 HashSet<String> vars = PS.VarList(t);
-                                for (String s : PS.VarList(PS.succCurrentRule))
-                                    if (!vars.contains(s))
-                                        PS.Substitutions.add(new Pair<>(s, Const.HoleSelected.Dup()));
+                                for (String s : vars)
+                                    if (!PS.VarList(PS.succCurrentRule).contains(s))
+                                        singleSide.add(s);
                             }
+                            for (String s : singleSide)
+                                PS.Substitutions.add(new Pair<>(s, Const.HoleSelected.Dup()));
+                            System.out.println("number of vars" + PS.Substitutions.get(0).first + "  " + PS.Substitutions.get(0).second);
+                            System.out.println("number of vars" + PS.Substitutions.get(1).first + "  " + PS.Substitutions.get(1).second);
 
                             PS.subPos = 0;
                             if (!PS.observe)
@@ -285,59 +276,7 @@ public class MainActivity extends DisplayUpdateHelper {
         }
     }
 
-    private class RuleSelectionListener implements View.OnClickListener {
 
-        @Override
-        public void onClick(View view) {
-            LinearLayout rlvv = MainActivity.this.findViewById(R.id.RuleListVerticalLayout);
-            for (int i = 0; i < rlvv.getChildCount(); i++) {
-                TextView theText = ((TextView) ((LinearLayout) ((HorizontalScrollView) rlvv.getChildAt(i)).getChildAt(0)).getChildAt(0));
-                if (theText.getText().toString().compareTo(((TextView) view).getText().toString()) == 0) {
-                    MainActivity.this.PS.anteCurrentRule = MainActivity.this.PS.Rules.get(i).first;
-                    MainActivity.this.PS.succCurrentRule = MainActivity.this.PS.Rules.get(i).second;
-                    textViewSelected(((TextView) view));
-                } else textViewUnselected(theText);
-            }
-        }
-    }
 
-    private class SideSelectionListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            if (view instanceof TextView && isMemberOf((TextView) view, (LinearLayout) MainActivity.this.findViewById(R.id.RightSideTermLayout))) {
-                Cleanslection((LinearLayout) MainActivity.this.findViewById(R.id.LeftSideTermLayout));
-                Cleanslection((LinearLayout) MainActivity.this.findViewById(R.id.RightSideTermLayout));
-                textViewSelected((TextView) view);
-                MainActivity.this.PS.succSelectedPosition = ((TextView) view).getText().toString();
-            } else if (view instanceof TextView && isMemberOf((TextView) view, (LinearLayout) MainActivity.this.findViewById(R.id.LeftSideTermLayout))) {
-                Cleanslection((LinearLayout) MainActivity.this.findViewById(R.id.RightSideTermLayout));
-                if (isNotSelected((TextView) view)) {
-                    textViewSelected((TextView) view);
-                    MainActivity.this.PS.anteSelectedPositions.add(((TextView) view).getText().toString());
-                } else {
-                    textViewUnselected((TextView) view);
-                    MainActivity.this.PS.anteSelectedPositions.remove(((TextView) view).getText().toString());
-                }
-            }
-        }
-
-        private void Cleanslection(LinearLayout side) {
-            int size = side.getChildCount();
-            for (int i = 0; i < size; i++)
-                textViewUnselected(((TextView) ((LinearLayout) ((HorizontalScrollView) side.getChildAt(i)).getChildAt(0)).getChildAt(0)));
-            MainActivity.this.PS.succSelectedPosition = "";
-            MainActivity.this.PS.anteSelectedPositions = new ArrayList<>();
-        }
-
-        private boolean isMemberOf(TextView view, LinearLayout side) {
-            int size = side.getChildCount();
-            for (int i = 0; i < size; i++) {
-                String value = ((TextView) ((LinearLayout) ((HorizontalScrollView) side.getChildAt(i)).getChildAt(0)).getChildAt(0)).getText().toString();
-                if (value.compareTo(view.getText().toString()) == 0) return true;
-            }
-            return false;
-
-        }
-    }
 
 }

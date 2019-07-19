@@ -98,4 +98,19 @@ public final class Const implements Term, Parcelable {
         out.writeInt(0);
         out.writeTypedList(this.subTerms());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        else if ((o instanceof Const)) {
+            return this.getSym().compareTo(((Const) o).getSym()) == 0;
+        } else return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + getSym().hashCode();
+        return hash;
+    }
 }

@@ -126,7 +126,10 @@ public class ProblemState implements Parcelable {
                 if (side == 0) {
                     int antesize = in.readInt();
                     ArrayList<String> anteselected = new ArrayList<>();
-                    while (antesize > 0) anteselected.add(in.readString());
+                    while (antesize > 0) {
+                        anteselected.add(in.readString());
+                        antesize--;
+                    }
 
                     int subhissize = in.readInt();
                     ArrayList<Pair<String, Term>> hissubs = new ArrayList<>();
@@ -309,9 +312,28 @@ HashSet<String> VarList(Term ti) {
     public Term getSelectedSuccTerm() {
         for (Term t : succProblem) if (t.Print().compareTo(succSelectedPosition) == 0) return t;
         return null;
-
-
     }
+
+    public HashSet<Term> replaceSelectedSuccTerm(ArrayList<Term> replacement) {
+        HashSet<Term> succupdate = new HashSet<>();
+        for (Term t : succProblem)
+            if (t.Print().compareTo(succSelectedPosition) != 0) succupdate.add(t);
+            else for (Term s : replacement) succupdate.add(s);
+        return succupdate;
+    }
+
+    public HashSet<Term> replaceSelectedAnteTerms(Term replacement) {
+        HashSet<Term> anteUpdate = new HashSet<>();
+        boolean replaced = false;
+        for (Term t : anteProblem)
+            if (!anteSelectedPositions.contains(t.Print())) anteUpdate.add(t);
+            else if (!replaced) {
+                anteUpdate.add(replacement);
+                replaced = true;
+            }
+        return anteUpdate;
+    }
+
 
     public ArrayList<Term> getSelectedAnteTerm() {
         ArrayList<Term> termlist = new ArrayList<>();

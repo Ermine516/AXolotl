@@ -4,8 +4,8 @@ package com.example.axolotltouch;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,17 +29,18 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
     }
 
     protected void ActivityDecorate() {
-        System.out.println(PS.Substitutions.get(PS.subPos).first + "  " + PS.Substitutions.get(PS.subPos).second.Print());
-
-        TextView lhs = this.findViewById(R.id.LeftSideProblem);
-        TextView rhs = this.findViewById(R.id.RightSideProblem);
         TextView varDisplay = this.findViewById(R.id.VarTextview);
         TextView subDisplay = this.findViewById(R.id.SubTermTextView);
+        LinearLayout leftterm = this.findViewById(R.id.LeftSideTermLayout);
+        LinearLayout rightterm = this.findViewById(R.id.RightSideTermLayout);
+        leftterm.removeAllViewsInLayout();
+        rightterm.removeAllViewsInLayout();
         String var = PS.Substitutions.get(PS.subPos).first;
         if (MatchDisplayActivity.this.PS.anteSelectedPositions.size() == 0) {
             Term succTerm = PS.getSelectedSuccTerm();
-            lhs.setText(Html.fromHtml(PS.succCurrentRule.Print(new Const(var))));
-            rhs.setText(Html.fromHtml(succTerm.Print(var, PS.succCurrentRule, PS.Substitutions.get(PS.subPos).second)));
+            leftterm.addView(scrollTextSelectConstruct(PS.succCurrentRule.Print(new Const(var)), null, this, true));
+            rightterm.addView(scrollTextSelectConstruct(succTerm.Print(var, PS.succCurrentRule, PS.Substitutions.get(PS.subPos).second), null, this, true));
+
         } else {
             ArrayList<Term> anteTerm = PS.getSelectedAnteTerm();
         }

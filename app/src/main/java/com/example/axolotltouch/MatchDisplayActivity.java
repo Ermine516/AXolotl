@@ -50,8 +50,6 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
                         rightTerm.addView(scrollTextSelectConstruct(t.Print(var, s, PS.Substitutions.get(PS.subPos).second), null, this, true));
                         break one;
                     }
-
-
         }
 
         varDisplay.setText(var);

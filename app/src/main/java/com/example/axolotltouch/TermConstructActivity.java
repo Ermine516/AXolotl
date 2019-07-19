@@ -51,26 +51,25 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
 
     private void FurtureProblemDisplay() {
         ProblemState PS = TermConstructActivity.this.PS;
-
+        ArrayList<Pair<String, Term>> localSubstitution = new ArrayList<>();
+        for (Pair<String, Term> p : PS.Substitutions) {
+            if (p.first.compareTo(PS.Substitutions.get(PS.subPos).first) != 0 && p.second.getSym().compareTo(Const.HoleSelected.getSym()) == 0)
+                localSubstitution.add(new Pair<String, Term>(p.first, new Const(p.first)));
+            else localSubstitution.add(p);
+        }
         if (PS.anteSelectedPositions.size() == 0) {
             updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.LeftSideTermLayout), PS.anteProblem.toArray(AuxFunctionality.HashSetTermArray));
             ArrayList<Term> temp = new ArrayList<>();
             for (Term t : PS.anteCurrentRule) {
-                Term tosub = t.Dup();
-                for (Pair<String, Term> s : PS.Substitutions) {
-                    System.out.println("the size is " + s.first);
-
-                    tosub = tosub.replace(new Const(s.first), s.second);
-                }
+                Term tosub = TermHelper.applySubstitution(localSubstitution, t.Dup());
                 temp.add(tosub);
             }
             HashSet<Term> updated = PS.replaceSelectedSuccTerm(temp);
             updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), updated.toArray(AuxFunctionality.HashSetTermArray));
         } else {
             updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.LeftSideTermLayout), PS.succProblem.toArray(AuxFunctionality.HashSetTermArray));
-            Term tosub = PS.succCurrentRule.Dup();
-            for (Pair<String, Term> s : PS.Substitutions)
-                tosub = tosub.replace(new Const(s.first), s.second);
+
+            Term tosub = TermHelper.applySubstitution(localSubstitution, PS.succCurrentRule.Dup());
             HashSet<Term> updated = PS.replaceSelectedAnteTerms(tosub);
             updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), updated.toArray(AuxFunctionality.HashSetTermArray));
 

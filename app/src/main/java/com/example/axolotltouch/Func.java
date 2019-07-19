@@ -105,7 +105,6 @@ public final class Func implements Term, Parcelable {
     }
 
     public String Print(String var, Term compare, Term t) {
-        System.out.println(var + "  " + compare.Print() + "  " + t.Print());
         if (compare.subTerms().size() == 0 && compare.getSym().compareTo(var) == 0 && TermHelper.TermMatch(this, t))
             return "<font color=#ff0000>" + this.Print() + "</font>";
         else {

@@ -74,7 +74,7 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
                 boolean selectedTerm = false;
                 for (String s : PS.anteSelectedPositions)
                     if (t.Print().compareTo(s) == 0) selectedTerm = true;
-                if (!selectedTerm) newProblemAnte.add(t.Dup());
+                if (!selectedTerm || PS.anteCurrentRule.size() == 0) newProblemAnte.add(t.Dup());
             }
             newProblemAnte.add(temp);
             PS.anteProblem = newProblemAnte;
@@ -89,6 +89,7 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
                 if (t.Print().compareTo(PS.succSelectedPosition) != 0) newProblemsucc.add(t);
             for (Term t : temp) newProblemsucc.add(t);
             PS.succProblem = newProblemsucc;
+
         }
         PS.anteSelectedPositions = new ArrayList<>();
         PS.succSelectedPosition = "";

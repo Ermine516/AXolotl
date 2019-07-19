@@ -13,7 +13,6 @@ class TermHelper {
 
     static Term parse(String s, ProblemState PS) throws FormatException {
         Term result = pI(clean(s), PS).get(0).get(0);
-        System.out.println(clean(s) + " " + result.toString() + " " + result.Print());
         if (clean(s).compareTo(result.toString()) != 0)
             throw (new TermHelper()).new FormatException();
 		else return result;
@@ -86,8 +85,6 @@ class TermHelper {
                 ret &= TermMatch(left.subTerms().get(i), right.subTerms().get(i));
             return ret;
         } else return false;
-
-
     }
 
     static ArrayList<Pair<String, Term>> varTermMatch(Term left, Term right, ProblemState PS) {
@@ -108,5 +105,12 @@ class TermHelper {
                 for (int i = 0; i < left.subTerms().size(); i++)
                     ret.putAll(varTermMatchMap(left.subTerms().get(i), right.subTerms().get(i), PS));
         return ret;
+    }
+
+    static Term applySubstitution(ArrayList<Pair<String, Term>> substitution, Term term) {
+        Term tosub = term.Dup();
+        for (Pair<String, Term> s : substitution)
+            tosub = tosub.replace(new Const(s.first), s.second);
+        return tosub;
     }
 }

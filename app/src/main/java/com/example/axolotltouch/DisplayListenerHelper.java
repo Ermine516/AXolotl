@@ -62,12 +62,12 @@ public abstract class DisplayListenerHelper extends AppCompatActivity implements
         @Override
         public void onClick(View view) {
             if (view instanceof TextView && isMemberOf((TextView) view, (LinearLayout) DisplayListenerHelper.this.findViewById(R.id.RightSideTermLayout))) {
-                Cleanslection((LinearLayout) DisplayListenerHelper.this.findViewById(R.id.LeftSideTermLayout));
-                Cleanslection((LinearLayout) DisplayListenerHelper.this.findViewById(R.id.RightSideTermLayout));
+                Cleanslection((LinearLayout) DisplayListenerHelper.this.findViewById(R.id.LeftSideTermLayout), false);
+                Cleanslection((LinearLayout) DisplayListenerHelper.this.findViewById(R.id.RightSideTermLayout), true);
                 textViewSelected((TextView) view);
                 DisplayListenerHelper.this.PS.succSelectedPosition = ((TextView) view).getText().toString();
             } else if (view instanceof TextView && isMemberOf((TextView) view, (LinearLayout) DisplayListenerHelper.this.findViewById(R.id.LeftSideTermLayout))) {
-                Cleanslection((LinearLayout) DisplayListenerHelper.this.findViewById(R.id.RightSideTermLayout));
+                Cleanslection((LinearLayout) DisplayListenerHelper.this.findViewById(R.id.RightSideTermLayout), true);
                 if (isNotSelected((TextView) view)) {
                     textViewSelected((TextView) view);
                     DisplayListenerHelper.this.PS.anteSelectedPositions.add(((TextView) view).getText().toString());
@@ -78,12 +78,13 @@ public abstract class DisplayListenerHelper extends AppCompatActivity implements
             }
         }
 
-        private void Cleanslection(LinearLayout side) {
+        private void Cleanslection(LinearLayout side, boolean leftorright) {
             int size = side.getChildCount();
             for (int i = 0; i < size; i++)
                 textViewUnselected(((TextView) ((LinearLayout) ((HorizontalScrollView) side.getChildAt(i)).getChildAt(0)).getChildAt(0)));
             DisplayListenerHelper.this.PS.succSelectedPosition = "";
-            DisplayListenerHelper.this.PS.anteSelectedPositions = new ArrayList<>();
+            if (!leftorright)
+                DisplayListenerHelper.this.PS.anteSelectedPositions = new ArrayList<>();
         }
 
         private boolean isMemberOf(TextView view, LinearLayout side) {

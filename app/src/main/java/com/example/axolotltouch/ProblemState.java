@@ -285,22 +285,25 @@ HashSet<String> VarList(Term ti) {
         }
 		out.writeInt(History.size());
         for (Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Pair<ArrayList<Term>, Term>>> his : History) {
-            if (his.first.first.size() != 0) {
+            Pair<ArrayList<String>, String> selection = his.first;
+            ArrayList<Pair<String, Term>> substitution = his.second.first;
+            Pair<ArrayList<Term>, Term> rule = his.second.second;
+            if (selection.first.size() != 0) {
                 out.writeInt(0);
-                out.writeInt(his.first.first.size());
-                for (String s : his.first.first) out.writeString(s);
-            } else if (his.first.second.compareTo("") != 0) {
+                out.writeInt(selection.first.size());
+                for (String s : selection.first) out.writeString(s);
+            } else {
                 out.writeInt(1);
-                out.writeString(succSelectedPosition);
+                out.writeString(selection.second);
             }
-            out.writeInt(his.second.first.size());
-            for (int i = 0; i < his.second.first.size(); i++) {
-                out.writeString(his.second.first.get(i).first);
-                out.writeTypedObject(his.second.first.get(i).second, flags);
+            out.writeInt(substitution.size());
+            for (int i = 0; i < substitution.size(); i++) {
+                out.writeString(substitution.get(i).first);
+                out.writeTypedObject(substitution.get(i).second, flags);
             }
-            out.writeInt(his.second.second.first.size());
-            for (Term t : his.second.second.first) out.writeTypedObject(t, flags);
-            out.writeTypedObject(his.second.second.second, flags);
+            out.writeInt(rule.first.size());
+            for (Term t : rule.first) out.writeTypedObject(t, flags);
+            out.writeTypedObject(rule.second, flags);
         }
         out.writeInt(SubHistory.size());
         for (String key : SubHistory.keySet()) {

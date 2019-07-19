@@ -32,7 +32,6 @@ public class MainActivity extends DisplayUpdateHelper {
             PS = new ProblemState();
             PS.observe = passobseve;
         }
-
         ActivityDecorate();
     }
 
@@ -70,22 +69,33 @@ public class MainActivity extends DisplayUpdateHelper {
                     Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Pair<ArrayList<Term>, Term>>> laststep = PS.History.remove(PS.History.size() - 1);
                     Pair<ArrayList<Term>, Term> rule = laststep.second.second;
                     ArrayList<Term> anteSideApply = new ArrayList<>();
-                    Term succSideApply = rule.second;
-                    for (Pair<String, Term> s : laststep.second.first) {
-                        for (Term t : rule.first)
-                            anteSideApply.add(t.replace(new Const(s.first), s.second));
-                        succSideApply.replace(new Const(s.first), s.second);
-                    }
+                    Term succSideApply = rule.second.Dup();
+                    for (Pair<String, Term> s : laststep.second.first)
+                        succSideApply = succSideApply.replace(new Const(s.first), s.second);
                     if (laststep.first.first.size() != 0) {
+                        if (rule.first.size() > 0) {
+                            for (Term t : rule.first) anteSideApply.add(t);
+                            for (int i = 0; i < anteSideApply.size(); i++)
+                                for (Pair<String, Term> s : laststep.second.first)
+                                    anteSideApply.set(i, anteSideApply.get(i).replace(new Const(s.first), s.second));
+                        }
                         HashSet<Term> newAnteProblem = new HashSet<>(anteSideApply);
                         for (Term t : PS.anteProblem)
                             if (t.Print().compareTo(succSideApply.Print()) != 0)
                                 newAnteProblem.add(t);
                         PS.anteProblem = newAnteProblem;
-
                     } else {
+
                         HashSet<Term> newSuccProblem = new HashSet<>();
+                        for (Pair<String, Term> s : laststep.second.first)
+                            succSideApply = succSideApply.replace(new Const(s.first), s.second);
                         newSuccProblem.add(succSideApply);
+                        for (Term t : rule.first) {
+                            Term temp = t.Dup();
+                            for (Pair<String, Term> s : laststep.second.first)
+                                temp = temp.replace(new Const(s.first), s.second);
+                            anteSideApply.add(temp);
+                        }
                         for (Term t : PS.succProblem) {
                             boolean wasselected = false;
                             for (Term s : anteSideApply)
@@ -138,9 +148,6 @@ public class MainActivity extends DisplayUpdateHelper {
                             }
                             for (String s : singleSide)
                                 PS.Substitutions.add(new Pair<>(s, Const.HoleSelected.Dup()));
-                            System.out.println("number of vars" + PS.Substitutions.get(0).first + "  " + PS.Substitutions.get(0).second);
-                            System.out.println("number of vars" + PS.Substitutions.get(1).first + "  " + PS.Substitutions.get(1).second);
-
                             PS.subPos = 0;
                             if (!PS.observe)
                                 while (PS.subPos < PS.Substitutions.size() && !PS.Substitutions.get(PS.subPos).second.contains(Const.HoleSelected))
@@ -168,11 +175,11 @@ public class MainActivity extends DisplayUpdateHelper {
                         }
                         if (anteterm.size() == PS.anteSelectedPositions.size()) {
                             ArrayList<Pair<Term, Term>> matchings = matchAnteProblemRule(anteterm, PS.anteCurrentRule);
-                            if (matchings != null) {
+                            if (matchings != null || PS.anteCurrentRule.size() == 0) {
                                 PS.Substitutions = new ArrayList<>();
-                                for (Pair<Term, Term> match : matchings) {
-                                    PS.Substitutions.addAll(TermHelper.varTermMatch(match.second, match.first, PS));
-                                }
+                                if (PS.anteCurrentRule.size() != 0)
+                                    for (Pair<Term, Term> match : matchings)
+                                        PS.Substitutions.addAll(TermHelper.varTermMatch(match.second, match.first, PS));
                                 HashSet<String> occurences = new HashSet<>();
                                 ArrayList<Pair<String, Term>> subCleaned = new ArrayList<>();
                                 for (Pair<String, Term> p : PS.Substitutions)
@@ -207,7 +214,6 @@ public class MainActivity extends DisplayUpdateHelper {
                                 Toast.makeText(MainActivity.this, "Rule not applicable", Toast.LENGTH_SHORT).show();
                         } else
                             Toast.makeText(MainActivity.this, "Rule not applicable", Toast.LENGTH_SHORT).show();
-
                     } else
                         Toast.makeText(MainActivity.this, "Select a Side of the Problem ", Toast.LENGTH_SHORT).show();
                 } else
@@ -221,16 +227,18 @@ public class MainActivity extends DisplayUpdateHelper {
         //assumes a unique pairing
         private ArrayList<Pair<Term, Term>> matchAnteProblemRule(ArrayList<Term> problem, ArrayList<Term> rule) {
             ProblemState PS = MainActivity.this.PS;
-            for (Term s : problem) {
-                HashMap<String, Term> varMatching = new HashMap<>();
-                varMatching.putAll(TermHelper.varTermMatchMap(s, rule.get(0), PS));
-                if (varMatching.size() == PS.VarList(rule.get(0)).size()) {
-                    ArrayList<Term> internalProblem = new ArrayList<>(problem);
-                    internalProblem.remove(s);
-                    ArrayList<Pair<Term, Term>> matches = matchHelper(internalProblem, rule, 1, varMatching);
-                    if (matches != null) {
-                        matches.add(new Pair(rule.get(0), s));
-                        return matches;
+            if (rule.size() > 0) {
+                for (Term s : problem) {
+                    HashMap<String, Term> varMatching = new HashMap<>();
+                    varMatching.putAll(TermHelper.varTermMatchMap(s, rule.get(0), PS));
+                    if (varMatching.size() == PS.VarList(rule.get(0)).size()) {
+                        ArrayList<Term> internalProblem = new ArrayList<>(problem);
+                        internalProblem.remove(s);
+                        ArrayList<Pair<Term, Term>> matches = matchHelper(internalProblem, rule, 1, varMatching);
+                        if (matches != null) {
+                            matches.add(new Pair(rule.get(0), s));
+                            return matches;
+                        }
                     }
                 }
             }
@@ -264,11 +272,8 @@ public class MainActivity extends DisplayUpdateHelper {
                     }
                 }
                 return null;
-
             }
-
         }
-
         private Term getTermByString(String succSelectedPosition, HashSet<Term> succProblem) {
             for (Term t : succProblem)
                 if (t.Print().compareTo(succSelectedPosition) == 0) return t.Dup();

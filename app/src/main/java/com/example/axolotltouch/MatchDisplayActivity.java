@@ -31,18 +31,27 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
     protected void ActivityDecorate() {
         TextView varDisplay = this.findViewById(R.id.VarTextview);
         TextView subDisplay = this.findViewById(R.id.SubTermTextView);
-        LinearLayout leftterm = this.findViewById(R.id.LeftSideTermLayout);
-        LinearLayout rightterm = this.findViewById(R.id.RightSideTermLayout);
-        leftterm.removeAllViewsInLayout();
-        rightterm.removeAllViewsInLayout();
+        LinearLayout leftTerm = this.findViewById(R.id.LeftSideTermLayout);
+        LinearLayout rightTerm = this.findViewById(R.id.RightSideTermLayout);
+        leftTerm.removeAllViewsInLayout();
+        rightTerm.removeAllViewsInLayout();
         String var = PS.Substitutions.get(PS.subPos).first;
         if (MatchDisplayActivity.this.PS.anteSelectedPositions.size() == 0) {
             Term succTerm = PS.getSelectedSuccTerm();
-            leftterm.addView(scrollTextSelectConstruct(PS.succCurrentRule.Print(new Const(var)), null, this, true));
-            rightterm.addView(scrollTextSelectConstruct(succTerm.Print(var, PS.succCurrentRule, PS.Substitutions.get(PS.subPos).second), null, this, true));
-
+            leftTerm.addView(scrollTextSelectConstruct(PS.succCurrentRule.Print(new Const(var)), null, this, true));
+            rightTerm.addView(scrollTextSelectConstruct(succTerm.Print(var, PS.succCurrentRule, PS.Substitutions.get(PS.subPos).second), null, this, true));
         } else {
             ArrayList<Term> anteTerm = PS.getSelectedAnteTerm();
+            for (Term t : PS.anteCurrentRule)
+                leftTerm.addView(scrollTextSelectConstruct(t.Print(new Const(var)), null, this, true));
+            for (Term t : anteTerm)
+                one:for (Term s : PS.anteCurrentRule)
+                    if (PS.VarList(s).contains(var)) {
+                        rightTerm.addView(scrollTextSelectConstruct(t.Print(var, s, PS.Substitutions.get(PS.subPos).second), null, this, true));
+                        break one;
+                    }
+
+
         }
 
         varDisplay.setText(var);

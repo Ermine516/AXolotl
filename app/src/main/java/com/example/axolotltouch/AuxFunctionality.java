@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 class AuxFunctionality {
-    public static final Term[] HashSetTermArray = new Term[]{Const.Hole};
-      static final String PASSPROBLEMSTATE = "com.example.android.AXolotlTouch.extra.problemstate";
+    static final Term[] HashSetTermArray = new Term[]{Const.Hole};
+    static final String PASSPROBLEMSTATE = "com.example.android.AXolotlTouch.extra.problemstate";
     static final int READ_REQUEST_CODE = 42;
     private static final String nameParseRegex = "[a-zA-Z&\\u2227\\u2228\\u00AC\\u21D2\\u21D4\\u2284\\u2285\\u22A4\\u25A1\\u25C7]+";
 
@@ -122,8 +122,8 @@ class AuxFunctionality {
 
     private static boolean parseProblemDefinition(ProblemState newPS, String[] parts) throws TermHelper.FormatException {
         if (parts.length < 3) throw new TermHelper().new FormatException();
-        int anteSize = new Integer(parts[1]);
-        int succSize = new Integer(parts[2]);
+        int anteSize = Integer.valueOf(parts[1]);
+        int succSize = Integer.valueOf(parts[2]);
         if (parts.length != anteSize + succSize + 3) throw new TermHelper().new FormatException();
         newPS.anteProblem = new HashSet<>();
         newPS.succProblem = new HashSet<>();
@@ -143,9 +143,12 @@ class AuxFunctionality {
     }
 
     private static boolean parseRuleDefinition(ProblemState newPS, String[] parts) throws TermHelper.FormatException {
+        System.out.println("should not have crashed 1  ");
         if (parts.length < 2) throw new TermHelper().new FormatException();
-        int anteSize = new Integer(parts[1]);
+        int anteSize = Integer.valueOf(parts[1]);
+        System.out.println("should not have crashed  2 ");
         if (parts.length != anteSize + 3) throw new TermHelper().new FormatException();
+        System.out.println("should not have crashed  3  ");
         ArrayList<Term> anteRule = new ArrayList<>();
         Term succRule = Const.HoleSelected;
         for (int i = 2; i < parts.length; i++) {
@@ -189,17 +192,17 @@ class AuxFunctionality {
             for (Term t : rule.first) vl.addAll(PS.VarList(t));
             vl.addAll(PS.VarList(rule.second));
             for (String t : vl) prefix.append("∀").append(t);
-            String retString = (prefix.toString().compareTo("") != 0) ? prefix + "(Δ " : "Δ ";
+            StringBuilder retString = new StringBuilder((prefix.toString().compareTo("") != 0) ? prefix + "(Δ " : "Δ ");
             if (rule.first.size() > 0)
                 for (int i = 0; i < rule.first.size(); i++)
                     if (i == 0 && i != rule.first.size() - 1)
-                        retString += ", " + rule.first.get(i).Print() + " , ";
+                        retString.append(", ").append(rule.first.get(i).Print()).append(" , ");
                     else if (0 == rule.first.size() - 1)
-                        retString += ", " + rule.first.get(i).Print() + " ⊢ Δ , ";
+                        retString.append(", ").append(rule.first.get(i).Print()).append(" ⊢ Δ , ");
                     else if (i == rule.first.size() - 1)
-                        retString += rule.first.get(i).Print() + " ⊢ Δ , ";
-                    else retString += rule.first.get(i).Print() + " , ";
-            else retString += "⊢ Δ , ";
+                        retString.append(rule.first.get(i).Print()).append(" ⊢ Δ , ");
+                    else retString.append(rule.first.get(i).Print()).append(" , ");
+            else retString.append("⊢ Δ , ");
             return retString + rule.second.Print() + ((prefix.toString().compareTo("") != 0) ? " )" : "");
         }
         else return "";

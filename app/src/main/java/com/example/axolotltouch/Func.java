@@ -105,7 +105,6 @@ public final class Func implements Term, Parcelable {
     }
 
     public String Print(String var, Term compare, Term t) {
-        System.out.println(var + "  " + compare.Print() + "  " + t.Print());
         if (compare.subTerms().size() == 0 && compare.getSym().compareTo(var) == 0 && TermHelper.TermMatch(this, t))
             return "<font color=#ff0000>" + this.Print() + "</font>";
         else {
@@ -156,6 +155,7 @@ public final class Func implements Term, Parcelable {
     }
 
     //Finds all the term symbols in the term tree
+    @SuppressWarnings("ConstantConditions")
     public HashMap<String, HashSet<Integer>> basicTerms() {
         HashMap<String, HashSet<Integer>> result = new HashMap<>();
         HashSet<Integer> temp3 = new HashSet<>();
@@ -185,5 +185,32 @@ public final class Func implements Term, Parcelable {
         out.writeString(this.getSym());
         out.writeInt((this.infix) ? 1 : 0);
         out.writeTypedList(this.subTerms());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        else if ((o instanceof Func)) {
+            if (this.getSym().compareTo(((Func) o).getSym()) == 0) {
+                boolean areequal = true;
+                for (int i = 0; i < this.subTerms().size(); i++)
+                    areequal &= this.subTerms().get(i).equals(((Term) o).subTerms().get(i));
+                return areequal;
+            } else return false;
+        } else if ((o instanceof Const)) {
+            if (this.subTerms().size() == 0)
+                return this.getSym().compareTo(((Const) o).getSym()) == 0;
+            else return false;
+        } else return false;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + getSym().hashCode();
+        for (Term t : subTerms())
+            hash = 31 * hash + t.hashCode();
+        return hash;
     }
 }

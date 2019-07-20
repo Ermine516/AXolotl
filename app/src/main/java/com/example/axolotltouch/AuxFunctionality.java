@@ -10,12 +10,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 class AuxFunctionality {
-      static final String PASSPROBLEMSTATE = "com.example.android.AXolotlTouch.extra.problemstate";
+    static final Term[] HashSetTermArray = new Term[]{Const.Hole};
+    static final String PASSPROBLEMSTATE = "com.example.android.AXolotlTouch.extra.problemstate";
     static final int READ_REQUEST_CODE = 42;
-    private static final String nameParseRegex = "[a-zA-Z&\\u2227\\u2228\\u00AC\\u21D2\\u21D4\\u2284\\u2285\\u22A4\\u25A1\\u25C7\\u25E6]+";
+    private static final String nameParseRegex = "[a-zA-Z&\\u2227\\u2228\\u00AC\\u21D2\\u21D4\\u2284\\u2285\\u22A4\\u25A1\\u25C7]+";
 
      static void SideMenuItems(int id, Activity ctx, ProblemState PS) {
         Intent intent = null;
@@ -36,14 +38,6 @@ class AuxFunctionality {
             PS = newPS;
         } else if (id == R.id.modalProblem01) {
             ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.modal1), "modal1.txt", ctx);
-            intent = new Intent(ctx, MainActivity.class);
-            PS = newPS;
-        } else if (id == R.id.misc01) {
-            ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.misc1), "misc1.txt", ctx);
-            intent = new Intent(ctx, MainActivity.class);
-            PS = newPS;
-        } else if (id == R.id.misc02) {
-            ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.misc2), "misc2.txt", ctx);
             intent = new Intent(ctx, MainActivity.class);
             PS = newPS;
         } else if (id == R.id.ViewProof) {
@@ -97,19 +91,19 @@ class AuxFunctionality {
                      parseFunctionSymbol(newPS, parts);
                  else if (parts[0].compareTo("Rule:") == 0)
                      foundProblemOrRule = parseRuleDefinition(newPS, parts);
-                 else if (parts[0].compareTo("Problem:") == 0 && newPS.ssequent[0].getSym().compareTo(Const.Hole.getSym()) == 0)
+                 else if (parts[0].compareTo("Problem:") == 0 && newPS.anteProblem.size() == 1 && newPS.anteProblem.toArray(HashSetTermArray)[0].getSym().compareTo(Const.Hole.getSym()) == 0)
                      foundProblemOrRule = parseProblemDefinition(newPS, parts);
                  else if (parts[0].compareTo("Variable:") == 0 && !foundProblemOrRule)
                      parsevariableSymbol(newPS, parts);
                  else throw new IOException();
              }
-//**********************************************Parsing Variables from file***************************************************
          } catch (Exception ex) {
              Toast.makeText(ctx, "Syntax error on line " + lineCount + " of " + file + ".", Toast.LENGTH_SHORT).show();
              newPS = new ProblemState();
              newPS.observe = ((DisplayUpdateHelper) ctx).PS.observe;
          }
-         newPS.rsequent = new Term[]{Const.HoleSelected, Const.HoleSelected};
+         newPS.anteCurrentRule = new ArrayList<>();
+         newPS.anteCurrentRule.add(Const.HoleSelected);
          return newPS;
      }
 
@@ -120,27 +114,49 @@ class AuxFunctionality {
         if (name.toString().matches("[a-zA-Z]+")
                 && !newPS.Variables.contains(name.toString())
                 && !newPS.Constants.contains(name.toString())
-                && !newPS.containsFunctionsymbol(name.toString()))
+                && newPS.containsFunctionsymbol(name.toString()))
             newPS.Variables.add(name.toString());
         else throw new TermHelper().new FormatException();
     }
 
     private static boolean parseProblemDefinition(ProblemState newPS, String[] parts) throws TermHelper.FormatException {
-        if (parts.length != 3) throw new TermHelper().new FormatException();
-        newPS.ssequent[0] = TermHelper.parse(parts[1], newPS);
-        newPS.ssequent[1] = TermHelper.parse(parts[2], newPS);
-        if (!newPS.isIndexed(newPS.ssequent[0]) || !newPS.isIndexed(newPS.ssequent[1]))
-            throw new TermHelper().new FormatException();
+        if (parts.length < 3) throw new TermHelper().new FormatException();
+        int anteSize = Integer.valueOf(parts[1]);
+        int succSize = Integer.valueOf(parts[2]);
+        if (parts.length != anteSize + succSize + 3) throw new TermHelper().new FormatException();
+        newPS.anteProblem = new HashSet<>();
+        newPS.succProblem = new HashSet<>();
+        for (int i = 3; i < anteSize + 3; i++) {
+            Term temp = TermHelper.parse(parts[i], newPS);
+            newPS.anteProblem.add(temp);
+            if (!newPS.isIndexed(temp))
+                throw new TermHelper().new FormatException();
+        }
+        if (newPS.anteProblem.size() == 0) newPS.anteProblem.add(Const.Empty.Dup());
+        for (int i = anteSize + 3; i < parts.length; i++) {
+            Term temp = TermHelper.parse(parts[i], newPS);
+            newPS.succProblem.add(temp);
+            if (!newPS.isIndexed(temp))
+                throw new TermHelper().new FormatException();
+        }
         return true;
     }
 
     private static boolean parseRuleDefinition(ProblemState newPS, String[] parts) throws TermHelper.FormatException {
-        if (parts.length != 3) throw new TermHelper().new FormatException();
-        newPS.rsequent[0] = TermHelper.parse(parts[1], newPS);
-        newPS.rsequent[1] = TermHelper.parse(parts[2], newPS);
-        if (!newPS.isIndexed(newPS.rsequent[0]) || !newPS.isIndexed(newPS.rsequent[1]))
-            throw new TermHelper().new FormatException();
-        newPS.Rules.add(new Pair<>(newPS.rsequent[0], newPS.rsequent[1]));
+        System.out.println("should not have crashed 1  ");
+        if (parts.length < 2) throw new TermHelper().new FormatException();
+        int anteSize = Integer.valueOf(parts[1]);
+        System.out.println("should not have crashed  2 ");
+        if (parts.length != anteSize + 3) throw new TermHelper().new FormatException();
+        System.out.println("should not have crashed  3  ");
+        ArrayList<Term> anteRule = new ArrayList<>();
+        Term succRule = Const.HoleSelected;
+        for (int i = 2; i < parts.length; i++) {
+            succRule = TermHelper.parse(parts[i], newPS);
+            if (!newPS.isIndexed(succRule)) throw new TermHelper().new FormatException();
+            else if (i != parts.length - 1) anteRule.add(TermHelper.parse(parts[i], newPS));
+        }
+        newPS.Rules.add(new Pair<>(anteRule, succRule));
         return true;
     }
 
@@ -161,27 +177,12 @@ class AuxFunctionality {
                 && arity.toString().matches("[0-9]+")
                 && !PS.Variables.contains(name.toString())
                 && !PS.Constants.contains(name.toString())
-                && !PS.containsFunctionsymbol(name.toString())) {
+                && PS.containsFunctionsymbol(name.toString())) {
             if (Integer.parseInt(arity.toString()) == 0) PS.Constants.add(name.toString());
             else
                 PS.Functions.add(new Pair<>(name.toString(), new Pair<>(Integer.parseInt(arity.toString()), infix)));
         } else throw new TermHelper().new FormatException();
     }
 
-
-    static String RuleTermstoString(Pair<Term, Term> rule, ProblemState PS) {
-        if (rule != null && rule.first != null && rule.second != null) {
-            StringBuilder prefix = new StringBuilder();
-            HashSet<String> vl = new HashSet<>();
-            vl.addAll(PS.VarList(rule.first));
-            vl.addAll(PS.VarList(rule.second));
-            for (String t : vl) prefix.append("∀").append(t);
-            String retString = (prefix.toString().compareTo("") != 0) ? prefix + "(" : "";
-            retString += "" + rule.first.Print() + " ⊢  ";
-
-            return retString + rule.second.Print() + ((prefix.toString().compareTo("") != 0) ? " )" : "");
-        }
-        else return "";
-    }
 
 }

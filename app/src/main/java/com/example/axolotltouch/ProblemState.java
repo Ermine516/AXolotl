@@ -7,31 +7,45 @@ import android.os.Parcelable;
 import androidx.core.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
 //This contains all information concerning the problem rules and substitutions 
 //as well as functions providing important features. 
 public class ProblemState implements Parcelable {
-    Term[] ssequent;
-    Term[] rsequent;
-    int selectedSide;
     int subPos;
+    ArrayList<Boolean> MatchorConstruct;
     boolean observe;
+    HashSet<Term> anteProblem;
+    ArrayList<String> anteSelectedPositions;
+    HashSet<Term> succProblem;
+    String succSelectedPosition;
+    ArrayList<Term> anteCurrentRule;
+    Term succCurrentRule;
+
     HashSet<String> Variables;
     ArrayList<String> Constants;
     ArrayList<Pair<String, Pair<Integer, Boolean>>> Functions;
     ArrayList<Pair<String, Term>> Substitutions;
-    ArrayList<Pair<Term, Term>> Rules;
-    ArrayList<Pair<Integer, Pair<ArrayList<Pair<String, Term>>, Pair<Term, Term>>>> History;
+    ArrayList<Pair<ArrayList<Term>, Term>> Rules;
+    ArrayList<Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Pair<ArrayList<Term>, Term>>>> History;
     HashMap<String, ArrayList<Term>> SubHistory;
 
     public ProblemState() {
-        rsequent = new Term[]{Const.HoleSelected, Const.HoleSelected};
-        ssequent = new Term[]{Const.Hole, Const.Hole};
-        selectedSide = -1;
         subPos = -1;
         observe = true;
+        MatchorConstruct = new ArrayList<>();
+        anteProblem = new HashSet<>();
+        anteProblem.add(Const.Hole);
+        anteSelectedPositions = new ArrayList<>();
+        succProblem = new HashSet<>();
+        succProblem.add(Const.Hole);
+        succSelectedPosition = "";
+        anteCurrentRule = new ArrayList<>();
+        anteCurrentRule.add(Const.HoleSelected);
+        succCurrentRule = Const.HoleSelected.Dup();
+
         SubHistory = new HashMap<>();
 		Rules = new ArrayList<>();
         Substitutions = new ArrayList<>();
@@ -41,27 +55,54 @@ public class ProblemState implements Parcelable {
 		History= new ArrayList<>();
 	}
     ProblemState(Parcel in){
-        observe = in.readInt() == 1;
-        selectedSide = in.readInt();
         subPos = in.readInt();
-        ssequent = new Term[in.readInt()];
-        in.readTypedArray(ssequent, Term.CREATOR);
-        rsequent = new Term[in.readInt()];
-        in.readTypedArray(rsequent, Term.CREATOR);
-		String[] tempVar = new String[in.readInt()];
+        observe = in.readInt() == 1;
+        int MatchorConstructSize = in.readInt();
+        MatchorConstruct = new ArrayList<>();
+        while (MatchorConstructSize > 0) {
+            MatchorConstruct.add(in.readInt() == 1);
+            MatchorConstructSize--;
+        }
+        int anteProblemsize = in.readInt();
+        anteProblem = new HashSet<>();
+        while (anteProblemsize > 0) {
+            anteProblem.add(in.readTypedObject(Term.CREATOR));
+            anteProblemsize--;
+        }
+        int anteSelectedPositionssize = in.readInt();
+        anteSelectedPositions = new ArrayList<>();
+        while (anteSelectedPositionssize > 0) {
+            anteSelectedPositions.add(in.readString());
+            anteSelectedPositionssize--;
+        }
+        int succProblemsize = in.readInt();
+        succProblem = new HashSet<>();
+        while (succProblemsize > 0) {
+            succProblem.add(in.readTypedObject(Term.CREATOR));
+            succProblemsize--;
+        }
+        succSelectedPosition = in.readString();
+        int anteCurrentRuleSize = in.readInt();
+        anteCurrentRule = new ArrayList<>();
+        while (anteCurrentRuleSize > 0) {
+            anteCurrentRule.add(in.readTypedObject(Term.CREATOR));
+            anteCurrentRuleSize--;
+        }
+        succCurrentRule = in.readTypedObject(Term.CREATOR);
+        String[] tempVar = new String[in.readInt()];
         in.readStringArray(tempVar);
         Variables = new HashSet<>();
-        for (String t: tempVar) Variables.add(t);
+        Variables.addAll(Arrays.asList(tempVar));
         String[] tempConst = new String[in.readInt()];
         in.readStringArray(tempConst);
         Constants = new ArrayList<>();
-        for (String t: tempConst) Constants.add(t);
+        Constants.addAll(Arrays.asList(tempConst));
         Functions = new ArrayList<>();
         int funcSize = in.readInt();
         for (int i = 0; i < funcSize; i++) {
             String key = in.readString();
             int arity = in.readInt();
-            boolean infix = (in.readInt() == 1) ? true : false;
+            boolean infix = in.readInt() == 1;
             Functions.add(new Pair<>(key, new Pair<>(arity, infix)));
         }
         Substitutions = new ArrayList<>();
@@ -75,7 +116,14 @@ public class ProblemState implements Parcelable {
 		Rules = new ArrayList<>();
         if (rulesSize > 0)
         	while( rulesSize>0){
-                Rules.add(new Pair<>(in.readTypedObject(Term.CREATOR), in.readTypedObject(Term.CREATOR)));
+                int ruleSize = in.readInt();
+                ArrayList<Term> rule;
+                if (ruleSize > 0) {
+                    rule = new ArrayList<>();
+                    for (int ri = 0; ri < ruleSize; ri++)
+                        rule.add(in.readTypedObject(Term.CREATOR));
+                } else rule = new ArrayList<>();
+                Rules.add(new Pair<>(rule, in.readTypedObject(Term.CREATOR)));
 				rulesSize--;
 			}
 
@@ -83,21 +131,56 @@ public class ProblemState implements Parcelable {
 		History = new ArrayList<>();
 		if(hisSize!= 0){
 			while( hisSize>0){
-                int side = in.readInt();
-                int subhissize = in.readInt();
-                ArrayList<Pair<String, Term>> hissubs = new ArrayList<>();
-                if (subhissize != 0) {
-                    while (subhissize > 0) {
-                        String hisvar = in.readString();
-                        Term hissubterm = in.readTypedObject(Term.CREATOR);
-                        hissubs.add(new Pair<>(hisvar, hissubterm));
-                        subhissize--;
+                int side = in.readInt(); //either zero or one
+                if (side == 0) {
+                    int antesize = in.readInt();
+                    ArrayList<String> anteselected = new ArrayList<>();
+                    while (antesize > 0) {
+                        anteselected.add(in.readString());
+                        antesize--;
                     }
+
+                    int subhissize = in.readInt();
+                    ArrayList<Pair<String, Term>> hissubs = new ArrayList<>();
+                    if (subhissize != 0) {
+                        while (subhissize > 0) {
+                            String hisvar = in.readString();
+                            Term hissubterm = in.readTypedObject(Term.CREATOR);
+                            hissubs.add(new Pair<>(hisvar, hissubterm));
+                            subhissize--;
+                        }
+                    }
+                    int hisruleleftsize = in.readInt();
+                    ArrayList<Term> hisruleleft = new ArrayList<>();
+                    while (hisruleleftsize > 0) {
+                        hisruleleft.add(in.readTypedObject(Term.CREATOR));
+                        hisruleleftsize--;
+                    }
+                    Term hisruleright = in.readTypedObject(Term.CREATOR);
+                    History.add(new Pair<>(new Pair<>(anteselected, ""), new Pair<>(hissubs, new Pair<>(hisruleleft, hisruleright))));
+                    hisSize--;
+                } else {
+                    String succside = in.readString();
+                    int subhissize = in.readInt();
+                    ArrayList<Pair<String, Term>> hissubs = new ArrayList<>();
+                    if (subhissize != 0) {
+                        while (subhissize > 0) {
+                            String hisvar = in.readString();
+                            Term hissubterm = in.readTypedObject(Term.CREATOR);
+                            hissubs.add(new Pair<>(hisvar, hissubterm));
+                            subhissize--;
+                        }
+                    }
+                    int hisruleleftsize = in.readInt();
+                    ArrayList<Term> hisruleleft = new ArrayList<>();
+                    while (hisruleleftsize > 0) {
+                        hisruleleft.add(in.readTypedObject(Term.CREATOR));
+                        hisruleleftsize--;
+                    }
+                    Term hisruleright = in.readTypedObject(Term.CREATOR);
+                    History.add(new Pair<>(new Pair<>(new ArrayList<String>(), succside), new Pair<>(hissubs, new Pair<>(hisruleleft, hisruleright))));
+                    hisSize--;
                 }
-                Term hisruleleft = in.readTypedObject(Term.CREATOR);
-                Term hisruleright = in.readTypedObject(Term.CREATOR);
-                History.add(new Pair<>(side, new Pair<>(hissubs, new Pair<>(hisruleleft, hisruleright))));
-				hisSize--;
 			}
 		}
         SubHistory = new HashMap<>();
@@ -111,72 +194,101 @@ public class ProblemState implements Parcelable {
         }
     }
 
-    public void setProblem(Term[] problem) {
-        if (problem.length == 2) ssequent = new Term[]{problem[0].Dup(), problem[1].Dup()};
+    static Term getTermByString(String succSelectedPosition, HashSet<Term> succProblem) {
+        for (Term t : succProblem)
+            if (t.Print().compareTo(succSelectedPosition) == 0) return t.Dup();
+        return null;
     }
-//This method checks if the given problem Term is properly constructed
-//i.e. variable free and functions and constants are used correctly
-boolean ProperProblemTerm(Term prob) {
-		boolean ret = true;
-		for (String t: this.Constants) if(t.compareTo(prob.getSym())==0 && prob.Print().contains("(")) ret =false;
-		if(ret) for (String t: this.Variables) if(t.compareTo(prob.getSym())==0) ret =false;
-    if (ret) for (Pair<String, Pair<Integer, Boolean>> t : this.Functions)
-        if (t.first.compareTo(prob.getSym()) == 0 && prob.Print().contains("(") && prob.subTerms().size() != t.second.first)
-            ret = false;
-		if(prob instanceof Func)
-            for (Term t : prob.subTerms()) ret &= ProperProblemTerm(t);
-		return ret;
-	}
 
-//Checks if every symbol within a term is indexed
-boolean isIndexed(Term ti) {
-		boolean result = true;
-		if(ti instanceof Func) {
-            for (Term t : ti.subTerms()) result &= isIndexed(t);
-            boolean contained = false;
-            boolean sameArity = false;
-            for (Pair<String, Pair<Integer, Boolean>> p : Functions) {
-                if (ti.getSym().compareTo(p.first) == 0) {
-                    contained = true;
-                    if (p.second.first == ti.subTerms().size()) sameArity = true;
-                }
+    static boolean sideContainsEmptySet(HashSet<Term> side) {
+        for (Term t : side) if (t.getSym().compareTo(Const.Empty.getSym()) == 0) return true;
+        return false;
+    }
 
+    Term getSelectedSuccTerm() {
+        for (Term t : succProblem) if (t.Print().compareTo(succSelectedPosition) == 0) return t;
+        return null;
+    }
+
+    HashSet<Term> replaceSelectedSuccTerm(ArrayList<Term> replacement) {
+        HashSet<Term> succupdate = new HashSet<>();
+        for (Term t : succProblem)
+            if (t.Print().compareTo(succSelectedPosition) != 0) succupdate.add(t);
+            else succupdate.addAll(replacement);
+        return succupdate;
+    }
+
+    HashSet<Term> replaceSelectedAnteTerms(Term replacement) {
+        HashSet<Term> anteUpdate = new HashSet<>();
+        boolean replaced = false;
+        for (Term t : anteProblem)
+            if (!anteSelectedPositions.contains(t.Print())) anteUpdate.add(t);
+            else if (!replaced) {
+                anteUpdate.add(replacement);
+                replaced = true;
             }
-            return contained && sameArity && result;
-		}
-		else return Constants.contains(ti.getSym()) || Variables.contains(ti.getSym());
-	}
-
-    public boolean containsFunctionsymbol(String func) {
-        boolean contained = false;
-        for (Pair<String, Pair<Integer, Boolean>> p : Functions)
-            if (func.compareTo(p.first) == 0) contained = true;
-        return contained;
+        return anteUpdate;
     }
-//Finds all variables within a term
-HashSet<String> VarList(Term ti) {
-    HashSet<String> vl = new HashSet<>();
-    if (ti instanceof Func) for (Term t : ti.subTerms()) vl.addAll(VarList(t));
-		else for (String t: this.Variables) if(t.compareTo(ti.getSym())==0) vl.add(ti.getSym());
-	    return vl;
 
-	}
+    ArrayList<Term> getSelectedAnteTerm() {
+        ArrayList<Term> termlist = new ArrayList<>();
+        for (Term t : anteProblem)
+            for (String s : anteSelectedPositions)
+                if (t.Print().compareTo(s) == 0) termlist.add(t);
+        return termlist;
 
-    @Override
-    public int describeContents() {
-        return 0;
+
+    }
+
+    String RuleTermstoString(Pair<ArrayList<Term>, Term> rule) {
+        if (rule != null && rule.first != null && rule.second != null) {
+            StringBuilder prefix = new StringBuilder();
+            HashSet<String> vl = new HashSet<>();
+            for (Term t : rule.first) vl.addAll(this.VarList(t));
+            vl.addAll(this.VarList(rule.second));
+            for (String t : vl) prefix.append("∀").append(t);
+            StringBuilder retString = new StringBuilder((prefix.toString().compareTo("") != 0) ? prefix + "(Δ " : "Δ ");
+            if (rule.first.size() > 0)
+                for (int i = 0; i < rule.first.size(); i++)
+                    if (i == 0 && i != rule.first.size() - 1)
+                        retString.append(", ").append(rule.first.get(i).Print()).append(" , ");
+                    else if (0 == rule.first.size() - 1)
+                        retString.append(", ").append(rule.first.get(i).Print()).append(" ⊢ Δ , ");
+                    else if (i == rule.first.size() - 1)
+                        retString.append(rule.first.get(i).Print()).append(" ⊢ Δ , ");
+                    else retString.append(rule.first.get(i).Print()).append(" , ");
+            else retString.append("⊢ Δ , ");
+            return retString + rule.second.Print() + ((prefix.toString().compareTo("") != 0) ? " )" : "");
+        } else return "";
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    boolean containsFunctionsymbol(String func) {
+        boolean contained = true;
+        for (Pair<String, Pair<Integer, Boolean>> p : Functions)
+            if (func.compareTo(p.first) == 0) contained = false;
+        return contained;
     }
 
     // write your object's data to the passed-in Parcel
     @Override
+    @SuppressWarnings("ConstantConditions")
     public void writeToParcel(Parcel out, int flags) {
-        out.writeInt((observe) ? 1 : 0);
-        out.writeInt(selectedSide);
         out.writeInt(subPos);
-        out.writeInt(ssequent.length);
-        out.writeTypedArray(ssequent, flags);
-        out.writeInt(rsequent.length);
-        out.writeTypedArray(rsequent, flags);
+        out.writeInt((observe) ? 1 : 0);
+        out.writeInt(MatchorConstruct.size());
+        for (int i = 0; i < MatchorConstruct.size(); i++)
+            out.writeInt((MatchorConstruct.get(i)) ? 1 : 0);
+        out.writeInt(anteProblem.size());
+        for (Term t : anteProblem) out.writeTypedObject(t, flags);
+        out.writeInt(anteSelectedPositions.size());
+        for (String t : anteSelectedPositions) out.writeString(t);
+        out.writeInt(succProblem.size());
+        for (Term t : succProblem) out.writeTypedObject(t, flags);
+        out.writeString(succSelectedPosition);
+        out.writeInt(anteCurrentRule.size());
+        for (Term t : anteCurrentRule) out.writeTypedObject(t, flags);
+        out.writeTypedObject(succCurrentRule, flags);
 		out.writeInt(Variables.size());
 		out.writeStringArray(Variables.toArray(new String[0]));
     	out.writeInt(Constants.size());
@@ -193,20 +305,33 @@ HashSet<String> VarList(Term ti) {
             out.writeTypedObject(Substitutions.get(i).second, flags);
 		}
 		out.writeInt(Rules.size());
-        for (Pair<Term, Term> rule : Rules) {
-            out.writeTypedObject(rule.first, flags);
+        for (Pair<ArrayList<Term>, Term> rule : Rules) {
+            out.writeInt(rule.first.size());
+            for (int i = 0; i < rule.first.size(); i++)
+                out.writeTypedObject(rule.first.get(i), flags);
             out.writeTypedObject(rule.second, flags);
         }
 		out.writeInt(History.size());
-        for (Pair<Integer, Pair<ArrayList<Pair<String, Term>>, Pair<Term, Term>>> his : History) {
-            out.writeInt(his.first);
-            out.writeInt(his.second.first.size());
-            for (int i = 0; i < his.second.first.size(); i++) {
-                out.writeString(his.second.first.get(i).first);
-                out.writeTypedObject(his.second.first.get(i).second, flags);
+        for (Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Pair<ArrayList<Term>, Term>>> his : History) {
+            Pair<ArrayList<String>, String> selection = his.first;
+            ArrayList<Pair<String, Term>> substitution = his.second.first;
+            Pair<ArrayList<Term>, Term> rule = his.second.second;
+            if (selection.first.size() != 0) {
+                out.writeInt(0);
+                out.writeInt(selection.first.size());
+                for (String s : selection.first) out.writeString(s);
+            } else {
+                out.writeInt(1);
+                out.writeString(selection.second);
             }
-            out.writeTypedObject(his.second.second.first, flags);
-            out.writeTypedObject(his.second.second.second, flags);
+            out.writeInt(substitution.size());
+            for (int i = 0; i < substitution.size(); i++) {
+                out.writeString(substitution.get(i).first);
+                out.writeTypedObject(substitution.get(i).second, flags);
+            }
+            out.writeInt(rule.first.size());
+            for (Term t : rule.first) out.writeTypedObject(t, flags);
+            out.writeTypedObject(rule.second, flags);
         }
         out.writeInt(SubHistory.size());
         for (String key : SubHistory.keySet()) {
@@ -215,7 +340,50 @@ HashSet<String> VarList(Term ti) {
         }
     }
 
-    // this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
+    //Finds all variables within a term
+    HashSet<String> VarList(Term ti) {
+        HashSet<String> vl = new HashSet<>();
+        if (ti instanceof Func) for (Term t : ti.subTerms()) vl.addAll(VarList(t));
+        else for (String t : this.Variables) if (t.compareTo(ti.getSym()) == 0) vl.add(ti.getSym());
+        return vl;
+    }
+
+    void problemClean() {
+        HashSet<Term> newAnte = new HashSet<>();
+        HashSet<Term> newSucc = new HashSet<>();
+        for (Term t : anteProblem)
+            if (t.getSym().compareTo(Const.Empty.getSym()) != 0) newAnte.add(t);
+        for (Term t : succProblem)
+            if (t.getSym().compareTo(Const.Empty.getSym()) != 0) newSucc.add(t);
+        anteProblem = newAnte;
+        succProblem = newSucc;
+    }
+
+    //Checks if every symbol within a term is indexed
+    @SuppressWarnings("ConstantConditions")
+    boolean isIndexed(Term ti) {
+        boolean result = true;
+        if (ti instanceof Func) {
+            for (Term t : ti.subTerms()) result &= isIndexed(t);
+            boolean contained = false;
+            boolean sameArity = false;
+            for (Pair<String, Pair<Integer, Boolean>> p : Functions) {
+                if (ti.getSym().compareTo(p.first) == 0) {
+                    contained = true;
+                    if (p.second.first == ti.subTerms().size()) sameArity = true;
+                }
+
+            }
+            return contained && sameArity && result;
+        } else return Constants.contains(ti.getSym()) || Variables.contains(ti.getSym());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+
     public static final Parcelable.Creator<ProblemState> CREATOR = new Parcelable.Creator<ProblemState>() {
         public ProblemState createFromParcel(Parcel in) {
             return new ProblemState(in);

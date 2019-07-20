@@ -65,7 +65,7 @@
             app:layout_constraintTop_toBottomOf="@+id/RightSideTerm"
             app:layout_constraintVertical_weight="1" />
 
-        <HorizontalScrollView
+        <ScrollView
             android:id="@+id/RightSideTerm"
             android:layout_width="0dp"
             android:layout_height="50dp"
@@ -81,28 +81,14 @@
             app:layout_constraintTop_toBottomOf="@+id/unificationSymbol3">
 
             <LinearLayout
+                android:id="@+id/RightSideTermLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="vertical" />
+        </ScrollView>
 
-                <TextView
-                    android:id="@+id/RightSideProblem"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:autoText="false"
-                    android:editable="false"
-                    android:freezesText="true"
-                    android:gravity="center"
-                    android:minWidth="50dp"
-                    android:textColor="#000001"
-                    android:textSize="34sp"
-                    app:autoSizeMaxTextSize="60dp"
-                    app:autoSizeMinTextSize="60dp" />
-            </LinearLayout>
-        </HorizontalScrollView>
-
-        <HorizontalScrollView
+        <ScrollView
             android:id="@+id/LeftSideTerm"
             android:layout_width="0dp"
             android:layout_height="50dp"
@@ -118,22 +104,12 @@
             app:layout_constraintTop_toBottomOf="@+id/problemTag3">
 
             <LinearLayout
+                android:id="@+id/LeftSideTermLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/LeftSideProblem"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:freezesText="true"
-                    android:gravity="center"
-                    android:minWidth="50dp"
-                    android:textColor="#000001"
-                    android:textSize="34sp" />
-            </LinearLayout>
-        </HorizontalScrollView>
+                android:orientation="vertical" />
+        </ScrollView>
 
         <ImageView
             android:id="@+id/unificationSymbol3"
@@ -254,7 +230,6 @@
             android:id="@+id/problemTag3"
             android:layout_width="140dp"
             android:layout_height="20dp"
-            android:layout_marginTop="8dp"
             android:text="@string/UnifyTag"
             android:textColor="#000001"
             android:textSize="18sp"
@@ -263,7 +238,7 @@
             app:layout_constraintEnd_toStartOf="@+id/RightSideProblemTagDivider"
             app:layout_constraintHorizontal_bias=".1"
             app:layout_constraintStart_toEndOf="@+id/leftSideProblemTagDivider3"
-            app:layout_constraintTop_toTopOf="@+id/Drawer"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_weight="1" />
 
         <View

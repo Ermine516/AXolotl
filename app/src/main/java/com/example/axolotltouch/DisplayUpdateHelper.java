@@ -4,18 +4,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.GestureDetector;
+import android.text.Html;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.CompoundButton;
+import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.util.Pair;
 import androidx.core.view.GravityCompat;
@@ -29,24 +30,15 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Objects;
 
 import static com.example.axolotltouch.AuxFunctionality.PASSPROBLEMSTATE;
 
-public abstract class DisplayUpdateHelper extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-    ProblemState PS;
+public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
     Switch switcher;
-     protected abstract void ActivityDecorate();
 
-    public void textViewSelected(TextView v) {
-        v.setBackgroundColor(Color.BLACK);
-        v.setTextColor(Color.WHITE);
-    }
-
-    public void textViewUnselected(TextView v) {
-        v.setBackgroundColor(Color.WHITE);
-        v.setTextColor(Color.BLACK);
-    }
+    protected abstract void ActivityDecorate();
 
     protected ProblemState ConstructActivity(Bundle in) {
          Toolbar toolbar = findViewById(R.id.toolbar);
@@ -69,43 +61,52 @@ public abstract class DisplayUpdateHelper extends AppCompatActivity implements N
         switcher.setOnCheckedChangeListener(new ObservationListener());
         return PS;
      }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.overflowmenu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        AuxFunctionality.OverflowMenuSelected(item.getItemId(),this);
-        return super.onOptionsItemSelected(item);
-    }
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.Drawer);
-        if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START);
-        else super.onBackPressed();
-
-    }
 
     protected void swipeRightProblemStateUpdate() {
-        PS.History.add(new Pair<>(PS.selectedSide, new Pair<>(PS.Substitutions, new Pair<>(PS.rsequent[0].Dup(), PS.rsequent[1].Dup()))));
-        int anti = (PS.selectedSide == 1) ? 0 : 1;
-        Term temp = PS.rsequent[anti].Dup();
-        for (Pair<String, Term> s : PS.Substitutions)
-            temp = temp.replace(new Const(s.first), s.second);
-        PS.ssequent[PS.selectedSide] = temp;
-        PS.selectedSide = -1;
+        PS.History.add(new Pair<>(new Pair<>(PS.anteSelectedPositions, PS.succSelectedPosition), new Pair<>(PS.Substitutions, new Pair<>(PS.anteCurrentRule, PS.succCurrentRule.Dup()))));
+        if ((PS.anteSelectedPositions.size() != 0)) {
+            Term temp = PS.succCurrentRule.Dup();
+            for (Pair<String, Term> s : PS.Substitutions)
+                temp = temp.replace(new Const(s.first), s.second);
+            HashSet<Term> newProblemAnte = new HashSet<>();
+            for (Term t : PS.anteProblem) {
+                boolean selectedTerm = false;
+                for (String s : PS.anteSelectedPositions)
+                    if (t.Print().compareTo(s) == 0) selectedTerm = true;
+                if (!selectedTerm || PS.anteCurrentRule.size() == 0) newProblemAnte.add(t.Dup());
+            }
+            newProblemAnte.add(temp);
+            PS.anteProblem = newProblemAnte;
+        } else {
+            ArrayList<Term> temp = new ArrayList<>();
+            for (Term t : PS.anteCurrentRule) temp.add(t.Dup());
+            for (Pair<String, Term> s : PS.Substitutions)
+                for (int i = 0; i < temp.size(); i++)
+                    temp.set(i, temp.get(i).replace(new Const(s.first), s.second));
+            HashSet<Term> newProblemsucc;
+            newProblemsucc = new HashSet<>();
+            for (Term t : PS.succProblem)
+                if (t.Print().compareTo(PS.succSelectedPosition) != 0) newProblemsucc.add(t);
+            newProblemsucc.addAll(temp);
+            PS.succProblem = newProblemsucc;
+
+        }
+        PS.anteSelectedPositions = new ArrayList<>();
+        PS.succSelectedPosition = "";
         PS.subPos = -1;
-        PS.rsequent = new Term[]{Const.HoleSelected, Const.HoleSelected};
+        PS.anteCurrentRule = new ArrayList<>();
+        PS.anteCurrentRule.add(Const.HoleSelected);
+        PS.succCurrentRule = Const.HoleSelected;
         PS.Substitutions = new ArrayList<>();
         PS.SubHistory = new HashMap<>();
-        if (PS.ssequent[0].Print().compareTo(PS.ssequent[1].Print()) == 0)
+        if (PS.anteProblem.containsAll(PS.succProblem) && PS.succProblem.containsAll(PS.anteProblem))
             Toast.makeText(DisplayUpdateHelper.this, "Congratulations! Problem Solved! ", Toast.LENGTH_SHORT).show();
         else Toast.makeText(DisplayUpdateHelper.this, "Rule Applied", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
+    @SuppressWarnings("ConstantConditions")
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
         if (requestCode == AuxFunctionality.READ_REQUEST_CODE) {
@@ -125,6 +126,8 @@ public abstract class DisplayUpdateHelper extends AppCompatActivity implements N
         } else super.onActivityResult(requestCode,resultCode,data);
 
     }
+
+    @SuppressWarnings("NullableProblems")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         AuxFunctionality.SideMenuItems(item.getItemId(), this, PS);
@@ -133,44 +136,45 @@ public abstract class DisplayUpdateHelper extends AppCompatActivity implements N
         return true;
     }
 
-    protected abstract class OnSwipeTouchListener implements View.OnTouchListener {
-        private final GestureDetector gestureDetector;
+    public HorizontalScrollView scrollTextSelectConstruct(String text, View.OnClickListener lis, Context ctx, boolean gravity) {
+        TextView TermText = new TextView(ctx);
+        TermText.setTextSize(40);
+        TermText.setText(Html.fromHtml(text));
+        if (gravity) TermText.setGravity(Gravity.CENTER);
+        TermText.setFreezesText(true);
+        TermText.setTextColor(Color.BLACK);
+        TermText.setBackgroundColor(Color.WHITE);
+        TermText.setLayoutParams(new FrameLayout.LayoutParams(((int) TermText.getPaint().measureText(TermText.getText().toString()) + 20), FrameLayout.LayoutParams.WRAP_CONTENT));
+        if (lis != null) TermText.setOnClickListener(lis);
+        LinearLayout scrollLayout = new LinearLayout(this);
+        scrollLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.MATCH_PARENT, (gravity) ? Gravity.CENTER : Gravity.NO_GRAVITY));
+        scrollLayout.setOrientation(LinearLayout.VERTICAL);
+        scrollLayout.addView(TermText);
+        HorizontalScrollView HScroll = new HorizontalScrollView(this);
+        HScroll.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT, (gravity) ? Gravity.CENTER : Gravity.NO_GRAVITY));
+        HScroll.addView(scrollLayout);
 
-        OnSwipeTouchListener(Context context) {
-            gestureDetector = new GestureDetector(context, new GestureListener());
-        }
-
-        public abstract boolean onSwipeLeft();
-
-        public abstract boolean onSwipeRight();
-
-        public boolean onTouch(View v, MotionEvent event) {
-            return gestureDetector.onTouchEvent(event);
-        }
-
-        private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
-            private static final int SWIPE_DISTANCE_THRESHOLD = 75;
-            private static final int SWIPE_VELOCITY_THRESHOLD = 1000;
-
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                float distanceX = e2.getX() - e1.getX(), distanceY = e2.getY() - e1.getY();
-                if (Math.abs(distanceX) > Math.abs(distanceY) && Math.abs(distanceX) > SWIPE_DISTANCE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD)
-                    if (distanceX > 0) return onSwipeRight();
-                    else return onSwipeLeft();
-                else return false;
-            }
-        }
+        return HScroll;
     }
 
-    protected class ObservationListener implements CompoundButton.OnCheckedChangeListener {
-        ObservationListener() {
-            super();
-        }
-
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            DisplayUpdateHelper.this.PS.observe = isChecked;
-        }
+    protected void updateProblemSideDisplay(LinearLayout sl, Term[] t) {
+        sl.removeAllViewsInLayout();
+        for (int i = 0; i < t.length; i++)
+            sl.addView(scrollTextSelectConstruct(t[i].Print(), new DisplayUpdateHelper.SideSelectionListener(), this, true));
     }
+
+    protected void updatefutureProblemSideDisplay(LinearLayout sl, Term[] t) {
+        sl.removeAllViewsInLayout();
+        for (int i = 0; i < t.length; i++)
+            sl.addView(scrollTextSelectConstruct(t[i].Print(), null, this, false));
+    }
+
+    protected void RuleDisplayUpdate() {
+        LinearLayout RLVV = this.findViewById(R.id.RuleListVerticalLayout);
+        RLVV.removeAllViewsInLayout();
+        for (int i = 0; i < PS.Rules.size(); i++)
+            RLVV.addView(scrollTextSelectConstruct(PS.RuleTermstoString(PS.Rules.get(i)), new DisplayUpdateHelper.RuleSelectionListener(), this, false));
+    }
+
 
 }

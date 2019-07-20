@@ -13,6 +13,7 @@ public final class Const implements Term, Parcelable {
     //Special constants used for substitution definition
     final static Const HoleSelected = new Const("⚫");
     final static Const Hole = new Const("⚪");
+    final static Const Empty = new Const("∅");
     //Constant symbol
     private final String Sym;
     private ArrayList<Term> Args;
@@ -97,5 +98,20 @@ public final class Const implements Term, Parcelable {
         out.writeString(this.getSym());
         out.writeInt(0);
         out.writeTypedList(this.subTerms());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        else if ((o instanceof Const)) {
+            return this.getSym().compareTo(((Const) o).getSym()) == 0;
+        } else return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + getSym().hashCode();
+        return hash;
     }
 }

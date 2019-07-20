@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
@@ -19,6 +18,7 @@ import androidx.core.util.Pair;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import static com.example.axolotltouch.AuxFunctionality.PASSPROBLEMSTATE;
 
@@ -49,19 +49,36 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
         TermDisplayUpdate();
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void FurtureProblemDisplay() {
-        TextView lhs = this.findViewById(R.id.LeftSideProblem);
-        TextView rhs = this.findViewById(R.id.RightSideProblem);
-        if (PS.selectedSide == 1) {
-            lhs.setText(PS.ssequent[0].Print());
-            Term temp = PS.rsequent[0].Dup();
-            for (Pair<String, Term> s : PS.Substitutions)
-                temp = temp.replace(new Const(s.first), s.second);
-            rhs.setText(Html.fromHtml(temp.Print(PS.Substitutions.get(PS.subPos).second)));
+        ProblemState PS = TermConstructActivity.this.PS;
+        ArrayList<Pair<String, Term>> localSubstitution = new ArrayList<>();
+        for (Pair<String, Term> p : PS.Substitutions) {
+            if (p.first.compareTo(PS.Substitutions.get(PS.subPos).first) != 0 && p.second.getSym().compareTo(Const.HoleSelected.getSym()) == 0)
+                localSubstitution.add(new Pair<String, Term>(p.first, new Const(p.first)));
+            else localSubstitution.add(p);
+        }
+        if (PS.anteSelectedPositions.size() == 0) {
+            updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.LeftSideTermLayout), PS.anteProblem.toArray(AuxFunctionality.HashSetTermArray));
+            ArrayList<Term> temp = new ArrayList<>();
+            for (Term t : PS.anteCurrentRule) {
+                Term tosub = TermHelper.applySubstitution(localSubstitution, t.Dup());
+                temp.add(tosub);
+            }
+            HashSet<Term> updated = PS.replaceSelectedSuccTerm(temp);
+            updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), updated.toArray(AuxFunctionality.HashSetTermArray));
+        } else {
+            updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.LeftSideTermLayout), PS.succProblem.toArray(AuxFunctionality.HashSetTermArray));
+
+            Term tosub = TermHelper.applySubstitution(localSubstitution, PS.succCurrentRule.Dup());
+            HashSet<Term> updated = PS.replaceSelectedAnteTerms(tosub);
+            updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), updated.toArray(AuxFunctionality.HashSetTermArray));
+
         }
 
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void UpdateTermDisplay() {
         TextView td = this.findViewById(R.id.TermDisplay);
         LinearLayout ltd = this.findViewById(R.id.TermInstancceLayout);
@@ -71,6 +88,7 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
         ltd.setMinimumWidth((width > 75) ? width : 75);
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void TermDisplayUpdate() {
         LinearLayout RLVV = this.findViewById(R.id.TermSelectionLayout);
         RLVV.removeAllViewsInLayout();
@@ -117,14 +135,16 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
             try {
                 if (TermConstructActivity.this.PS.subPos == -1 || !PS.observe) {
                     TermConstructActivity.this.PS.subPos = -1;
-                    PS.selectedSide = -1;
+                    PS.anteSelectedPositions = new ArrayList<>();
+                    PS.succSelectedPosition = "";
                     PS.Substitutions = new ArrayList<>();
                     intent = new Intent(TermConstructActivity.this, MainActivity.class);
                     Toast.makeText(TermConstructActivity.this, "Select Rule and Problem Side", Toast.LENGTH_SHORT).show();
                 } else {
-                    if (PS.Substitutions.get(PS.subPos).second.contains(Const.HoleSelected))
+                    if (PS.MatchorConstruct.get(PS.subPos)) {
+                        PS.Substitutions.set(PS.subPos, new Pair<>(PS.Substitutions.get(PS.subPos).first, Const.HoleSelected.Dup()));
                         intent = new Intent(TermConstructActivity.this, TermConstructActivity.class);
-                    else
+                    } else
                         intent = new Intent(TermConstructActivity.this, MatchDisplayActivity.class);
                     Toast.makeText(TermConstructActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).first, Toast.LENGTH_SHORT).show();
                 }
@@ -138,6 +158,7 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
             return true;
         }
 
+        @SuppressWarnings("ConstantConditions")
         public boolean onSwipeRight() {
             ProblemState PS = TermConstructActivity.this.PS;
             Intent intent;
@@ -169,6 +190,7 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private class SymbolSelectionListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
@@ -193,6 +215,7 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private class UndoSubstitutionListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {

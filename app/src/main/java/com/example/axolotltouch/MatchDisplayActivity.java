@@ -4,10 +4,12 @@ package com.example.axolotltouch;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.util.Pair;
 
 import java.util.ArrayList;
 
@@ -28,14 +30,31 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
         ActivityDecorate();
     }
 
+    @SuppressWarnings("ConstantConditions")
     protected void ActivityDecorate() {
-        TextView lhs = this.findViewById(R.id.LeftSideProblem);
-        TextView rhs = this.findViewById(R.id.RightSideProblem);
         TextView varDisplay = this.findViewById(R.id.VarTextview);
         TextView subDisplay = this.findViewById(R.id.SubTermTextView);
+        LinearLayout leftTerm = this.findViewById(R.id.LeftSideTermLayout);
+        LinearLayout rightTerm = this.findViewById(R.id.RightSideTermLayout);
+        leftTerm.removeAllViewsInLayout();
+        rightTerm.removeAllViewsInLayout();
         String var = PS.Substitutions.get(PS.subPos).first;
-        lhs.setText(Html.fromHtml(PS.rsequent[MatchDisplayActivity.this.PS.selectedSide].Print(new Const(var))));
-        rhs.setText(Html.fromHtml(PS.ssequent[MatchDisplayActivity.this.PS.selectedSide].Print(var, PS.rsequent[MatchDisplayActivity.this.PS.selectedSide], PS.Substitutions.get(PS.subPos).second)));
+        if (MatchDisplayActivity.this.PS.anteSelectedPositions.size() == 0) {
+            Term succTerm = PS.getSelectedSuccTerm();
+            leftTerm.addView(scrollTextSelectConstruct(PS.succCurrentRule.Print(new Const(var)), null, this, true));
+            rightTerm.addView(scrollTextSelectConstruct(succTerm.Print(var, PS.succCurrentRule, PS.Substitutions.get(PS.subPos).second), null, this, true));
+        } else {
+            ArrayList<Term> anteTerm = PS.getSelectedAnteTerm();
+            for (Term t : PS.anteCurrentRule)
+                leftTerm.addView(scrollTextSelectConstruct(t.Print(new Const(var)), null, this, true));
+            for (Term t : anteTerm)
+                for (Term s : PS.anteCurrentRule)
+                    if (PS.VarList(s).contains(var)) {
+                        rightTerm.addView(scrollTextSelectConstruct(t.Print(var, s, PS.Substitutions.get(PS.subPos).second), null, this, true));
+                        break;
+                    }
+        }
+
         varDisplay.setText(var);
         try {
             subDisplay.setText(PS.Substitutions.get(PS.subPos).second.Print());
@@ -55,10 +74,15 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
                 Intent intent;
                 if (MatchDisplayActivity.this.PS.subPos == -1 || !PS.observe) {
                     MatchDisplayActivity.this.PS.subPos = -1;
-                    PS.selectedSide = -1;
+                    PS.anteSelectedPositions = new ArrayList<>();
+                    PS.succSelectedPosition = "";
                     PS.Substitutions = new ArrayList<>();
                     intent = new Intent(MatchDisplayActivity.this, MainActivity.class);
                     Toast.makeText(MatchDisplayActivity.this, "Select Rule and Problem Side", Toast.LENGTH_SHORT).show();
+                } else if (PS.MatchorConstruct.get(PS.subPos)) {
+                    PS.Substitutions.set(PS.subPos, new Pair<>(PS.Substitutions.get(PS.subPos).first, Const.HoleSelected.Dup()));
+                    intent = new Intent(MatchDisplayActivity.this, TermConstructActivity.class);
+                    Toast.makeText(MatchDisplayActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).first, Toast.LENGTH_SHORT).show();
                 } else {
                     intent = new Intent(MatchDisplayActivity.this, MatchDisplayActivity.class);
                     Toast.makeText(MatchDisplayActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).first, Toast.LENGTH_SHORT).show();
@@ -73,6 +97,7 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
             return true;
         }
 
+        @SuppressWarnings("ConstantConditions")
         public boolean onSwipeRight() {
             ProblemState PS = MatchDisplayActivity.this.PS;
             Intent intent;

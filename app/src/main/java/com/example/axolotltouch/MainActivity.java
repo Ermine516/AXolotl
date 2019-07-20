@@ -182,7 +182,7 @@ public class MainActivity extends DisplayUpdateHelper {
                             MainActivity.this.finish();
                         } else
                             Toast.makeText(MainActivity.this, "Rule not applicable", Toast.LENGTH_SHORT).show();
-                    } else if (PS.anteSelectedPositions.size() != 0) {
+                    } else if (PS.anteSelectedPositions.size() != 0) {// might need to fix bug here concerning proper matchings...
                         ArrayList<Term> anteterm = new ArrayList<>();
                         for (String s : PS.anteSelectedPositions) {
                             Term temp = ProblemState.getTermByString(s, PS.anteProblem);

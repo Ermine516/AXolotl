@@ -139,8 +139,9 @@ public class MainActivity extends DisplayUpdateHelper {
                 if (PS.succCurrentRule.getSym().compareTo(Const.HoleSelected.getSym()) != 0) {
                     if (PS.succSelectedPosition.compareTo("") != 0) {
                         Term succTerm = ProblemState.getTermByString(PS.succSelectedPosition, PS.succProblem);
-                        if (succTerm != null) {
+                        if (succTerm != null && TermHelper.TermMatchWithVar(succTerm, PS.succCurrentRule, PS.Variables)) {
                             PS.Substitutions = TermHelper.varTermMatch(succTerm, PS.succCurrentRule, PS);
+
                             HashSet<String> occurences = new HashSet<>();
                             ArrayList<Pair<String, Term>> subCleaned = new ArrayList<>();
                             for (Pair<String, Term> p : PS.Substitutions)
@@ -181,7 +182,7 @@ public class MainActivity extends DisplayUpdateHelper {
                             MainActivity.this.finish();
                         } else
                             Toast.makeText(MainActivity.this, "Rule not applicable", Toast.LENGTH_SHORT).show();
-                    } else if (PS.anteSelectedPositions.size() != 0) {
+                    } else if (PS.anteSelectedPositions.size() != 0) {// might need to fix bug here concerning proper matchings...
                         ArrayList<Term> anteterm = new ArrayList<>();
                         for (String s : PS.anteSelectedPositions) {
                             Term temp = ProblemState.getTermByString(s, PS.anteProblem);

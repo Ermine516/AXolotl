@@ -126,6 +126,8 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
         } else super.onActivityResult(requestCode,resultCode,data);
 
     }
+
+    @SuppressWarnings("NullableProblems")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         AuxFunctionality.SideMenuItems(item.getItemId(), this, PS);

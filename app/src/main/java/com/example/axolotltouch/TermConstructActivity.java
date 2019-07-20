@@ -129,7 +129,6 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
             super(ctx);
         }
 
-        @SuppressWarnings("ConstantConditions")
         public boolean onSwipeLeft() {
             PS.subPos--;
             Intent intent;

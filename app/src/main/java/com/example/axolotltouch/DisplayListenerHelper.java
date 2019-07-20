@@ -44,6 +44,7 @@ public abstract class DisplayListenerHelper extends AppCompatActivity implements
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         AuxFunctionality.OverflowMenuSelected(item.getItemId(), this);

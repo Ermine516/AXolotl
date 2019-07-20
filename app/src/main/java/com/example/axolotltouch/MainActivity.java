@@ -45,6 +45,7 @@ public class MainActivity extends DisplayUpdateHelper {
         out.putParcelable("ProblemState", PS);
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected void onRestoreInstanceState(Bundle in) {
         super.onRestoreInstanceState(in);
@@ -57,8 +58,8 @@ public class MainActivity extends DisplayUpdateHelper {
     }
 
     private void UpdateProblemDisplay() {
-        updateProblemSideDisplay((LinearLayout) this.findViewById(R.id.LeftSideTermLayout), PS.anteProblem.toArray(new Term[1]));
-        updateProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), PS.succProblem.toArray(new Term[1]));
+        updateProblemSideDisplay((LinearLayout) this.findViewById(R.id.LeftSideTermLayout), PS.anteProblem.toArray(AuxFunctionality.HashSetTermArray));
+        updateProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), PS.succProblem.toArray(AuxFunctionality.HashSetTermArray));
     }
 
 

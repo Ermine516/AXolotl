@@ -26,6 +26,11 @@ public class MainActivity extends DisplayUpdateHelper {
             }
         });
         PS = ConstructActivity(savedInstanceState);
+        if (ProblemState.sideContainsEmptySet(PS.anteProblem) && PS.anteProblem.size() > 1 ||
+                ProblemState.sideContainsEmptySet(PS.succProblem) && PS.succProblem.size() > 1)
+            PS.problemClean();
+        if (PS.anteProblem.size() == 0) PS.anteProblem.add(Const.Empty.Dup());
+        if (PS.succProblem.size() == 0) PS.succProblem.add(Const.Empty.Dup());
         if (PS.anteProblem.containsAll(PS.succProblem) && PS.succProblem.containsAll(PS.anteProblem)) {
             boolean passobseve = PS.observe;
             PS = new ProblemState();
@@ -150,6 +155,10 @@ public class MainActivity extends DisplayUpdateHelper {
                             for (String s : singleSide)
                                 PS.Substitutions.add(new Pair<>(s, Const.HoleSelected.Dup()));
                             PS.subPos = 0;
+                            PS.MatchorConstruct = new ArrayList<>();
+                            for (int i = 0; i < PS.Substitutions.size(); i++)
+                                PS.MatchorConstruct.add(PS.Substitutions.get(i).second.getSym().compareTo(Const.HoleSelected.getSym()) == 0);
+
                             if (!PS.observe)
                                 while (PS.subPos < PS.Substitutions.size() && !PS.Substitutions.get(PS.subPos).second.contains(Const.HoleSelected))
                                     PS.subPos++;
@@ -195,6 +204,8 @@ public class MainActivity extends DisplayUpdateHelper {
                                 for (String s : vars)
                                     PS.Substitutions.add(new Pair<>(s, Const.HoleSelected.Dup()));
                                 PS.subPos = 0;
+                                for (int i = 0; i < PS.Substitutions.size(); i++)
+                                    PS.MatchorConstruct.add(PS.Substitutions.get(i).second.getSym().compareTo(Const.HoleSelected.getSym()) == 0);
                                 if (!PS.observe)
                                     while (PS.subPos < PS.Substitutions.size() && !PS.Substitutions.get(PS.subPos).second.contains(Const.HoleSelected))
                                         PS.subPos++;

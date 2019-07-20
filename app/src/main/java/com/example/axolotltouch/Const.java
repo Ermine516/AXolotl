@@ -13,6 +13,7 @@ public final class Const implements Term, Parcelable {
     //Special constants used for substitution definition
     final static Const HoleSelected = new Const("⚫");
     final static Const Hole = new Const("⚪");
+    final static Const Empty = new Const("∅");
     //Constant symbol
     private final String Sym;
     private ArrayList<Term> Args;

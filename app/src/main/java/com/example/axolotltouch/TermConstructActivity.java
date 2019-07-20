@@ -142,9 +142,10 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
                     intent = new Intent(TermConstructActivity.this, MainActivity.class);
                     Toast.makeText(TermConstructActivity.this, "Select Rule and Problem Side", Toast.LENGTH_SHORT).show();
                 } else {
-                    if (PS.Substitutions.get(PS.subPos).second.contains(Const.HoleSelected))
+                    if (PS.MatchorConstruct.get(PS.subPos)) {
+                        PS.Substitutions.set(PS.subPos, new Pair<>(PS.Substitutions.get(PS.subPos).first, Const.HoleSelected.Dup()));
                         intent = new Intent(TermConstructActivity.this, TermConstructActivity.class);
-                    else
+                    } else
                         intent = new Intent(TermConstructActivity.this, MatchDisplayActivity.class);
                     Toast.makeText(TermConstructActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).first, Toast.LENGTH_SHORT).show();
                 }

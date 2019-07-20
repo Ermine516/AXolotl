@@ -9,6 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.util.Pair;
+
 import java.util.ArrayList;
 
 import static com.example.axolotltouch.AuxFunctionality.PASSPROBLEMSTATE;
@@ -77,6 +79,10 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
                     PS.Substitutions = new ArrayList<>();
                     intent = new Intent(MatchDisplayActivity.this, MainActivity.class);
                     Toast.makeText(MatchDisplayActivity.this, "Select Rule and Problem Side", Toast.LENGTH_SHORT).show();
+                } else if (PS.MatchorConstruct.get(PS.subPos)) {
+                    PS.Substitutions.set(PS.subPos, new Pair<>(PS.Substitutions.get(PS.subPos).first, Const.HoleSelected.Dup()));
+                    intent = new Intent(MatchDisplayActivity.this, TermConstructActivity.class);
+                    Toast.makeText(MatchDisplayActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).first, Toast.LENGTH_SHORT).show();
                 } else {
                     intent = new Intent(MatchDisplayActivity.this, MatchDisplayActivity.class);
                     Toast.makeText(MatchDisplayActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).first, Toast.LENGTH_SHORT).show();

@@ -132,6 +132,7 @@ class AuxFunctionality {
             if (!newPS.isIndexed(temp))
                 throw new TermHelper().new FormatException();
         }
+        if (newPS.anteProblem.size() == 0) newPS.anteProblem.add(Const.Empty.Dup());
         for (int i = anteSize + 3; i < parts.length; i++) {
             Term temp = TermHelper.parse(parts[i], newPS);
             newPS.succProblem.add(temp);

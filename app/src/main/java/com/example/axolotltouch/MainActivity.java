@@ -69,7 +69,7 @@ public class MainActivity extends DisplayUpdateHelper {
 
         @SuppressWarnings("ConstantConditions")
         public boolean onSwipeLeft() {
-            if (PS.History.size() != 0)
+            if (PS.History.size() != 0) {
                 try {
                     Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Pair<ArrayList<Term>, Term>>> laststep = PS.History.remove(PS.History.size() - 1);
                     Pair<ArrayList<Term>, Term> rule = laststep.second.second;
@@ -113,17 +113,20 @@ public class MainActivity extends DisplayUpdateHelper {
                     Toast.makeText(MainActivity.this, "Problems accessing History", Toast.LENGTH_SHORT).show();
                     return true;
                 }
-            PS.anteSelectedPositions = new ArrayList<>();
-            PS.succSelectedPosition = "";
-            PS.subPos = -1;
-            PS.anteCurrentRule = new ArrayList<>();
-            PS.anteCurrentRule.add(Const.HoleSelected);
-            PS.Substitutions = new ArrayList<>();
-            Intent intent = new Intent(MainActivity.this, MainActivity.class);
-            intent.putExtra(PASSPROBLEMSTATE, PS);
-            MainActivity.this.startActivity(intent);
-            MainActivity.this.finish();
-            Toast.makeText(MainActivity.this, "Rule Application Undone!", Toast.LENGTH_SHORT).show();
+                PS.anteSelectedPositions = new ArrayList<>();
+                PS.succSelectedPosition = "";
+                PS.subPos = -1;
+                PS.anteCurrentRule = new ArrayList<>();
+                PS.anteCurrentRule.add(Const.HoleSelected);
+                PS.Substitutions = new ArrayList<>();
+                Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                intent.putExtra(PASSPROBLEMSTATE, PS);
+                MainActivity.this.startActivity(intent);
+                MainActivity.this.finish();
+                Toast.makeText(MainActivity.this, "Rule Application Undone!", Toast.LENGTH_SHORT).show();
+            } else
+                Toast.makeText(MainActivity.this, "No Rule Application to Undo!", Toast.LENGTH_SHORT).show();
+
             return true;
         }
 

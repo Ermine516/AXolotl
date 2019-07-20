@@ -147,12 +147,12 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
         TermText.setLayoutParams(new FrameLayout.LayoutParams(((int) TermText.getPaint().measureText(TermText.getText().toString()) + 20), FrameLayout.LayoutParams.WRAP_CONTENT));
         if (lis != null) TermText.setOnClickListener(lis);
         LinearLayout scrollLayout = new LinearLayout(this);
-        scrollLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.MATCH_PARENT, (gravity) ? Gravity.CENTER : Gravity.NO_GRAVITY));
+        scrollLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.MATCH_PARENT, Gravity.NO_GRAVITY));//(gravity) ? Gravity.CENTER : Gravity.NO_GRAVITY));
         scrollLayout.setOrientation(LinearLayout.VERTICAL);
         scrollLayout.addView(TermText);
         HorizontalScrollView HScroll = new HorizontalScrollView(this);
-        HScroll.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT, (gravity) ? Gravity.CENTER : Gravity.NO_GRAVITY));
         HScroll.addView(scrollLayout);
+        HScroll.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, (gravity) ? Gravity.CENTER : Gravity.NO_GRAVITY));
 
         return HScroll;
     }

@@ -4,6 +4,7 @@ import androidx.core.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 
 class TermHelper {
@@ -69,6 +70,22 @@ class TermHelper {
             boolean ret = true;
             for (int i = 0; i < left.subTerms().size(); i++)
                 ret &= TermMatch(left.subTerms().get(i), right.subTerms().get(i));
+            return ret;
+        } else return false;
+    }
+
+    static boolean TermMatchWithVar(Term left, Term right, HashSet<String> var) {
+        if (left instanceof Const && right instanceof Const && (left.getSym().compareTo(right.getSym()) == 0 ||
+                var.contains(left.getSym()) || var.contains(right.getSym())))
+            return true;
+        else if ((left instanceof Func && right instanceof Const && var.contains(right.getSym())))
+            return true;
+        else if ((right instanceof Func && left instanceof Const && var.contains(left.getSym())))
+            return true;
+        else if (left instanceof Func && right instanceof Func && left.getSym().compareTo(right.getSym()) == 0) {
+            boolean ret = true;
+            for (int i = 0; i < left.subTerms().size(); i++)
+                ret &= TermMatchWithVar(left.subTerms().get(i), right.subTerms().get(i), var);
             return ret;
         } else return false;
     }

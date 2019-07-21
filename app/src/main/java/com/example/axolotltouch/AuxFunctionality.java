@@ -36,6 +36,14 @@ class AuxFunctionality {
             ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.prop3), "prop3.txt", ctx);
             intent = new Intent(ctx, MainActivity.class);
             PS = newPS;
+        } else if (id == R.id.propositional04) {
+            ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.prop4), "prop4.txt", ctx);
+            intent = new Intent(ctx, MainActivity.class);
+            PS = newPS;
+        } else if (id == R.id.propositional05) {
+            ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.prop5), "prop5.txt", ctx);
+            intent = new Intent(ctx, MainActivity.class);
+            PS = newPS;
         } else if (id == R.id.modalProblem01) {
             ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.modal1), "modal1.txt", ctx);
             intent = new Intent(ctx, MainActivity.class);

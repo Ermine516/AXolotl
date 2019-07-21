@@ -33,6 +33,12 @@
             <item
                 android:id="@+id/propositional03"
                 android:title="@string/Problem3" />
+            <item
+                android:id="@+id/propositional04"
+                android:title="@string/problem04" />
+            <item
+                android:id="@+id/propositional05"
+                android:title="@string/Problem05" />
         </menu>
     </item>
     <item

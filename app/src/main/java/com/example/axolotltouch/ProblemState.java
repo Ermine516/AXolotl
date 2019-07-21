@@ -15,7 +15,7 @@ import java.util.HashSet;
 //as well as functions providing important features. 
 public class ProblemState implements Parcelable {
     int subPos;
-    ArrayList<Boolean> MatchorConstruct;
+    HashMap<String, Boolean> MatchorConstruct;
     boolean observe;
     HashSet<Term> anteProblem;
     ArrayList<String> anteSelectedPositions;
@@ -35,7 +35,7 @@ public class ProblemState implements Parcelable {
     public ProblemState() {
         subPos = -1;
         observe = true;
-        MatchorConstruct = new ArrayList<>();
+        MatchorConstruct = new HashMap<>();
         anteProblem = new HashSet<>();
         anteProblem.add(Const.Hole);
         anteSelectedPositions = new ArrayList<>();
@@ -58,9 +58,9 @@ public class ProblemState implements Parcelable {
         subPos = in.readInt();
         observe = in.readInt() == 1;
         int MatchorConstructSize = in.readInt();
-        MatchorConstruct = new ArrayList<>();
+        MatchorConstruct = new HashMap<>();
         while (MatchorConstructSize > 0) {
-            MatchorConstruct.add(in.readInt() == 1);
+            MatchorConstruct.put(in.readString(), in.readInt() == 1);
             MatchorConstructSize--;
         }
         int anteProblemsize = in.readInt();
@@ -277,8 +277,10 @@ public class ProblemState implements Parcelable {
         out.writeInt(subPos);
         out.writeInt((observe) ? 1 : 0);
         out.writeInt(MatchorConstruct.size());
-        for (int i = 0; i < MatchorConstruct.size(); i++)
-            out.writeInt((MatchorConstruct.get(i)) ? 1 : 0);
+        for (String key : MatchorConstruct.keySet()) {
+            out.writeString(key);
+            out.writeInt((MatchorConstruct.get(key)) ? 1 : 0);
+        }
         out.writeInt(anteProblem.size());
         for (Term t : anteProblem) out.writeTypedObject(t, flags);
         out.writeInt(anteSelectedPositions.size());

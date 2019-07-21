@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.core.util.Pair;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import static com.example.axolotltouch.AuxFunctionality.PASSPROBLEMSTATE;
@@ -33,8 +34,10 @@ public class MainActivity extends DisplayUpdateHelper {
         if (PS.succProblem.size() == 0) PS.succProblem.add(Const.Empty.Dup());
         if (PS.anteProblem.containsAll(PS.succProblem) && PS.succProblem.containsAll(PS.anteProblem)) {
             boolean passobseve = PS.observe;
+            ArrayList<Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Pair<ArrayList<Term>, Term>>>> ProofHistory = PS.History;
             PS = new ProblemState();
             PS.observe = passobseve;
+            PS.History = ProofHistory;
         }
         ActivityDecorate();
     }
@@ -141,7 +144,6 @@ public class MainActivity extends DisplayUpdateHelper {
                         Term succTerm = ProblemState.getTermByString(PS.succSelectedPosition, PS.succProblem);
                         if (succTerm != null && TermHelper.TermMatchWithVar(succTerm, PS.succCurrentRule, PS.Variables)) {
                             PS.Substitutions = TermHelper.varTermMatch(succTerm, PS.succCurrentRule, PS);
-
                             HashSet<String> occurences = new HashSet<>();
                             ArrayList<Pair<String, Term>> subCleaned = new ArrayList<>();
                             for (Pair<String, Term> p : PS.Substitutions)
@@ -160,9 +162,9 @@ public class MainActivity extends DisplayUpdateHelper {
                             for (String s : singleSide)
                                 PS.Substitutions.add(new Pair<>(s, Const.HoleSelected.Dup()));
                             PS.subPos = 0;
-                            PS.MatchorConstruct = new ArrayList<>();
-                            for (int i = 0; i < PS.Substitutions.size(); i++)
-                                PS.MatchorConstruct.add(PS.Substitutions.get(i).second.getSym().compareTo(Const.HoleSelected.getSym()) == 0);
+                            PS.MatchorConstruct = new HashMap<>();
+                            for (Pair<String, Term> p : PS.Substitutions)
+                                PS.MatchorConstruct.put(p.first, p.second.getSym().compareTo(Const.HoleSelected.getSym()) == 0);
 
                             if (!PS.observe)
                                 while (PS.subPos < PS.Substitutions.size() && !PS.Substitutions.get(PS.subPos).second.contains(Const.HoleSelected))
@@ -182,7 +184,7 @@ public class MainActivity extends DisplayUpdateHelper {
                             MainActivity.this.finish();
                         } else
                             Toast.makeText(MainActivity.this, "Rule not applicable", Toast.LENGTH_SHORT).show();
-                    } else if (PS.anteSelectedPositions.size() != 0) {// might need to fix bug here concerning proper matchings...
+                    } else if (PS.anteSelectedPositions.size() != 0) {
                         ArrayList<Term> anteterm = new ArrayList<>();
                         for (String s : PS.anteSelectedPositions) {
                             Term temp = ProblemState.getTermByString(s, PS.anteProblem);
@@ -209,8 +211,9 @@ public class MainActivity extends DisplayUpdateHelper {
                                 for (String s : vars)
                                     PS.Substitutions.add(new Pair<>(s, Const.HoleSelected.Dup()));
                                 PS.subPos = 0;
-                                for (int i = 0; i < PS.Substitutions.size(); i++)
-                                    PS.MatchorConstruct.add(PS.Substitutions.get(i).second.getSym().compareTo(Const.HoleSelected.getSym()) == 0);
+                                PS.MatchorConstruct = new HashMap<>();
+                                for (Pair<String, Term> p : PS.Substitutions)
+                                    PS.MatchorConstruct.put(p.first, p.second.getSym().compareTo(Const.HoleSelected.getSym()) == 0);
                                 if (!PS.observe)
                                     while (PS.subPos < PS.Substitutions.size() && !PS.Substitutions.get(PS.subPos).second.contains(Const.HoleSelected))
                                         PS.subPos++;

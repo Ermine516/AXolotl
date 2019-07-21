@@ -79,7 +79,7 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
                     PS.Substitutions = new ArrayList<>();
                     intent = new Intent(MatchDisplayActivity.this, MainActivity.class);
                     Toast.makeText(MatchDisplayActivity.this, "Select Rule and Problem Side", Toast.LENGTH_SHORT).show();
-                } else if (PS.MatchorConstruct.get(PS.subPos)) {
+                } else if (PS.MatchorConstruct.get(PS.Substitutions.get(PS.subPos).first)) {
                     PS.Substitutions.set(PS.subPos, new Pair<>(PS.Substitutions.get(PS.subPos).first, Const.HoleSelected.Dup()));
                     intent = new Intent(MatchDisplayActivity.this, TermConstructActivity.class);
                     Toast.makeText(MatchDisplayActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).first, Toast.LENGTH_SHORT).show();
@@ -92,7 +92,6 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
                 MatchDisplayActivity.this.finish();
             } catch (NullPointerException e) {
                 Toast.makeText(MatchDisplayActivity.this, "Problems accessing Previous State", Toast.LENGTH_SHORT).show();
-
             }
             return true;
         }

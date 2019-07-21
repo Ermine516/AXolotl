@@ -89,7 +89,6 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
                 if (t.Print().compareTo(PS.succSelectedPosition) != 0) newProblemsucc.add(t);
             newProblemsucc.addAll(temp);
             PS.succProblem = newProblemsucc;
-
         }
         PS.anteSelectedPositions = new ArrayList<>();
         PS.succSelectedPosition = "";
@@ -99,10 +98,11 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
         PS.succCurrentRule = Const.HoleSelected;
         PS.Substitutions = new ArrayList<>();
         PS.SubHistory = new HashMap<>();
-        if (PS.anteProblem.containsAll(PS.succProblem) && PS.succProblem.containsAll(PS.anteProblem))
+        if (PS.succProblem.isEmpty()) PS.succProblem.add(Const.Empty.Dup());
+        if (PS.anteProblem.isEmpty()) PS.anteProblem.add(Const.Empty.Dup());
+        if ((PS.anteProblem.containsAll(PS.succProblem) && PS.succProblem.containsAll(PS.anteProblem)))
             Toast.makeText(DisplayUpdateHelper.this, "Congratulations! Problem Solved! ", Toast.LENGTH_SHORT).show();
         else Toast.makeText(DisplayUpdateHelper.this, "Rule Applied", Toast.LENGTH_SHORT).show();
-
     }
 
     @Override

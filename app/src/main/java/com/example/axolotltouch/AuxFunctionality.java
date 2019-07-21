@@ -143,12 +143,9 @@ class AuxFunctionality {
     }
 
     private static boolean parseRuleDefinition(ProblemState newPS, String[] parts) throws TermHelper.FormatException {
-        System.out.println("should not have crashed 1  ");
         if (parts.length < 2) throw new TermHelper().new FormatException();
         int anteSize = Integer.valueOf(parts[1]);
-        System.out.println("should not have crashed  2 ");
         if (parts.length != anteSize + 3) throw new TermHelper().new FormatException();
-        System.out.println("should not have crashed  3  ");
         ArrayList<Term> anteRule = new ArrayList<>();
         Term succRule = Const.HoleSelected;
         for (int i = 2; i < parts.length; i++) {

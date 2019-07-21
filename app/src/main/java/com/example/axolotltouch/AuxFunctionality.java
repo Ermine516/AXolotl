@@ -122,7 +122,7 @@ class AuxFunctionality {
         if (name.toString().matches("[a-zA-Z]+")
                 && !newPS.Variables.contains(name.toString())
                 && !newPS.Constants.contains(name.toString())
-                && newPS.containsFunctionsymbol(name.toString()))
+                && newPS.containsFunctionSymbol(name.toString()))
             newPS.Variables.add(name.toString());
         else throw new TermHelper().new FormatException();
     }
@@ -182,7 +182,7 @@ class AuxFunctionality {
                 && arity.toString().matches("[0-9]+")
                 && !PS.Variables.contains(name.toString())
                 && !PS.Constants.contains(name.toString())
-                && PS.containsFunctionsymbol(name.toString())) {
+                && PS.containsFunctionSymbol(name.toString())) {
             if (Integer.parseInt(arity.toString()) == 0) PS.Constants.add(name.toString());
             else
                 PS.Functions.add(new Pair<>(name.toString(), new Pair<>(Integer.parseInt(arity.toString()), infix)));

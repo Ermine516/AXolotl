@@ -14,6 +14,7 @@ import java.util.HashSet;
 //This contains all information concerning the problem rules and substitutions 
 //as well as functions providing important features. 
 public class ProblemState implements Parcelable {
+    public static final String RULESYMBOL = "◀■▶";
     int subPos;
     HashMap<String, Boolean> MatchorConstruct;
     boolean observe;
@@ -240,7 +241,7 @@ public class ProblemState implements Parcelable {
 
     }
 
-    String RuleTermstoString(Pair<ArrayList<Term>, Term> rule) {
+    String RuleTermsToString(Pair<ArrayList<Term>, Term> rule) {
         if (rule != null && rule.first != null && rule.second != null) {
             StringBuilder prefix = new StringBuilder();
             HashSet<String> vl = new HashSet<>();
@@ -253,17 +254,17 @@ public class ProblemState implements Parcelable {
                     if (i == 0 && i != rule.first.size() - 1)
                         retString.append(", ").append(rule.first.get(i).Print()).append(" , ");
                     else if (0 == rule.first.size() - 1)
-                        retString.append(", ").append(rule.first.get(i).Print()).append(" ⊢ Δ , ");
+                        retString.append(", ").append(rule.first.get(i).Print()).append(" " + RULESYMBOL).append(" Δ , ");
                     else if (i == rule.first.size() - 1)
-                        retString.append(rule.first.get(i).Print()).append(" ⊢ Δ , ");
+                        retString.append(rule.first.get(i).Print()).append(" " + RULESYMBOL).append(" Δ , ");
                     else retString.append(rule.first.get(i).Print()).append(" , ");
-            else retString.append("⊢ Δ , ");
+            else retString.append(RULESYMBOL).append(" Δ , ");
             return retString + rule.second.Print() + ((prefix.toString().compareTo("") != 0) ? " )" : "");
         } else return "";
     }
 
     @SuppressWarnings("ConstantConditions")
-    boolean containsFunctionsymbol(String func) {
+    boolean containsFunctionSymbol(String func) {
         boolean contained = true;
         for (Pair<String, Pair<Integer, Boolean>> p : Functions)
             if (func.compareTo(p.first) == 0) contained = false;

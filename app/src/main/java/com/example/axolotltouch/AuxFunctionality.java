@@ -151,17 +151,25 @@ class AuxFunctionality {
     }
 
     private static boolean parseRuleDefinition(ProblemState newPS, String[] parts) throws TermHelper.FormatException {
+        String ruleRegex = "\\[(.)*\\]";
         if (parts.length < 2) throw new TermHelper().new FormatException();
         int anteSize = Integer.valueOf(parts[1]);
-        if (parts.length != anteSize + 3) throw new TermHelper().new FormatException();
+        int partsAjustedSize = parts.length;
+        String ruleLabel = "";
+        if (parts.length != anteSize + 3) {
+            if (parts.length != anteSize + 4) throw new TermHelper().new FormatException();
+            partsAjustedSize--;
+            if (parts[partsAjustedSize].matches(ruleRegex)) ruleLabel = parts[partsAjustedSize];
+            else throw new TermHelper().new FormatException();
+        }
         ArrayList<Term> anteRule = new ArrayList<>();
         Term succRule = Const.HoleSelected;
-        for (int i = 2; i < parts.length; i++) {
+        for (int i = 2; i < partsAjustedSize; i++) {
             succRule = TermHelper.parse(parts[i], newPS);
             if (!newPS.isIndexed(succRule)) throw new TermHelper().new FormatException();
-            else if (i != parts.length - 1) anteRule.add(TermHelper.parse(parts[i], newPS));
+            else if (i != partsAjustedSize - 1) anteRule.add(TermHelper.parse(parts[i], newPS));
         }
-        newPS.Rules.add(new Pair<>(anteRule, succRule));
+        newPS.Rules.add(new Pair<>(ruleLabel, new Pair<>(anteRule, succRule)));
         return true;
     }
 

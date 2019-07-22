@@ -14,7 +14,7 @@ import java.util.HashSet;
 //This contains all information concerning the problem rules and substitutions 
 //as well as functions providing important features. 
 public class ProblemState implements Parcelable {
-    public static final String RULESYMBOL = "◀■▶";
+    private static final String RULESYMBOL = "◀■▶";
     int subPos;
     HashMap<String, Boolean> MatchorConstruct;
     boolean observe;
@@ -29,7 +29,7 @@ public class ProblemState implements Parcelable {
     ArrayList<String> Constants;
     ArrayList<Pair<String, Pair<Integer, Boolean>>> Functions;
     ArrayList<Pair<String, Term>> Substitutions;
-    ArrayList<Pair<ArrayList<Term>, Term>> Rules;
+    ArrayList<Pair<String, Pair<ArrayList<Term>, Term>>> Rules;
     ArrayList<Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Pair<ArrayList<Term>, Term>>>> History;
     HashMap<String, ArrayList<Term>> SubHistory;
 
@@ -117,6 +117,7 @@ public class ProblemState implements Parcelable {
 		Rules = new ArrayList<>();
         if (rulesSize > 0)
         	while( rulesSize>0){
+                String label = in.readString();
                 int ruleSize = in.readInt();
                 ArrayList<Term> rule;
                 if (ruleSize > 0) {
@@ -124,7 +125,7 @@ public class ProblemState implements Parcelable {
                     for (int ri = 0; ri < ruleSize; ri++)
                         rule.add(in.readTypedObject(Term.CREATOR));
                 } else rule = new ArrayList<>();
-                Rules.add(new Pair<>(rule, in.readTypedObject(Term.CREATOR)));
+                Rules.add(new Pair<>(label, new Pair<>(rule, in.readTypedObject(Term.CREATOR))));
 				rulesSize--;
 			}
 
@@ -308,11 +309,12 @@ public class ProblemState implements Parcelable {
             out.writeTypedObject(Substitutions.get(i).second, flags);
 		}
 		out.writeInt(Rules.size());
-        for (Pair<ArrayList<Term>, Term> rule : Rules) {
-            out.writeInt(rule.first.size());
-            for (int i = 0; i < rule.first.size(); i++)
-                out.writeTypedObject(rule.first.get(i), flags);
-            out.writeTypedObject(rule.second, flags);
+        for (Pair<String, Pair<ArrayList<Term>, Term>> rule : Rules) {
+            out.writeString(rule.first);
+            out.writeInt(rule.second.first.size());
+            for (int i = 0; i < rule.second.first.size(); i++)
+                out.writeTypedObject(rule.second.first.get(i), flags);
+            out.writeTypedObject(rule.second.second, flags);
         }
 		out.writeInt(History.size());
         for (Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Pair<ArrayList<Term>, Term>>> his : History) {

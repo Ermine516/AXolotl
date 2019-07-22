@@ -173,7 +173,7 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
         LinearLayout RLVV = this.findViewById(R.id.RuleListVerticalLayout);
         RLVV.removeAllViewsInLayout();
         for (int i = 0; i < PS.Rules.size(); i++)
-            RLVV.addView(scrollTextSelectConstruct(PS.RuleTermsToString(PS.Rules.get(i)), new DisplayUpdateHelper.RuleSelectionListener(), this, false));
+            RLVV.addView(scrollTextSelectConstruct(PS.RuleTermsToString(PS.Rules.get(i).second), new DisplayUpdateHelper.RuleSelectionListener(), this, false));
     }
 
 

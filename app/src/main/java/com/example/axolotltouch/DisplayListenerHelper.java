@@ -147,8 +147,8 @@ public abstract class DisplayListenerHelper extends AppCompatActivity implements
             for (int i = 0; i < rlvv.getChildCount(); i++) {
                 TextView theText = ((TextView) ((LinearLayout) ((HorizontalScrollView) rlvv.getChildAt(i)).getChildAt(0)).getChildAt(0));
                 if (theText.getText().toString().compareTo(((TextView) view).getText().toString()) == 0) {
-                    DisplayListenerHelper.this.PS.anteCurrentRule = DisplayListenerHelper.this.PS.Rules.get(i).first;
-                    DisplayListenerHelper.this.PS.succCurrentRule = DisplayListenerHelper.this.PS.Rules.get(i).second;
+                    DisplayListenerHelper.this.PS.anteCurrentRule = DisplayListenerHelper.this.PS.Rules.get(i).second.first;
+                    DisplayListenerHelper.this.PS.succCurrentRule = DisplayListenerHelper.this.PS.Rules.get(i).second.second;
                     textViewSelected(((TextView) view));
                 } else textViewUnselected(theText);
             }

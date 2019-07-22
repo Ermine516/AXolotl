@@ -18,7 +18,7 @@ class AuxFunctionality {
     static final Term[] HashSetTermArray = new Term[]{Const.Hole};
     static final String PASSPROBLEMSTATE = "com.example.android.AXolotlTouch.extra.problemstate";
     static final int READ_REQUEST_CODE = 42;
-    private static final String nameParseRegex = "[a-zA-Z&\\u2227\\u2228\\u00AC\\u21D2\\u21D4\\u2284\\u2285\\u22A4\\u25A1\\u25C7]+";
+    private static final String nameParseRegex = "[a-zA-Z&\\u2227\\u2228\\u00AC\\u21D2\\u21D4\\u2284\\u2285\\u22A4\\u25A1\\u25C7\\u22A2\\u03B5]+";
 
      static void SideMenuItems(int id, Activity ctx, ProblemState PS) {
          AssetManager manager = ctx.getAssets();

@@ -1,0 +1,14 @@
+Function: ∧ 2 infix
+Function: ⇒ 2 infix
+Function: A 0
+Function: B 0
+Function: C 0
+Function: ⊤ 0
+Variable: x
+Variable: y
+Variable: z
+Variable: w
+Problem: 2 1 ⇒(B,C) ⇒(A,B) ⇒(A,C)
+Rule: 2 x ⇒(x,y)  y [MP]
+Rule: 0  ⇒(x,⇒(y,x)) [Weak]
+Rule: 0  ⇒(⇒(x,⇒(y,z)),⇒(⇒(x,y),⇒(x,z))) [⇒-Trans]

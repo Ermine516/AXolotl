@@ -23,6 +23,9 @@
             android:name=".ProofDisplayActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".PropositionalProblemsListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

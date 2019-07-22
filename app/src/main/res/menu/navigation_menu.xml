@@ -22,25 +22,9 @@
                 app:showAsAction="always" />
         </menu>
     </item>
-    <item android:title="@string/PropLogic">
-        <menu>
-            <item
-                android:id="@+id/propositional01"
-                android:title="@string/Problem1" />
-            <item
-                android:id="@+id/propositional02"
-                android:title="@string/problem2" />
-            <item
-                android:id="@+id/propositional03"
-                android:title="@string/Problem3" />
-            <item
-                android:id="@+id/propositional04"
-                android:title="@string/problem04" />
-            <item
-                android:id="@+id/propositional05"
-                android:title="@string/Problem05" />
-        </menu>
-    </item>
+    <item
+        android:id="@+id/PropositionalProblems"
+        android:title="@string/PropLogic" />
     <item
         android:id="@+id/modalMenu"
         android:title="@string/ModalLogic">

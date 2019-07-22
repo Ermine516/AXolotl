@@ -2,6 +2,7 @@ package com.example.axolotltouch;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.widget.Toast;
 
 import androidx.core.util.Pair;
@@ -20,30 +21,13 @@ class AuxFunctionality {
     private static final String nameParseRegex = "[a-zA-Z&\\u2227\\u2228\\u00AC\\u21D2\\u21D4\\u2284\\u2285\\u22A4\\u25A1\\u25C7]+";
 
      static void SideMenuItems(int id, Activity ctx, ProblemState PS) {
-        Intent intent = null;
+         AssetManager manager = ctx.getAssets();
+         Intent intent = null;
         if (id == R.id.Problembutton) {
             Toast.makeText(ctx, "Problem", Toast.LENGTH_SHORT).show();
             intent = new Intent(ctx, MainActivity.class);
-        } else if (id == R.id.propositional01) {
-            ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.prop1), "prop1.txt", ctx);
-            intent = new Intent(ctx, MainActivity.class);
-            PS = newPS;
-        } else if (id == R.id.propositional02) {
-            ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.prop2), "prop2.txt", ctx);
-            intent = new Intent(ctx, MainActivity.class);
-            PS = newPS;
-        } else if (id == R.id.propositional03) {
-            ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.prop3), "prop3.txt", ctx);
-            intent = new Intent(ctx, MainActivity.class);
-            PS = newPS;
-        } else if (id == R.id.propositional04) {
-            ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.prop4), "prop4.txt", ctx);
-            intent = new Intent(ctx, MainActivity.class);
-            PS = newPS;
-        } else if (id == R.id.propositional05) {
-            ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.prop5), "prop5.txt", ctx);
-            intent = new Intent(ctx, MainActivity.class);
-            PS = newPS;
+        } else if (id == R.id.PropositionalProblems) {
+            intent = new Intent(ctx, PropositionalProblemsListActivity.class);
         } else if (id == R.id.modalProblem01) {
             ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.modal1), "modal1.txt", ctx);
             intent = new Intent(ctx, MainActivity.class);
@@ -55,7 +39,7 @@ class AuxFunctionality {
         if (intent != null) {
             intent.putExtra(PASSPROBLEMSTATE, PS);
             ctx.startActivity(intent);
-	    ctx.finish();
+            ctx.finish();
         }
     }
 
@@ -84,7 +68,8 @@ class AuxFunctionality {
         ctx.startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
-     static ProblemState loadFile(InputStream IS, String file, Activity ctx) {
+
+    static ProblemState loadFile(InputStream IS, String file, Activity ctx) {
          ProblemState newPS = new ProblemState();
          newPS.observe = ((DisplayUpdateHelper) ctx).PS.observe;
          String line;

@@ -142,6 +142,7 @@ public abstract class DisplayListenerHelper extends AppCompatActivity implements
     protected class RuleSelectionListener implements View.OnClickListener {
 
         @Override
+        @SuppressWarnings("ConstantConditions")
         public void onClick(View view) {
             LinearLayout rlvv = DisplayListenerHelper.this.findViewById(R.id.RuleListVerticalLayout);
             for (int i = 0; i < rlvv.getChildCount(); i++) {

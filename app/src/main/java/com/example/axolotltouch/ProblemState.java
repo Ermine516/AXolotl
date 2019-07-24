@@ -14,7 +14,7 @@ import java.util.HashSet;
 //This contains all information concerning the problem rules and substitutions 
 //as well as functions providing important features. 
 public class ProblemState implements Parcelable {
-    private static final String RULESYMBOL = "◀■▶";
+    private static final String RULESYMBOL = "◀▶";
     int subPos;
     HashMap<String, Boolean> MatchorConstruct;
     boolean observe;
@@ -51,9 +51,12 @@ public class ProblemState implements Parcelable {
 		Rules = new ArrayList<>();
         Substitutions = new ArrayList<>();
         Functions = new ArrayList<>();
+        Functions.add(new Pair<>("cons", new Pair<>(2, false)));
+        Functions.add(new Pair<>("⊢", new Pair<>(2, true)));
 		Variables = new HashSet<>();
         Constants = new ArrayList<>();
-		History= new ArrayList<>();
+        Constants.add("ε");
+        History = new ArrayList<>();
 	}
     ProblemState(Parcel in){
         subPos = in.readInt();

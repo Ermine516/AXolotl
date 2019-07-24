@@ -63,6 +63,59 @@ class TermHelper {
         return ret.toString();
     }
 
+    static boolean containsNestedSequents(Term t) {
+        if (t instanceof Const)
+            return false;
+        else if (t instanceof Func && t.getSym().compareTo("⊢") == 0) {
+            if (containsNestedSequents(t.subTerms().get(0)) || containsNestedSequents(t.subTerms().get(1)))
+                return false;
+            else return true;
+        } else if (t instanceof Func) {
+            boolean ret = false;
+            for (int i = 0; i < t.subTerms().size(); i++)
+                ret |= containsNestedSequents(t.subTerms().get(i));
+            return ret;
+        } else return false;
+    }
+
+    //assumes that containsNestedSequents(Term t) was checked
+    static boolean wellformedSequents(Term t) {
+        if (t instanceof Func && t.getSym().compareTo("⊢") == 0) {
+            if (t.subTerms().get(0).getSym().compareTo("cons") == 0 && t.subTerms().get(1).getSym().compareTo("cons") == 0) {
+                return !(containsNestedCons(t.subTerms().get(0)) || containsNestedCons(t.subTerms().get(1)));
+            } else if (t.subTerms().get(0).getSym().compareTo("cons") == 0 && freeOfCons(t.subTerms().get(1))) {
+                return !(containsNestedCons(t.subTerms().get(0)));
+            } else if (t.subTerms().get(1).getSym().compareTo("cons") == 0 && freeOfCons(t.subTerms().get(0))) {
+                return !(containsNestedCons(t.subTerms().get(1)));
+            } else if (freeOfCons(t.subTerms().get(0)) && freeOfCons(t.subTerms().get(1))) {
+                return true;
+            } else return false;
+        } else return false;
+    }
+
+    private static boolean containsNestedCons(Term t) {
+        if (t.getSym().compareTo("cons") == 0)
+            return containsNestedCons(t.subTerms().get(0)) || containsNestedCons(t.subTerms().get(1));
+        else if (t instanceof Const) return false;
+        else if (t instanceof Func) {
+            boolean ret = true;
+            for (int i = 0; i < t.subTerms().size(); i++)
+                ret &= freeOfCons(t.subTerms().get(i));
+            return !ret;
+        } else return true;
+    }
+
+    static boolean freeOfCons(Term t) {
+        if (t.getSym().compareTo("cons") == 0) return false;
+        else if (t instanceof Const) return true;
+        else if (t instanceof Func) {
+            boolean ret = true;
+            for (int i = 0; i < t.subTerms().size(); i++)
+                ret &= freeOfCons(t.subTerms().get(i));
+            return ret;
+        } else return false;
+
+    }
     static boolean TermMatch(Term left, Term right) {
         if (left instanceof Const && right instanceof Const && left.getSym().compareTo(right.getSym()) == 0)
             return true;
@@ -88,6 +141,7 @@ class TermHelper {
                 ret &= TermMatchWithVar(left.subTerms().get(i), right.subTerms().get(i), var);
             return ret;
         } else return false;
+
     }
 
     static ArrayList<Pair<String, Term>> varTermMatch(Term left, Term right, ProblemState PS) {

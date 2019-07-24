@@ -41,6 +41,7 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
         String var = PS.Substitutions.get(PS.subPos).first;
         if (MatchDisplayActivity.this.PS.anteSelectedPositions.size() == 0) {
             Term succTerm = PS.getSelectedSuccTerm();
+            succTerm.normalize(PS.Variables);
             leftTerm.addView(scrollTextSelectConstruct(PS.succCurrentRule.Print(new Const(var)), null, this, true));
             rightTerm.addView(scrollTextSelectConstruct(succTerm.Print(var, PS.succCurrentRule, PS.Substitutions.get(PS.subPos).second), null, this, true));
         } else {

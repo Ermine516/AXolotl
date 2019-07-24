@@ -165,8 +165,10 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
 
     protected void updatefutureProblemSideDisplay(LinearLayout sl, Term[] t) {
         sl.removeAllViewsInLayout();
-        for (int i = 0; i < t.length; i++)
+        for (int i = 0; i < t.length; i++) {
+            t[i].normalize(PS.Variables);
             sl.addView(scrollTextSelectConstruct(t[i].Print(), null, this, false));
+        }
     }
 
     protected void RuleDisplayUpdate() {
@@ -175,6 +177,4 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
         for (int i = 0; i < PS.Rules.size(); i++)
             RLVV.addView(scrollTextSelectConstruct(PS.RuleTermsToString(PS.Rules.get(i).second), new DisplayUpdateHelper.RuleSelectionListener(), this, false));
     }
-
-
 }

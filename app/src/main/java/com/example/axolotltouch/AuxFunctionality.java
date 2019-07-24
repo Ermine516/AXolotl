@@ -121,16 +121,25 @@ class AuxFunctionality {
         newPS.succProblem = new HashSet<>();
         for (int i = 3; i < anteSize + 3; i++) {
             Term temp = TermHelper.parse(parts[i], newPS);
-            newPS.anteProblem.add(temp);
-            if (!newPS.isIndexed(temp))
+            if (!newPS.isIndexed(temp) && !TermHelper.containsNestedSequents(temp))
                 throw new TermHelper().new FormatException();
+            else if (temp.Print().contains("⊢") && !TermHelper.wellformedSequents(temp))
+                throw new TermHelper().new FormatException();
+            else if (!temp.Print().contains("⊢") && !TermHelper.freeOfCons(temp))
+                throw new TermHelper().new FormatException();
+            else newPS.anteProblem.add(temp);
+
         }
         if (newPS.anteProblem.size() == 0) newPS.anteProblem.add(Const.Empty.Dup());
         for (int i = anteSize + 3; i < parts.length; i++) {
             Term temp = TermHelper.parse(parts[i], newPS);
-            newPS.succProblem.add(temp);
-            if (!newPS.isIndexed(temp))
+            if (!newPS.isIndexed(temp) && !TermHelper.containsNestedSequents(temp))
                 throw new TermHelper().new FormatException();
+            else if (temp.Print().contains("⊢") && !TermHelper.wellformedSequents(temp))
+                throw new TermHelper().new FormatException();
+            else if (!temp.Print().contains("⊢") && !TermHelper.freeOfCons(temp))
+                throw new TermHelper().new FormatException();
+            else newPS.succProblem.add(temp);
         }
         return true;
     }
@@ -151,8 +160,13 @@ class AuxFunctionality {
         Term succRule = Const.HoleSelected;
         for (int i = 2; i < partsAjustedSize; i++) {
             succRule = TermHelper.parse(parts[i], newPS);
-            if (!newPS.isIndexed(succRule)) throw new TermHelper().new FormatException();
-            else if (i != partsAjustedSize - 1) anteRule.add(TermHelper.parse(parts[i], newPS));
+            if (!newPS.isIndexed(succRule) && !TermHelper.containsNestedSequents(succRule))
+                throw new TermHelper().new FormatException();
+            else if (succRule.Print().contains("⊢") && !TermHelper.wellformedSequents(succRule))
+                throw new TermHelper().new FormatException();
+            else if (!succRule.Print().contains("⊢") && !TermHelper.freeOfCons(succRule))
+                throw new TermHelper().new FormatException();
+            else if (i != partsAjustedSize - 1) anteRule.add(succRule);
         }
         newPS.Rules.add(new Pair<>(ruleLabel, new Pair<>(anteRule, succRule)));
         return true;
@@ -171,6 +185,9 @@ class AuxFunctionality {
             if (parts[i].matches("infix") && Integer.decode(arity.toString()) == 2) infix = true;
             else if (parts[i].matches("infix") && Integer.decode(arity.toString()) != 2)
                 throw new TermHelper().new FormatException();
+        if (name.toString().compareTo("cons") == 0 ||
+                name.toString().compareTo("⊢") == 0 ||
+                name.toString().compareTo("ε") == 0) throw new TermHelper().new FormatException();
         if (name.toString().matches(nameParseRegex)
                 && arity.toString().matches("[0-9]+")
                 && !PS.Variables.contains(name.toString())

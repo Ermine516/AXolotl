@@ -45,5 +45,7 @@
     <string name="SubstitutionList">Substitution List</string>
     <string name="problem04">Problem 4</string>
     <string name="Problem05">Problem 5</string>
+    <string name="termmatchingmenu">Term Matching</string>
+    <string name="nonclassical">Non-Classical</string>
 </resources>
 

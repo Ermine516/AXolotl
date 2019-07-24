@@ -65,7 +65,7 @@ public abstract class DisplayListenerHelper extends AppCompatActivity implements
         @Override
         public void onClick(View view) {
             if (view instanceof TextView && isMemberOf((TextView) view, (LinearLayout) DisplayListenerHelper.this.findViewById(R.id.RightSideTermLayout))) {
-                Cleanslection((LinearLayout) DisplayListenerHelper.this.findViewById(R.id.LeftSideTermLayout), false);
+                //      Cleanslection((LinearLayout) DisplayListenerHelper.this.findViewById(R.id.LeftSideTermLayout), false);
                 Cleanslection((LinearLayout) DisplayListenerHelper.this.findViewById(R.id.RightSideTermLayout), true);
                 textViewSelected((TextView) view);
                 DisplayListenerHelper.this.PS.succSelectedPosition = ((TextView) view).getText().toString();

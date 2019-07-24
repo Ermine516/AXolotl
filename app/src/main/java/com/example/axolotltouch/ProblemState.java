@@ -14,7 +14,7 @@ import java.util.HashSet;
 //This contains all information concerning the problem rules and substitutions 
 //as well as functions providing important features. 
 public class ProblemState implements Parcelable {
-    private static final String RULESYMBOL = "◀▶";
+    private static final String RULESYMBOL = "▶";
     int subPos;
     HashMap<String, Boolean> MatchorConstruct;
     boolean observe;
@@ -247,12 +247,7 @@ public class ProblemState implements Parcelable {
 
     String RuleTermsToString(Pair<ArrayList<Term>, Term> rule) {
         if (rule != null && rule.first != null && rule.second != null) {
-            StringBuilder prefix = new StringBuilder();
-            HashSet<String> vl = new HashSet<>();
-            for (Term t : rule.first) vl.addAll(this.VarList(t));
-            vl.addAll(this.VarList(rule.second));
-            for (String t : vl) prefix.append("∀").append(t);
-            StringBuilder retString = new StringBuilder((prefix.toString().compareTo("") != 0) ? prefix + "(Δ " : "Δ ");
+            StringBuilder retString = new StringBuilder("Δ ");
             if (rule.first.size() > 0)
                 for (int i = 0; i < rule.first.size(); i++)
                     if (i == 0 && i != rule.first.size() - 1)
@@ -263,7 +258,7 @@ public class ProblemState implements Parcelable {
                         retString.append(rule.first.get(i).Print()).append(" " + RULESYMBOL).append(" Δ , ");
                     else retString.append(rule.first.get(i).Print()).append(" , ");
             else retString.append(RULESYMBOL).append(" Δ , ");
-            return retString + rule.second.Print() + ((prefix.toString().compareTo("") != 0) ? " )" : "");
+            return retString + rule.second.Print();
         } else return "";
     }
 
@@ -401,4 +396,10 @@ public class ProblemState implements Parcelable {
             return new ProblemState[size];
         }
     };
+
+    public boolean SequentProblem() {
+        for (Term t : this.succProblem)
+            if (TermHelper.wellformedSequents(t)) return true;
+        return false;
+    }
 }

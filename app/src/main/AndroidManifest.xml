@@ -26,6 +26,12 @@
             android:name=".PropositionalProblemsListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".TermMatchingProblemsListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NonClassicalProblemsListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

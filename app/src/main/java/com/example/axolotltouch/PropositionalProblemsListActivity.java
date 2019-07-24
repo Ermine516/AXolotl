@@ -42,7 +42,6 @@ public class PropositionalProblemsListActivity extends DisplayUpdateHelper {
                         if (j == anteProb.length - 1) problemString += anteProb[j].Print() + " ";
                         else problemString += anteProb[j].Print() + " , ";
                 }
-                problemString += "⊢ ";
                 Term[] succProb = newPS.succProblem.toArray(AuxFunctionality.HashSetTermArray);
                 for (int j = 0; j < succProb.length; j++)
                     if (j == succProb.length - 1) problemString += succProb[j].Print();

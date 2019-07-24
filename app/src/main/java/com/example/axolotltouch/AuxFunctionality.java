@@ -18,7 +18,7 @@ class AuxFunctionality {
     static final Term[] HashSetTermArray = new Term[]{Const.Hole};
     static final String PASSPROBLEMSTATE = "com.example.android.AXolotlTouch.extra.problemstate";
     static final int READ_REQUEST_CODE = 42;
-    private static final String nameParseRegex = "[a-zA-Z&\\u2227\\u2228\\u00AC\\u21D2\\u21D4\\u2284\\u2285\\u22A4\\u25A1\\u25C7\\u22A2\\u03B5]+";
+    private static final String nameParseRegex = "[a-zA-Z&\\u25E6\\u2227\\u2228\\u00AC\\u21D2\\u21D4\\u2284\\u2285\\u22A4\\u25A1\\u25C7\\u22A2\\u03B5]+";
 
      static void SideMenuItems(int id, Activity ctx, ProblemState PS) {
          AssetManager manager = ctx.getAssets();
@@ -28,10 +28,10 @@ class AuxFunctionality {
             intent = new Intent(ctx, MainActivity.class);
         } else if (id == R.id.PropositionalProblems) {
             intent = new Intent(ctx, PropositionalProblemsListActivity.class);
-        } else if (id == R.id.modalProblem01) {
-            ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.modal1), "modal1.txt", ctx);
-            intent = new Intent(ctx, MainActivity.class);
-            PS = newPS;
+        } else if (id == R.id.TermMatchingProblems) {
+            intent = new Intent(ctx, TermMatchingProblemsListActivity.class);
+        } else if (id == R.id.nonclassical) {
+            intent = new Intent(ctx, NonClassicalProblemsListActivity.class);
         } else if (id == R.id.ViewProof) {
             intent = new Intent(ctx, ProofDisplayActivity.class);
             Toast.makeText(ctx, "View Proof", Toast.LENGTH_SHORT).show();
@@ -95,6 +95,19 @@ class AuxFunctionality {
              newPS = new ProblemState();
              newPS.observe = ((DisplayUpdateHelper) ctx).PS.observe;
          }
+        if (!newPS.SequentProblem()) {
+            ArrayList<Pair<String, Pair<Integer, Boolean>>> cleanedFunctions = new ArrayList<>();
+            for (Pair<String, Pair<Integer, Boolean>> p : newPS.Functions)
+                if (p.first.compareTo("cons") != 0)
+                    if (p.first.compareTo("⊢") != 0)
+                        cleanedFunctions.add(p);
+            ArrayList<String> cleanedConstants = new ArrayList<>();
+            for (String s : newPS.Constants)
+                if (s.compareTo("ε") != 0)
+                    cleanedConstants.add(s);
+            newPS.Functions = cleanedFunctions;
+            newPS.Constants = cleanedConstants;
+        }
          newPS.anteCurrentRule = new ArrayList<>();
          newPS.anteCurrentRule.add(Const.HoleSelected);
          return newPS;

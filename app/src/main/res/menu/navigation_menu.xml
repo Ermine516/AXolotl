@@ -1,48 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/optionsmenu"
-        android:title="@string/Options">
-        <menu>
-            <item
-                android:id="@+id/Problembutton"
-                android:icon="@drawable/unieqhdpi"
-                android:title="Problem" />
-            <item
-                android:id="@+id/ViewProof"
-                android:icon="@drawable/proofxxxhdpi"
-                android:title="View Proof" />
-            <item
-                android:id="@+id/observeswitch"
-                android:actionLayout="@layout/switch_item"
-                android:paddingTop="16dp"
-                app:actionLayout="@layout/switch_item"
-                app:showAsAction="always" />
-        </menu>
-    </item>
+        android:id="@+id/Problembutton"
+        android:icon="@drawable/unieqhdpi"
+        android:title="Problem" />
+    <item
+        android:id="@+id/ViewProof"
+        android:icon="@drawable/proofxxxhdpi"
+        android:title="View Proof" />
+    <item
+        android:id="@+id/observeswitch"
+        android:paddingTop="16dp"
+        android:theme="@style/MyCustomSwitchTheme"
+        app:actionLayout="@layout/switch_item"
+        app:showAsAction="always"
+        tools:visibility="visible" />
+    <item
+        android:id="@+id/TermMatchingProblems"
+        android:title="@string/termmatchingmenu" />
     <item
         android:id="@+id/PropositionalProblems"
         android:title="@string/PropLogic" />
     <item
-        android:id="@+id/modalMenu"
-        android:title="@string/ModalLogic">
-        <menu>
-            <item
-                android:id="@+id/modalProblem01"
-                android:title="@string/Problem1" />
-        </menu>
-    </item>
-    <item android:title="Miscellaneous">
-        <menu>
-            <item
-                android:id="@+id/misc01"
-                android:title="Misc01" />
-            <item
-                android:id="@+id/misc02"
-                android:title="Misc02" />
-        </menu>
-    </item>
+        android:id="@+id/nonclassical"
+        android:title="@string/nonclassical" />
 
 </menu>

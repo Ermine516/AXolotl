@@ -64,56 +64,17 @@
             app:layout_constraintVertical_bias="0.0" />
 
         <ScrollView
-            android:id="@+id/LeftSideTerm"
-            android:layout_width="0dp"
-            android:layout_height="55dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:fillViewport="true"
-            app:layout_constraintBottom_toTopOf="@+id/UnificationSymbol"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/BottomProblemTagDivider">
-
-            <LinearLayout
-                android:id="@+id/LeftSideTermLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:minWidth="50dp"
-                android:orientation="vertical" />
-        </ScrollView>
-
-        <ImageView
-            android:id="@+id/UnificationSymbol"
-            android:layout_width="85dp"
-            android:layout_height="65dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:scaleX="1.3"
-            android:scaleY="1.3"
-            app:layout_constraintBottom_toTopOf="@+id/RightSideTerm"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/LeftSideTerm"
-            app:srcCompat="@drawable/unieqhdpi" />
-
-        <ScrollView
             android:id="@+id/RightSideTerm"
             android:layout_width="0dp"
             android:layout_height="55dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:fillViewport="true"
-            app:layout_constraintBottom_toTopOf="@+id/RuleListScroll"
+            app:layout_constraintBottom_toTopOf="@+id/AxolotlHorizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/UnificationSymbol">
+            app:layout_constraintTop_toBottomOf="@+id/BottomProblemTagDivider">
 
             <LinearLayout
                 android:id="@+id/RightSideTermLayout"
@@ -124,20 +85,32 @@
                 android:orientation="vertical" />
         </ScrollView>
 
+        <ImageView
+            android:id="@+id/AxolotlHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="142dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/RuleListScroll"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/RightSideTerm"
+            app:srcCompat="@drawable/axolotlhorizontal" />
+
         <ScrollView
             android:id="@+id/RuleListScroll"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
             app:layout_constrainedHeight="true"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/RightSideTerm">
+            app:layout_constraintTop_toBottomOf="@+id/AxolotlHorizontal">
 
             <LinearLayout
                 android:id="@+id/RuleListVerticalLayout"
@@ -153,7 +126,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="@color/navigationMenuColor"
         app:headerLayout="@layout/nav_header"
+        app:itemTextColor="@color/navigationMenuTextColor"
         app:menu="@menu/navigation_menu">
 
     </com.google.android.material.navigation.NavigationView>

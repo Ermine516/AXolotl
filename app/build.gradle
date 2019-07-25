@@ -39,3 +39,4 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.diegocarloslima:byakugallery:0.1.+@aar'
 }
+

@@ -91,6 +91,32 @@ public final class Func implements Term, Parcelable {
 
     }
 
+    public String PrintBold(ArrayList<Term> terms) {
+        if (this.getSym().compareTo("⊢") == 0)
+            return this.Args.get(0).PrintBold(terms) + " " + this.getSym() + " " + this.Args.get(1).PrintBold(terms);
+        else if (this.getSym().compareTo("cons") == 0) {
+            String s = this.Args.get(1).PrintCons();
+            return this.Args.get(0).PrintCons() + ((s.compareTo("") != 0) ? " , " : "") + s;
+        } else if (this.Args.size() == 2 && infix) {
+            String s = "(";
+            s += this.Args.get(0).PrintBold(terms) + " " + this.getSym() + " " + this.Args.get(1).PrintBold(terms);
+            return s + ")";
+        } else {
+            StringBuilder s = new StringBuilder(Sym + "(");
+            int i = 0;
+            for (; i < (this.Args.size() - 1); i++)
+                s.append(this.Args.get(i).PrintBold(terms)).append(",");
+            Term t = this.Args.get(i);
+            String ss = t.PrintBold(terms);
+            if (this.Args.size() > 0) s.append(ss).append(")");
+            for (Term tt : terms)
+                if (tt.PrintBold(terms).compareTo(s.toString()) == 0)
+                    return "<b>" + s.toString() + "</b>";
+            return s.toString();
+        }
+
+    }
+
     public String PrintCons() {
         if (this.getSym().compareTo("cons") == 0) {
             String s = this.Args.get(1).PrintCons();
@@ -98,6 +124,15 @@ public final class Func implements Term, Parcelable {
         } else return this.Print();
 
     }
+
+    public String PrintConsBold(ArrayList<Term> terms) {
+        if (this.getSym().compareTo("cons") == 0) {
+            String s = this.Args.get(1).PrintConsBold(terms);
+            return this.Args.get(0).PrintConsBold(terms) + ((s.compareTo("") != 0) ? " , " : "") + s;
+        } else return this.PrintBold(terms);
+
+    }
+
     public String Print(Term t) {
         if (TermHelper.TermMatch(this, t)) return "<font color=#ff0000>" + this.Print() + "</font>";
         else {

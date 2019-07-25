@@ -35,6 +35,10 @@ public interface Term extends Parcelable {
 
     String PrintCons(String var, Term compare, Term t);
 
+    String PrintBold(ArrayList<Term> terms);
+
+    String PrintConsBold(ArrayList<Term> terms);
+
     void normalize(HashSet<String> var);
 
     HashMap<String, HashSet<Integer>> basicTerms();

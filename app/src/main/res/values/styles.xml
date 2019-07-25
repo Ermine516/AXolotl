@@ -13,7 +13,7 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="MyCustomSwitchTheme">
+    <style name="MyCustomSwitchTheme" parent="Theme.AppCompat.Light">
         <!-- active thumb & track color (30% transparency) -->
         <item name="colorControlActivated">#000000</item>
         <!-- inactive thumb color -->

@@ -70,6 +70,17 @@ public final class Const implements Term, Parcelable {
         else return Print();
     }
 
+    public String PrintBold(ArrayList<Term> terms) {
+        for (Term t : terms)
+            if (t.getSym().compareTo(this.getSym()) == 0)
+                return "<b>" + this.Print() + "</b>";
+        return this.Print();
+    }
+
+    public String PrintConsBold(ArrayList<Term> terms) {
+        if (this.getSym().compareTo("ε") == 0) return "";
+        else return this.PrintBold(terms);
+    }
     public void normalize(HashSet<String> var) {
         return;
     }

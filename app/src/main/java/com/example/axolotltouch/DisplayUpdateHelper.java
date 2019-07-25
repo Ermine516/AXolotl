@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +35,7 @@ import java.util.Objects;
 import static com.example.axolotltouch.AuxFunctionality.PASSPROBLEMSTATE;
 
 public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
-    Switch switcher;
+    androidx.appcompat.widget.SwitchCompat switcher;
 
     protected abstract void ActivityDecorate();
 
@@ -63,7 +62,8 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
      }
 
     protected void swipeRightProblemStateUpdate() {
-        PS.History.add(new Pair<>(new Pair<>(PS.anteSelectedPositions, PS.succSelectedPosition), new Pair<>(PS.Substitutions, new Pair<>(PS.anteCurrentRule, PS.succCurrentRule.Dup()))));
+        if (PS.succCurrentRule.getSym().compareTo(Const.Hole.getSym()) != 0)
+            PS.History.add(new Pair<>(new Pair<>(PS.anteSelectedPositions, PS.succSelectedPosition), new Pair<>(PS.Substitutions, new Pair<>(PS.anteCurrentRule, PS.succCurrentRule.Dup()))));
         if ((PS.anteSelectedPositions.size() != 0)) {
             Term temp = PS.succCurrentRule.Dup();
             for (Pair<String, Term> s : PS.Substitutions)

@@ -248,17 +248,20 @@ public class ProblemState implements Parcelable {
     String RuleTermsToString(Pair<ArrayList<Term>, Term> rule) {
         if (rule != null && rule.first != null && rule.second != null) {
             StringBuilder retString = new StringBuilder("Δ ");
+            ArrayList<Term> varAsTerms = new ArrayList<>();
+            for (String var : Variables) varAsTerms.add(new Const(var));
             if (rule.first.size() > 0)
                 for (int i = 0; i < rule.first.size(); i++)
                     if (i == 0 && i != rule.first.size() - 1)
-                        retString.append(", ").append(rule.first.get(i).Print()).append(" , ");
+                        retString.append(", ").append(rule.first.get(i).PrintBold(varAsTerms)).append(" , ");
                     else if (0 == rule.first.size() - 1)
-                        retString.append(", ").append(rule.first.get(i).Print()).append(" " + RULESYMBOL).append(" Δ , ");
+                        retString.append(", ").append(rule.first.get(i).PrintBold(varAsTerms)).append(" " + RULESYMBOL).append(" Δ , ");
                     else if (i == rule.first.size() - 1)
-                        retString.append(rule.first.get(i).Print()).append(" " + RULESYMBOL).append(" Δ , ");
-                    else retString.append(rule.first.get(i).Print()).append(" , ");
+                        retString.append(rule.first.get(i).PrintBold(varAsTerms)).append(" " + RULESYMBOL).append(" Δ , ");
+                    else retString.append(rule.first.get(i).PrintBold(varAsTerms)).append(" , ");
             else retString.append(RULESYMBOL).append(" Δ , ");
-            return retString + rule.second.Print();
+            System.out.println(retString + rule.second.PrintBold(varAsTerms));
+            return retString + rule.second.PrintBold(varAsTerms);
         } else return "";
     }
 

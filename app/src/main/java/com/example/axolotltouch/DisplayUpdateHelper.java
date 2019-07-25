@@ -151,6 +151,9 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
         scrollLayout.setOrientation(LinearLayout.VERTICAL);
         scrollLayout.addView(TermText);
         HorizontalScrollView HScroll = new HorizontalScrollView(this);
+        HScroll.setScrollbarFadingEnabled(false);
+        HScroll.setScrollBarDefaultDelayBeforeFade(0);
+        HScroll.setHorizontalScrollBarEnabled(true);
         HScroll.addView(scrollLayout);
         HScroll.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, (gravity) ? Gravity.CENTER : Gravity.NO_GRAVITY));
 

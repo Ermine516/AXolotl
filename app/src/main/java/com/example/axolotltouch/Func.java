@@ -71,7 +71,7 @@ public final class Func implements Term, Parcelable {
     //Prints term tree as a string
     public String Print() {
         if (this.getSym().compareTo("⊢") == 0)
-            return this.Args.get(0).Print() + " " + this.getSym() + " " + this.Args.get(1).Print();
+            return "(" + this.Args.get(0).Print() + " " + this.getSym() + " " + this.Args.get(1).Print() + ")";
         else if (this.getSym().compareTo("cons") == 0) {
             String s = this.Args.get(1).PrintCons();
             return this.Args.get(0).PrintCons() + ((s.compareTo("") != 0) ? " , " : "") + s;
@@ -93,10 +93,10 @@ public final class Func implements Term, Parcelable {
 
     public String PrintBold(ArrayList<Term> terms) {
         if (this.getSym().compareTo("⊢") == 0)
-            return this.Args.get(0).PrintBold(terms) + " " + this.getSym() + " " + this.Args.get(1).PrintBold(terms);
+            return "(" + this.Args.get(0).PrintBold(terms) + " " + this.getSym() + " " + this.Args.get(1).PrintBold(terms) + ")";
         else if (this.getSym().compareTo("cons") == 0) {
-            String s = this.Args.get(1).PrintCons();
-            return this.Args.get(0).PrintCons() + ((s.compareTo("") != 0) ? " , " : "") + s;
+            String s = this.Args.get(1).PrintConsBold(terms);
+            return this.Args.get(0).PrintConsBold(terms) + ((s.compareTo("") != 0) ? " , " : "") + s;
         } else if (this.Args.size() == 2 && infix) {
             String s = "(";
             s += this.Args.get(0).PrintBold(terms) + " " + this.getSym() + " " + this.Args.get(1).PrintBold(terms);
@@ -137,7 +137,7 @@ public final class Func implements Term, Parcelable {
         if (TermHelper.TermMatch(this, t)) return "<font color=#ff0000>" + this.Print() + "</font>";
         else {
             if (this.getSym().compareTo("⊢") == 0)
-                return this.Args.get(0).Print(t) + " " + this.getSym() + " " + this.Args.get(1).Print(t);
+                return "(" + this.Args.get(0).Print(t) + " " + this.getSym() + " " + this.Args.get(1).Print(t) + ")";
             else if (this.getSym().compareTo("cons") == 0) {
                 String s = this.Args.get(1).PrintCons(t);
                 return this.Args.get(0).PrintCons(t) + ((s.compareTo("") != 0) ? " , " : "") + s;
@@ -194,7 +194,7 @@ public final class Func implements Term, Parcelable {
             return "<font color=#ff0000>" + this.Print() + "</font>";
         else {
             if (this.getSym().compareTo("⊢") == 0)
-                return this.Args.get(0).Print(var, compare.subTerms().get(0), t) + " " + this.getSym() + " " + this.Args.get(1).Print(var, compare.subTerms().get(1), t);
+                return "(" + this.Args.get(0).Print(var, compare.subTerms().get(0), t) + " " + this.getSym() + " " + this.Args.get(1).Print(var, compare.subTerms().get(1), t) + ")";
             else if (this.getSym().compareTo("cons") == 0) {
                 if (compare.subTerms().size() != 0) {
                     String s = this.Args.get(1).PrintCons(var, compare.subTerms().get(1), t);

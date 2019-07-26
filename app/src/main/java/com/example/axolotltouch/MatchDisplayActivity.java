@@ -58,7 +58,9 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
 
         varDisplay.setText(var);
         try {
-            subDisplay.setText(PS.Substitutions.get(PS.subPos).second.Print());
+            if (PS.Substitutions.get(PS.subPos).second.Print().compareTo("") != 0)
+                subDisplay.setText(PS.Substitutions.get(PS.subPos).second.Print());
+            else subDisplay.setText("ε");
         } catch (NullPointerException e) {
             Toast.makeText(MatchDisplayActivity.this, "Unable to Display State", Toast.LENGTH_SHORT).show();
         }

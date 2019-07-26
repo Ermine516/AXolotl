@@ -249,7 +249,8 @@ public final class Func implements Term, Parcelable {
 
     private Term leftAssociate(Term t, HashSet<String> var) {
         ArrayList<Term> listTerms = (t.getSym().compareTo("cons") == 0) ? extractterms(t.subTerms().get(0)) : new ArrayList<>(Arrays.asList(new Term[]{t}));
-        listTerms.addAll(((t.getSym().compareTo("cons") == 0) ? extractterms(t.subTerms().get(1)) : new ArrayList<Term>()));
+        if (t.getSym().compareTo("cons") == 0)
+            listTerms.addAll((extractterms(t.subTerms().get(1))));
         if (listTerms.size() > 1) {
             ArrayList<Term> argList = new ArrayList<>();
             int startvalue = listTerms.size() - 3;
@@ -270,7 +271,7 @@ public final class Func implements Term, Parcelable {
                 ret = new Func("cons", argList, false);
             }
             return ret;
-        } else {
+        } else if (listTerms.size() == 1) {
             if (var.contains(listTerms.get(0).getSym())) return listTerms.get(0);
             else {
                 ArrayList<Term> argList = new ArrayList<>();
@@ -278,7 +279,7 @@ public final class Func implements Term, Parcelable {
                 argList.add(new Const("ε"));
                 return new Func("cons", argList, false);
             }
-        }
+        } else return new Const("ε");
     }
 
     private ArrayList<Term> extractterms(Term t) {

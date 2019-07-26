@@ -211,7 +211,11 @@ public class ProblemState implements Parcelable {
     }
 
     Term getSelectedSuccTerm() {
-        for (Term t : succProblem) if (t.Print().compareTo(succSelectedPosition) == 0) return t;
+        for (Term t : succProblem) {
+            System.out.println(t.Print() + "  " + (t.Print().compareTo(succSelectedPosition) == 0));
+            System.out.println(succSelectedPosition + "  " + (t.Print().compareTo(succSelectedPosition) == 0));
+            if (t.Print().compareTo(succSelectedPosition) == 0) return t;
+        }
         return null;
     }
 

@@ -37,7 +37,8 @@ public final class Const implements Term, Parcelable {
 
     //Prints the constant as a string
     public String Print() {
-        return this.Sym;
+        if (this.getSym().compareTo("ε") == 0) return "";
+        else return this.Sym;
     }
 
     public String PrintCons() {

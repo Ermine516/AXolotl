@@ -47,5 +47,6 @@
     <string name="Problem05">Problem 5</string>
     <string name="termmatchingmenu">Term Matching</string>
     <string name="nonclassical">Non-Classical</string>
+    <string name="changeinstate">Change in Problem State</string>
 </resources>
 

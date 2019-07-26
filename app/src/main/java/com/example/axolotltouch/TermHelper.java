@@ -41,7 +41,6 @@ class TermHelper {
             boolean infixity = false;
             for (Pair<String, Pair<Integer, Boolean>> p : PS.Functions)
                 if (pL[0].compareTo(p.first) == 0) infixity = p.second.second;
-
             Func f = new Func(pL[0], res.remove(0), infixity);
             if(res.size()==0) res.add(0,new ArrayList<Term>());
             res.get(0).add(0,f);

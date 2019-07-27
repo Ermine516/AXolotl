@@ -48,5 +48,14 @@
     <string name="termmatchingmenu">Term Matching</string>
     <string name="nonclassical">Non-Classical</string>
     <string name="changeinstate">Change in Problem State</string>
+    <string name="axolotl_character_image">Axolotl Character Image</string>
+    <string name="axolotl_character_head">AXolotl Character Head</string>
+    <string name="problem">Problem</string>
+    <string name="text_size">Text Size</string>
+    <string name="view_proof">View Proof</string>
+    <string name="proof_button_menu_symbol">Proof button menu Symbol</string>
+    <string name="problem_button_menu_symbol">Problem button menu symbol</string>
+    <string name="classical_logic">Classical Logic</string>
+    <string name="non_classical_logic">Non-Classical Logic</string>
 </resources>
 

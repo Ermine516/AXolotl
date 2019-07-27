@@ -12,13 +12,15 @@
         android:layout_marginTop="8dp"
         android:orientation="horizontal">
 
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/observeswitchformenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:checked="true" />
+            android:checked="true"
+            android:textOn="On"
+            android:theme="@style/MyCustomSwitchTheme" />
 
         <TextView
             android:id="@+id/textView3"
@@ -28,7 +30,7 @@
             android:fontFamily="sans-serif-medium"
             android:paddingStart="8dp"
             android:text="@string/ObserveMode"
-            android:textColor="@android:color/black"
+            android:textColor="#FDFDFE"
             android:textSize="14dp" />
     </LinearLayout>
 

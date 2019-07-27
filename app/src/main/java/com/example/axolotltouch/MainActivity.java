@@ -61,7 +61,6 @@ public class MainActivity extends DisplayUpdateHelper {
     }
 
     private void UpdateProblemDisplay() {
-        updateProblemSideDisplay((LinearLayout) this.findViewById(R.id.LeftSideTermLayout), PS.anteProblem.toArray(AuxFunctionality.HashSetTermArray));
         updateProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), PS.succProblem.toArray(AuxFunctionality.HashSetTermArray));
     }
 
@@ -142,78 +141,44 @@ public class MainActivity extends DisplayUpdateHelper {
                 if (PS.succCurrentRule.getSym().compareTo(Const.HoleSelected.getSym()) != 0) {
                     if (PS.succSelectedPosition.compareTo("") != 0) {
                         Term succTerm = ProblemState.getTermByString(PS.succSelectedPosition, PS.succProblem);
+                        if (TermHelper.wellformedSequents(succTerm) && TermHelper.wellformedSequents(PS.succCurrentRule)) {
+                            succTerm.normalize(PS.Variables);
+                            PS.succCurrentRule.normalize(PS.Variables);
+                        }
+                        System.out.println(succTerm.toString() + " " + TermHelper.TermMatchWithVar(succTerm, PS.succCurrentRule, PS.Variables));
+                        System.out.println(PS.succCurrentRule.toString());
                         if (succTerm != null && TermHelper.TermMatchWithVar(succTerm, PS.succCurrentRule, PS.Variables)) {
                             PS.Substitutions = TermHelper.varTermMatch(succTerm, PS.succCurrentRule, PS);
                             HashSet<String> occurences = new HashSet<>();
-                            ArrayList<Pair<String, Term>> subCleaned = new ArrayList<>();
-                            for (Pair<String, Term> p : PS.Substitutions)
+                            HashMap<String, Term> subCleaned = new HashMap<>();
+                            for (Pair<String, Term> p : PS.Substitutions) {
                                 if (!occurences.contains(p.first)) {
-                                    subCleaned.add(p);
+                                    subCleaned.put(p.first, p.second);
                                     occurences.add(p.first);
+                                } else if (p.second.toString().compareTo(subCleaned.get(p.first).toString()) != 0) {
+                                    subCleaned = null;
+                                    break;
                                 }
-                            PS.Substitutions = subCleaned;
-                            HashSet<String> singleSide = new HashSet<>();
-                            for (Term t : PS.anteCurrentRule) {
-                                HashSet<String> vars = PS.VarList(t);
-                                for (String s : vars)
-                                    if (!PS.VarList(PS.succCurrentRule).contains(s))
-                                        singleSide.add(s);
                             }
-                            for (String s : singleSide)
-                                PS.Substitutions.add(new Pair<>(s, Const.HoleSelected.Dup()));
-                            PS.subPos = 0;
-                            PS.MatchorConstruct = new HashMap<>();
-                            for (Pair<String, Term> p : PS.Substitutions)
-                                PS.MatchorConstruct.put(p.first, p.second.getSym().compareTo(Const.HoleSelected.getSym()) == 0);
-
-                            if (!PS.observe)
-                                while (PS.subPos < PS.Substitutions.size() && !PS.Substitutions.get(PS.subPos).second.contains(Const.HoleSelected))
-                                    PS.subPos++;
-                            if (PS.subPos < PS.Substitutions.size() && PS.Substitutions.get(PS.subPos).second.contains(Const.HoleSelected))
-                                intent = new Intent(MainActivity.this, TermConstructActivity.class);
-                            else if (PS.subPos < PS.Substitutions.size())
-                                intent = new Intent(MainActivity.this, MatchDisplayActivity.class);
-                            else {
-                                MainActivity.this.swipeRightProblemStateUpdate();
-                                intent = new Intent(MainActivity.this, MainActivity.class);
-                            }
-                            if (PS.subPos != -1)
-                                Toast.makeText(MainActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).first, Toast.LENGTH_SHORT).show();
-                            intent.putExtra(PASSPROBLEMSTATE, PS);
-                            MainActivity.this.startActivity(intent);
-                            MainActivity.this.finish();
-                        } else
-                            Toast.makeText(MainActivity.this, "Rule not applicable", Toast.LENGTH_SHORT).show();
-                    } else if (PS.anteSelectedPositions.size() != 0) {
-                        ArrayList<Term> anteterm = new ArrayList<>();
-                        for (String s : PS.anteSelectedPositions) {
-                            Term temp = ProblemState.getTermByString(s, PS.anteProblem);
-                            if (temp != null) anteterm.add(temp);
-                        }
-                        if (anteterm.size() == PS.anteSelectedPositions.size()) {
-                            ArrayList<Pair<Term, Term>> matchings = TermHelper.matchAnteProblemRule(anteterm, PS.anteCurrentRule, PS);
-                            if (matchings != null || PS.anteCurrentRule.size() == 0) {
+                            if (subCleaned != null) {
                                 PS.Substitutions = new ArrayList<>();
-                                if (PS.anteCurrentRule.size() != 0)
-                                    for (Pair<Term, Term> match : matchings)
-                                        PS.Substitutions.addAll(TermHelper.varTermMatch(match.second, match.first, PS));
-                                HashSet<String> occurences = new HashSet<>();
-                                ArrayList<Pair<String, Term>> subCleaned = new ArrayList<>();
-                                for (Pair<String, Term> p : PS.Substitutions)
-                                    if (!occurences.contains(p.first)) {
-                                        subCleaned.add(p);
-                                        occurences.add(p.first);
-                                    }
-                                PS.Substitutions = subCleaned;
-                                HashSet<String> vars = PS.VarList(PS.succCurrentRule);
-                                for (Pair<String, Term> sub : PS.Substitutions)
-                                    vars.remove(sub.first);
-                                for (String s : vars)
+                                for (String s : subCleaned.keySet())
+                                    PS.Substitutions.add(new Pair<>(s, subCleaned.get(s)));
+
+                                HashSet<String> singleSide = new HashSet<>();
+                                for (Term t : PS.anteCurrentRule) {
+                                    HashSet<String> vars = PS.VarList(t);
+                                    for (String s : vars)
+                                        if (!PS.VarList(PS.succCurrentRule).contains(s))
+                                            singleSide.add(s);
+                                }
+                                for (String s : singleSide)
                                     PS.Substitutions.add(new Pair<>(s, Const.HoleSelected.Dup()));
                                 PS.subPos = 0;
                                 PS.MatchorConstruct = new HashMap<>();
                                 for (Pair<String, Term> p : PS.Substitutions)
                                     PS.MatchorConstruct.put(p.first, p.second.getSym().compareTo(Const.HoleSelected.getSym()) == 0);
+
                                 if (!PS.observe)
                                     while (PS.subPos < PS.Substitutions.size() && !PS.Substitutions.get(PS.subPos).second.contains(Const.HoleSelected))
                                         PS.subPos++;

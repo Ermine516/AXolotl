@@ -14,7 +14,7 @@ import java.util.HashSet;
 //This contains all information concerning the problem rules and substitutions 
 //as well as functions providing important features. 
 public class ProblemState implements Parcelable {
-    private static final String RULESYMBOL = "◀■▶";
+    private static final String RULESYMBOL = "▶";
     int subPos;
     HashMap<String, Boolean> MatchorConstruct;
     boolean observe;
@@ -51,9 +51,12 @@ public class ProblemState implements Parcelable {
 		Rules = new ArrayList<>();
         Substitutions = new ArrayList<>();
         Functions = new ArrayList<>();
+        Functions.add(new Pair<>("cons", new Pair<>(2, false)));
+        Functions.add(new Pair<>("⊢", new Pair<>(2, true)));
 		Variables = new HashSet<>();
         Constants = new ArrayList<>();
-		History= new ArrayList<>();
+        Constants.add("ε");
+        History = new ArrayList<>();
 	}
     ProblemState(Parcel in){
         subPos = in.readInt();
@@ -208,7 +211,11 @@ public class ProblemState implements Parcelable {
     }
 
     Term getSelectedSuccTerm() {
-        for (Term t : succProblem) if (t.Print().compareTo(succSelectedPosition) == 0) return t;
+        for (Term t : succProblem) {
+            System.out.println(t.Print() + "  " + (t.Print().compareTo(succSelectedPosition) == 0));
+            System.out.println(succSelectedPosition + "  " + (t.Print().compareTo(succSelectedPosition) == 0));
+            if (t.Print().compareTo(succSelectedPosition) == 0) return t;
+        }
         return null;
     }
 
@@ -244,23 +251,21 @@ public class ProblemState implements Parcelable {
 
     String RuleTermsToString(Pair<ArrayList<Term>, Term> rule) {
         if (rule != null && rule.first != null && rule.second != null) {
-            StringBuilder prefix = new StringBuilder();
-            HashSet<String> vl = new HashSet<>();
-            for (Term t : rule.first) vl.addAll(this.VarList(t));
-            vl.addAll(this.VarList(rule.second));
-            for (String t : vl) prefix.append("∀").append(t);
-            StringBuilder retString = new StringBuilder((prefix.toString().compareTo("") != 0) ? prefix + "(Δ " : "Δ ");
+            StringBuilder retString = new StringBuilder("Δ ");
+            ArrayList<Term> varAsTerms = new ArrayList<>();
+            for (String var : Variables) varAsTerms.add(new Const(var));
             if (rule.first.size() > 0)
                 for (int i = 0; i < rule.first.size(); i++)
                     if (i == 0 && i != rule.first.size() - 1)
-                        retString.append(", ").append(rule.first.get(i).Print()).append(" , ");
+                        retString.append(", ").append(rule.first.get(i).PrintBold(varAsTerms)).append(" , ");
                     else if (0 == rule.first.size() - 1)
-                        retString.append(", ").append(rule.first.get(i).Print()).append(" " + RULESYMBOL).append(" Δ , ");
+                        retString.append(", ").append(rule.first.get(i).PrintBold(varAsTerms)).append(" " + RULESYMBOL).append(" Δ , ");
                     else if (i == rule.first.size() - 1)
-                        retString.append(rule.first.get(i).Print()).append(" " + RULESYMBOL).append(" Δ , ");
-                    else retString.append(rule.first.get(i).Print()).append(" , ");
+                        retString.append(rule.first.get(i).PrintBold(varAsTerms)).append(" " + RULESYMBOL).append(" Δ , ");
+                    else retString.append(rule.first.get(i).PrintBold(varAsTerms)).append(" , ");
             else retString.append(RULESYMBOL).append(" Δ , ");
-            return retString + rule.second.Print() + ((prefix.toString().compareTo("") != 0) ? " )" : "");
+            System.out.println(retString + rule.second.PrintBold(varAsTerms));
+            return retString + rule.second.PrintBold(varAsTerms);
         } else return "";
     }
 
@@ -398,4 +403,10 @@ public class ProblemState implements Parcelable {
             return new ProblemState[size];
         }
     };
+
+    public boolean SequentProblem() {
+        for (Term t : this.succProblem)
+            if (TermHelper.wellformedSequents(t)) return true;
+        return false;
+    }
 }

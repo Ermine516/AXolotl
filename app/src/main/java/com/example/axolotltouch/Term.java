@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 //General term Interface 
 public interface Term extends Parcelable {
-     String Print();
 
     Parcelable.Creator<Term> CREATOR = new Parcelable.Creator<Term>() {
 		public Term createFromParcel(Parcel in) {
@@ -23,15 +22,31 @@ public interface Term extends Parcelable {
 			return new Term[size];
 		}
     };
+
+    String Print();
+
     String Print(Term t);
 
     String Print(String var, Term compare, Term t);
+
+    String PrintCons();
+
+    String PrintCons(Term t);
+
+    String PrintCons(String var, Term compare, Term t);
+
+    String PrintBold(ArrayList<Term> terms);
+
+    String PrintConsBold(ArrayList<Term> terms);
+
+    void normalize(HashSet<String> var);
 
     HashMap<String, HashSet<Integer>> basicTerms();
 
     ArrayList<Term> subTerms();
 
     String getSym();
+
 
     Term replace(Const c, Term r);
 

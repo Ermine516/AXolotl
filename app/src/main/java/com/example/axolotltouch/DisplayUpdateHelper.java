@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +19,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.util.Pair;
 import androidx.core.view.GravityCompat;
-import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
@@ -36,7 +34,7 @@ import java.util.Objects;
 import static com.example.axolotltouch.AuxFunctionality.PASSPROBLEMSTATE;
 
 public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
-    Switch switcher;
+    androidx.appcompat.widget.SwitchCompat switcher;
 
     protected abstract void ActivityDecorate();
 
@@ -56,14 +54,15 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
             PS = in.getParcelable("ProblemState");
         else PS = new ProblemState();
         Menu menu = navigationView.getMenu();
-        switcher = MenuItemCompat.getActionView(menu.findItem(R.id.observeswitch)).findViewById(R.id.observeswitchformenu);
+        switcher = findViewById(R.id.observeswitchformenu);
         switcher.setChecked(PS.observe);
         switcher.setOnCheckedChangeListener(new ObservationListener());
         return PS;
      }
 
     protected void swipeRightProblemStateUpdate() {
-        PS.History.add(new Pair<>(new Pair<>(PS.anteSelectedPositions, PS.succSelectedPosition), new Pair<>(PS.Substitutions, new Pair<>(PS.anteCurrentRule, PS.succCurrentRule.Dup()))));
+        if (PS.succCurrentRule.getSym().compareTo(Const.Hole.getSym()) != 0)
+            PS.History.add(new Pair<>(new Pair<>(PS.anteSelectedPositions, PS.succSelectedPosition), new Pair<>(PS.Substitutions, new Pair<>(PS.anteCurrentRule, PS.succCurrentRule.Dup()))));
         if ((PS.anteSelectedPositions.size() != 0)) {
             Term temp = PS.succCurrentRule.Dup();
             for (Pair<String, Term> s : PS.Substitutions)
@@ -151,6 +150,9 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
         scrollLayout.setOrientation(LinearLayout.VERTICAL);
         scrollLayout.addView(TermText);
         HorizontalScrollView HScroll = new HorizontalScrollView(this);
+        HScroll.setScrollbarFadingEnabled(false);
+        HScroll.setScrollBarDefaultDelayBeforeFade(0);
+        HScroll.setHorizontalScrollBarEnabled(true);
         HScroll.addView(scrollLayout);
         HScroll.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, (gravity) ? Gravity.CENTER : Gravity.NO_GRAVITY));
 
@@ -165,8 +167,10 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
 
     protected void updatefutureProblemSideDisplay(LinearLayout sl, Term[] t) {
         sl.removeAllViewsInLayout();
-        for (int i = 0; i < t.length; i++)
+        for (int i = 0; i < t.length; i++) {
+            t[i].normalize(PS.Variables);
             sl.addView(scrollTextSelectConstruct(t[i].Print(), null, this, false));
+        }
     }
 
     protected void RuleDisplayUpdate() {
@@ -175,6 +179,4 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
         for (int i = 0; i < PS.Rules.size(); i++)
             RLVV.addView(scrollTextSelectConstruct(PS.RuleTermsToString(PS.Rules.get(i).second), new DisplayUpdateHelper.RuleSelectionListener(), this, false));
     }
-
-
 }

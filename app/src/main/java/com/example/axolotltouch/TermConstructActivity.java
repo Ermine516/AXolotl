@@ -59,7 +59,6 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
             else localSubstitution.add(p);
         }
         if (PS.anteSelectedPositions.size() == 0) {
-            updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.LeftSideTermLayout), PS.anteProblem.toArray(AuxFunctionality.HashSetTermArray));
             ArrayList<Term> temp = new ArrayList<>();
             for (Term t : PS.anteCurrentRule) {
                 Term tosub = TermHelper.applySubstitution(localSubstitution, t.Dup());
@@ -68,8 +67,6 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
             HashSet<Term> updated = PS.replaceSelectedSuccTerm(temp);
             updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), updated.toArray(AuxFunctionality.HashSetTermArray));
         } else {
-            updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.LeftSideTermLayout), PS.succProblem.toArray(AuxFunctionality.HashSetTermArray));
-
             Term tosub = TermHelper.applySubstitution(localSubstitution, PS.succCurrentRule.Dup());
             HashSet<Term> updated = PS.replaceSelectedAnteTerms(tosub);
             updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), updated.toArray(AuxFunctionality.HashSetTermArray));

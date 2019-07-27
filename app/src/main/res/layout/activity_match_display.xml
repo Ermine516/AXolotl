@@ -17,51 +17,20 @@
         android:layout_weight="13"
         tools:context=".MatchDisplayActivity">
 
-        <View
-            android:id="@+id/rightSiderRuleInstanceTagDivider2"
-            android:layout_width="3dp"
-            android:layout_height="0dp"
-            android:background="#DEAEAE"
-            app:layout_constraintBottom_toBottomOf="@+id/bottomRuleInstanceTagDivider2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/ruleInstanceTag2"
-            app:layout_constraintTop_toTopOf="@+id/bottomProblemTagDivider2" />
-
-        <View
-            android:id="@+id/leftSiderRuleInstanceTagDivider2"
-            android:layout_width="3dp"
-            android:layout_height="0dp"
-            android:background="#DEAEAE"
-            app:layout_constraintBottom_toBottomOf="@+id/bottomRuleInstanceTagDivider2"
-            app:layout_constraintEnd_toStartOf="@+id/ruleInstanceTag2"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/bottomProblemTagDivider2" />
-
-        <View
-            android:id="@+id/bottomRuleInstanceTagDivider2"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:background="#DEAEAE"
-            app:layout_constraintEnd_toEndOf="@+id/rightSiderRuleInstanceTagDivider2"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/leftSiderRuleInstanceTagDivider2"
-            app:layout_constraintTop_toBottomOf="@+id/ruleInstanceTag2" />
-
         <TextView
             android:id="@+id/ruleInstanceTag2"
-            android:layout_width="180dp"
-            android:layout_height="22dp"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:background="@color/LabelColor"
+            android:gravity="center"
             android:text="@string/RuleAppliedTag"
-            android:textColor="#000001"
-            android:textSize="18sp"
+            android:textColor="#FDFDFE"
+            android:textSize="24dp"
             app:layout_constrainedHeight="true"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toTopOf="@+id/VariableDisplayScroll"
-            app:layout_constraintEnd_toStartOf="@+id/rightSiderRuleInstanceTagDivider2"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/leftSiderRuleInstanceTagDivider2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/RightSideTerm"
             app:layout_constraintVertical_weight="1" />
 
@@ -71,9 +40,14 @@
             android:layout_height="50dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:fadeScrollbars="false"
             android:fadingEdge="none"
             android:fillViewport="true"
             android:scrollX="30dp"
+            android:scrollbarAlwaysDrawHorizontalTrack="true"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:scrollbarDefaultDelayBeforeFade="0"
+            android:scrollbarFadeDuration="0"
             android:scrollbars="none"
             app:layout_constraintBottom_toTopOf="@+id/ruleInstanceTag2"
             app:layout_constraintEnd_toEndOf="parent"
@@ -95,8 +69,11 @@
             android:layout_height="50dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:fadeScrollbars="false"
             android:fadingEdge="none"
             android:fillViewport="true"
+            android:scrollbarAlwaysDrawHorizontalTrack="true"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
             android:scrollbars="none"
             app:layout_constraintBottom_toTopOf="@+id/unificationSymbol3"
             app:layout_constraintEnd_toEndOf="parent"
@@ -135,7 +112,10 @@
             android:layout_height="50dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:fadeScrollbars="false"
             android:fillViewport="true"
+            android:scrollbarAlwaysDrawHorizontalTrack="true"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
             app:layout_constraintBottom_toTopOf="@+id/imageView2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -167,7 +147,10 @@
             android:layout_height="50dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:fadeScrollbars="false"
             android:fillViewport="true"
+            android:scrollbarAlwaysDrawHorizontalTrack="true"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -193,74 +176,21 @@
             </LinearLayout>
         </HorizontalScrollView>
 
-        <View
-            android:id="@+id/leftSideProblemTagDivider3"
-            android:layout_width="3dp"
-            android:layout_height="0dp"
-            android:background="#DEAEAE"
-            app:layout_constraintBottom_toBottomOf="@+id/bottomProblemTagDivider3"
-            app:layout_constraintEnd_toStartOf="@+id/problemTag3"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/divider2"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <View
-            android:id="@+id/RightSideProblemTagDivider"
-            android:layout_width="3dp"
-            android:layout_height="0dp"
-            android:background="#DEAEAE"
-            app:layout_constraintBottom_toTopOf="@+id/bottomProblemTagDivider3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/problemTag3"
-            app:layout_constraintTop_toTopOf="@+id/divider2"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <View
-            android:id="@+id/bottomProblemTagDivider3"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:background="#DEAEAE"
-            app:layout_constraintEnd_toEndOf="@+id/RightSideProblemTagDivider"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/leftSideProblemTagDivider3"
-            app:layout_constraintTop_toBottomOf="@+id/problemTag3" />
-
         <TextView
             android:id="@+id/problemTag3"
-            android:layout_width="140dp"
-            android:layout_height="20dp"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:background="@color/LabelColor"
+            android:gravity="center"
             android:text="@string/UnifyTag"
-            android:textColor="#000001"
-            android:textSize="18sp"
+            android:textColor="#FDFDFE"
+            android:textSize="24sp"
             app:layout_constrainedHeight="true"
             app:layout_constrainedWidth="true"
-            app:layout_constraintEnd_toStartOf="@+id/RightSideProblemTagDivider"
-            app:layout_constraintHorizontal_bias=".1"
-            app:layout_constraintStart_toEndOf="@+id/leftSideProblemTagDivider3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_weight="1" />
-
-        <View
-            android:id="@+id/divider2"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:background="#DEAEAE"
-            app:layout_constraintBottom_toTopOf="@+id/problemTag3"
-            app:layout_constraintEnd_toEndOf="@+id/RightSideProblemTagDivider"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/leftSideProblemTagDivider3" />
-
-        <View
-            android:id="@+id/bottomProblemTagDivider2"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:background="#DEAEAE"
-            app:layout_constraintBottom_toTopOf="@+id/ruleInstanceTag2"
-            app:layout_constraintEnd_toEndOf="@+id/rightSiderRuleInstanceTagDivider2"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/leftSiderRuleInstanceTagDivider2" />
 
         <ImageView
             android:id="@+id/imageView2"
@@ -282,7 +212,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="@color/navigationMenuColor"
         app:headerLayout="@layout/nav_header"
+        app:itemTextColor="@color/navigationMenuTextColor"
         app:menu="@menu/navigation_menu"></com.google.android.material.navigation.NavigationView>
 
 

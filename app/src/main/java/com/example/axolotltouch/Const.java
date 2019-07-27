@@ -37,9 +37,28 @@ public final class Const implements Term, Parcelable {
 
     //Prints the constant as a string
     public String Print() {
-        return this.Sym;
+        if (this.getSym().compareTo("ε") == 0) return "";
+        else return this.Sym;
     }
 
+    public String PrintCons() {
+        if (this.getSym().compareTo("ε") == 0) return "";
+        else return this.Sym;
+    }
+
+    public String PrintCons(Term t) {
+        if (this.getSym().compareTo("ε") == 0) return "";
+        else if (t.subTerms().size() == 0 && t.getSym().compareTo(this.getSym()) == 0)
+            return "<font color=#ff0000>" + Print() + "</font>";
+        else return Print();
+    }
+
+    public String PrintCons(String var, Term compare, Term t) {
+        if (this.getSym().compareTo("ε") == 0) return "";
+        else if (compare.subTerms().size() == 0 && compare.getSym().compareTo(var) == 0 && t.subTerms().size() == 0 && t.getSym().compareTo(this.getSym()) == 0)
+            return "<font color=#ff0000>" + Print() + "</font>";
+        else return Print();
+    }
     public String Print(Term t) {
         if (t.subTerms().size() == 0 && t.getSym().compareTo(this.getSym()) == 0)
             return "<font color=#ff0000>" + Print() + "</font>";
@@ -50,6 +69,22 @@ public final class Const implements Term, Parcelable {
         if (compare.subTerms().size() == 0 && compare.getSym().compareTo(var) == 0 && t.subTerms().size() == 0 && t.getSym().compareTo(this.getSym()) == 0)
             return "<font color=#ff0000>" + Print() + "</font>";
         else return Print();
+    }
+
+    public String PrintBold(ArrayList<Term> terms) {
+        for (Term t : terms)
+            if (t.getSym().compareTo(this.getSym()) == 0)
+                return "<b>" + this.Print() + "</b>";
+        return this.Print();
+    }
+
+    public String PrintConsBold(ArrayList<Term> terms) {
+        if (this.getSym().compareTo("ε") == 0) return "";
+        else return this.PrintBold(terms);
+    }
+
+    public void normalize(HashSet<String> var) {
+        return;
     }
 
     public String toString() {

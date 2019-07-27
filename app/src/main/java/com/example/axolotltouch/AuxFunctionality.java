@@ -2,6 +2,7 @@ package com.example.axolotltouch;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.widget.Toast;
 
 import androidx.core.util.Pair;
@@ -17,37 +18,20 @@ class AuxFunctionality {
     static final Term[] HashSetTermArray = new Term[]{Const.Hole};
     static final String PASSPROBLEMSTATE = "com.example.android.AXolotlTouch.extra.problemstate";
     static final int READ_REQUEST_CODE = 42;
-    private static final String nameParseRegex = "[a-zA-Z&\\u2227\\u2228\\u00AC\\u21D2\\u21D4\\u2284\\u2285\\u22A4\\u25A1\\u25C7]+";
+    private static final String nameParseRegex = "[a-zA-Z&\\u2194\\u25E6\\u2227\\u2228\\u00AC\\u21D2\\u21D4\\u2284\\u2285\\u22A4\\u25A1\\u25C7\\u22A2\\u03B5]+";
 
      static void SideMenuItems(int id, Activity ctx, ProblemState PS) {
-        Intent intent = null;
+         AssetManager manager = ctx.getAssets();
+         Intent intent = null;
         if (id == R.id.Problembutton) {
             Toast.makeText(ctx, "Problem", Toast.LENGTH_SHORT).show();
             intent = new Intent(ctx, MainActivity.class);
-        } else if (id == R.id.propositional01) {
-            ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.prop1), "prop1.txt", ctx);
-            intent = new Intent(ctx, MainActivity.class);
-            PS = newPS;
-        } else if (id == R.id.propositional02) {
-            ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.prop2), "prop2.txt", ctx);
-            intent = new Intent(ctx, MainActivity.class);
-            PS = newPS;
-        } else if (id == R.id.propositional03) {
-            ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.prop3), "prop3.txt", ctx);
-            intent = new Intent(ctx, MainActivity.class);
-            PS = newPS;
-        } else if (id == R.id.propositional04) {
-            ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.prop4), "prop4.txt", ctx);
-            intent = new Intent(ctx, MainActivity.class);
-            PS = newPS;
-        } else if (id == R.id.propositional05) {
-            ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.prop5), "prop5.txt", ctx);
-            intent = new Intent(ctx, MainActivity.class);
-            PS = newPS;
-        } else if (id == R.id.modalProblem01) {
-            ProblemState newPS = loadFile(ctx.getResources().openRawResource(R.raw.modal1), "modal1.txt", ctx);
-            intent = new Intent(ctx, MainActivity.class);
-            PS = newPS;
+        } else if (id == R.id.PropositionalProblems) {
+            intent = new Intent(ctx, PropositionalProblemsListActivity.class);
+        } else if (id == R.id.TermMatchingProblems) {
+            intent = new Intent(ctx, TermMatchingProblemsListActivity.class);
+        } else if (id == R.id.nonclassical) {
+            intent = new Intent(ctx, NonClassicalProblemsListActivity.class);
         } else if (id == R.id.ViewProof) {
             intent = new Intent(ctx, ProofDisplayActivity.class);
             Toast.makeText(ctx, "View Proof", Toast.LENGTH_SHORT).show();
@@ -55,7 +39,7 @@ class AuxFunctionality {
         if (intent != null) {
             intent.putExtra(PASSPROBLEMSTATE, PS);
             ctx.startActivity(intent);
-	    ctx.finish();
+            ctx.finish();
         }
     }
 
@@ -84,7 +68,8 @@ class AuxFunctionality {
         ctx.startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
-     static ProblemState loadFile(InputStream IS, String file, Activity ctx) {
+
+    static ProblemState loadFile(InputStream IS, String file, Activity ctx) {
          ProblemState newPS = new ProblemState();
          newPS.observe = ((DisplayUpdateHelper) ctx).PS.observe;
          String line;
@@ -110,6 +95,19 @@ class AuxFunctionality {
              newPS = new ProblemState();
              newPS.observe = ((DisplayUpdateHelper) ctx).PS.observe;
          }
+        if (!newPS.SequentProblem()) {
+            ArrayList<Pair<String, Pair<Integer, Boolean>>> cleanedFunctions = new ArrayList<>();
+            for (Pair<String, Pair<Integer, Boolean>> p : newPS.Functions)
+                if (p.first.compareTo("cons") != 0)
+                    if (p.first.compareTo("⊢") != 0)
+                        cleanedFunctions.add(p);
+            ArrayList<String> cleanedConstants = new ArrayList<>();
+            for (String s : newPS.Constants)
+                if (s.compareTo("ε") != 0)
+                    cleanedConstants.add(s);
+            newPS.Functions = cleanedFunctions;
+            newPS.Constants = cleanedConstants;
+        }
          newPS.anteCurrentRule = new ArrayList<>();
          newPS.anteCurrentRule.add(Const.HoleSelected);
          return newPS;
@@ -136,16 +134,25 @@ class AuxFunctionality {
         newPS.succProblem = new HashSet<>();
         for (int i = 3; i < anteSize + 3; i++) {
             Term temp = TermHelper.parse(parts[i], newPS);
-            newPS.anteProblem.add(temp);
-            if (!newPS.isIndexed(temp))
+            if (!newPS.isIndexed(temp) && !TermHelper.containsNestedSequents(temp))
                 throw new TermHelper().new FormatException();
+            else if (temp.Print().contains("⊢") && !TermHelper.wellformedSequents(temp))
+                throw new TermHelper().new FormatException();
+            else if (!temp.Print().contains("⊢") && !TermHelper.freeOfCons(temp))
+                throw new TermHelper().new FormatException();
+            else newPS.anteProblem.add(temp);
+
         }
         if (newPS.anteProblem.size() == 0) newPS.anteProblem.add(Const.Empty.Dup());
         for (int i = anteSize + 3; i < parts.length; i++) {
             Term temp = TermHelper.parse(parts[i], newPS);
-            newPS.succProblem.add(temp);
-            if (!newPS.isIndexed(temp))
+            if (!newPS.isIndexed(temp) && !TermHelper.containsNestedSequents(temp))
                 throw new TermHelper().new FormatException();
+            else if (temp.Print().contains("⊢") && !TermHelper.wellformedSequents(temp))
+                throw new TermHelper().new FormatException();
+            else if (!temp.Print().contains("⊢") && !TermHelper.freeOfCons(temp))
+                throw new TermHelper().new FormatException();
+            else newPS.succProblem.add(temp);
         }
         return true;
     }
@@ -166,8 +173,13 @@ class AuxFunctionality {
         Term succRule = Const.HoleSelected;
         for (int i = 2; i < partsAjustedSize; i++) {
             succRule = TermHelper.parse(parts[i], newPS);
-            if (!newPS.isIndexed(succRule)) throw new TermHelper().new FormatException();
-            else if (i != partsAjustedSize - 1) anteRule.add(TermHelper.parse(parts[i], newPS));
+            if (!newPS.isIndexed(succRule) && !TermHelper.containsNestedSequents(succRule))
+                throw new TermHelper().new FormatException();
+            else if (succRule.Print().contains("⊢") && !TermHelper.wellformedSequents(succRule))
+                throw new TermHelper().new FormatException();
+            else if (!succRule.Print().contains("⊢") && !TermHelper.freeOfCons(succRule))
+                throw new TermHelper().new FormatException();
+            else if (i != partsAjustedSize - 1) anteRule.add(succRule);
         }
         newPS.Rules.add(new Pair<>(ruleLabel, new Pair<>(anteRule, succRule)));
         return true;
@@ -186,6 +198,9 @@ class AuxFunctionality {
             if (parts[i].matches("infix") && Integer.decode(arity.toString()) == 2) infix = true;
             else if (parts[i].matches("infix") && Integer.decode(arity.toString()) != 2)
                 throw new TermHelper().new FormatException();
+        if (name.toString().compareTo("cons") == 0 ||
+                name.toString().compareTo("⊢") == 0 ||
+                name.toString().compareTo("ε") == 0) throw new TermHelper().new FormatException();
         if (name.toString().matches(nameParseRegex)
                 && arity.toString().matches("[0-9]+")
                 && !PS.Variables.contains(name.toString())

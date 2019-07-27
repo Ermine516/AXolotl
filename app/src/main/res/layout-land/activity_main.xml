@@ -21,7 +21,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             app:layout_constrainedHeight="true"
@@ -30,7 +29,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/UnificationSymbol">
+            app:layout_constraintTop_toBottomOf="@+id/imageView">
 
             <LinearLayout
                 android:id="@+id/RuleListVerticalLayout"
@@ -73,6 +72,17 @@
             app:layout_constraintStart_toStartOf="@+id/LeftSideProblemTagDivider"
             app:layout_constraintTop_toBottomOf="@+id/ProblemTag" />
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="165dp"
+            android:layout_height="147dp"
+            app:layout_constraintBottom_toTopOf="@+id/RuleListScroll"
+            app:layout_constraintEnd_toStartOf="@+id/RightSideTerm"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/BottomProblemTagDivider"
+            app:srcCompat="@drawable/axolotlfront" />
+
         <View
             android:id="@+id/RightSiderProblemTagDivider"
             android:layout_width="3dp"
@@ -86,58 +96,15 @@
             app:layout_constraintVertical_bias="0.0" />
 
         <ScrollView
-            android:id="@+id/LeftSideTerm"
-            android:layout_width="0dp"
-            android:layout_height="55dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:fillViewport="true"
-            app:layout_constraintBottom_toBottomOf="@+id/UnificationSymbol"
-            app:layout_constraintEnd_toStartOf="@+id/UnificationSymbol"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/UnificationSymbol"
-            app:layout_constraintVertical_bias="1.0">
-
-            <LinearLayout
-                android:id="@+id/LeftSideTermLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:minWidth="50dp"
-                android:orientation="vertical" />
-        </ScrollView>
-
-        <ImageView
-            android:id="@+id/UnificationSymbol"
-            android:layout_width="85dp"
-            android:layout_height="65dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:scaleX="1"
-            android:scaleY="1"
-            app:layout_constraintBottom_toTopOf="@+id/RuleListScroll"
-            app:layout_constraintEnd_toStartOf="@+id/RightSideTerm"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/LeftSideTerm"
-            app:layout_constraintTop_toBottomOf="@+id/BottomProblemTagDivider"
-            app:srcCompat="@drawable/unieqhdpi" />
-
-        <ScrollView
             android:id="@+id/RightSideTerm"
             android:layout_width="0dp"
             android:layout_height="55dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
             android:fillViewport="true"
-            app:layout_constraintBottom_toBottomOf="@+id/UnificationSymbol"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/UnificationSymbol"
-            app:layout_constraintTop_toTopOf="@+id/UnificationSymbol"
-            app:layout_constraintVertical_bias="0.0">
+            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintTop_toTopOf="@+id/imageView">
 
             <LinearLayout
                 android:id="@+id/RightSideTermLayout"
@@ -155,7 +122,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="@color/navigationMenuColor"
         app:headerLayout="@layout/nav_header"
+        app:itemTextColor="@color/navigationMenuTextColor"
         app:menu="@menu/navigation_menu"></com.google.android.material.navigation.NavigationView>
 
 

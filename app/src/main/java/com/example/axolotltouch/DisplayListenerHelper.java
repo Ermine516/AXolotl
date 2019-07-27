@@ -1,6 +1,7 @@
 package com.example.axolotltouch;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.GestureDetector;
@@ -19,6 +20,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class DisplayListenerHelper extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -63,7 +65,7 @@ public abstract class DisplayListenerHelper extends AppCompatActivity implements
         @Override
         public void onClick(View view) {
             if (view instanceof TextView && isMemberOf((TextView) view, (LinearLayout) DisplayListenerHelper.this.findViewById(R.id.RightSideTermLayout))) {
-                Cleanslection((LinearLayout) DisplayListenerHelper.this.findViewById(R.id.LeftSideTermLayout), false);
+                //      Cleanslection((LinearLayout) DisplayListenerHelper.this.findViewById(R.id.LeftSideTermLayout), false);
                 Cleanslection((LinearLayout) DisplayListenerHelper.this.findViewById(R.id.RightSideTermLayout), true);
                 textViewSelected((TextView) view);
                 DisplayListenerHelper.this.PS.succSelectedPosition = ((TextView) view).getText().toString();
@@ -142,6 +144,7 @@ public abstract class DisplayListenerHelper extends AppCompatActivity implements
     protected class RuleSelectionListener implements View.OnClickListener {
 
         @Override
+        @SuppressWarnings("ConstantConditions")
         public void onClick(View view) {
             LinearLayout rlvv = DisplayListenerHelper.this.findViewById(R.id.RuleListVerticalLayout);
             for (int i = 0; i < rlvv.getChildCount(); i++) {
@@ -155,4 +158,37 @@ public abstract class DisplayListenerHelper extends AppCompatActivity implements
         }
     }
 
+    protected class ProblemSelectionListener implements View.OnClickListener {
+        private String[] problems;
+        private ArrayList<String> parsedProblems;
+        private String dir;
+
+        ProblemSelectionListener(String[] prob, ArrayList<String> parProb, String direct) {
+            super();
+            problems = prob;
+            parsedProblems = parProb;
+            dir = direct;
+        }
+
+        @Override
+        @SuppressWarnings("ConstantConditions")
+        public void onClick(View view) {
+            ProblemState newPS;
+            TextView text = ((TextView) view);
+            for (int i = 0; i < parsedProblems.size(); i++) {
+                if (text.getText().toString().compareTo(parsedProblems.get(i)) == 0) {
+                    try {
+                        newPS = AuxFunctionality.loadFile(DisplayListenerHelper.this.getAssets().open(dir + problems[i]), problems[i], DisplayListenerHelper.this);
+                    } catch (IOException e) {
+                        break;
+                    }
+                    Intent intent = new Intent(DisplayListenerHelper.this, MainActivity.class);
+                    intent.putExtra(AuxFunctionality.PASSPROBLEMSTATE, newPS);
+                    DisplayListenerHelper.this.startActivity(intent);
+                    DisplayListenerHelper.this.finish();
+                    break;
+                }
+            }
+        }
+    }
 }

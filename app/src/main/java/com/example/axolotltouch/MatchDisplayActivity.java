@@ -41,6 +41,7 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
         String var = PS.Substitutions.get(PS.subPos).first;
         if (MatchDisplayActivity.this.PS.anteSelectedPositions.size() == 0) {
             Term succTerm = PS.getSelectedSuccTerm();
+            succTerm.normalize(PS.Variables);
             leftTerm.addView(scrollTextSelectConstruct(PS.succCurrentRule.Print(new Const(var)), null, this, true));
             rightTerm.addView(scrollTextSelectConstruct(succTerm.Print(var, PS.succCurrentRule, PS.Substitutions.get(PS.subPos).second), null, this, true));
         } else {
@@ -57,7 +58,9 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
 
         varDisplay.setText(var);
         try {
-            subDisplay.setText(PS.Substitutions.get(PS.subPos).second.Print());
+            if (PS.Substitutions.get(PS.subPos).second.Print().compareTo("") != 0)
+                subDisplay.setText(PS.Substitutions.get(PS.subPos).second.Print());
+            else subDisplay.setText("ε");
         } catch (NullPointerException e) {
             Toast.makeText(MatchDisplayActivity.this, "Unable to Display State", Toast.LENGTH_SHORT).show();
         }

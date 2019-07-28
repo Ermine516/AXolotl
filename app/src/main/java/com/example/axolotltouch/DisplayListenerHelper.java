@@ -2,6 +2,7 @@ package com.example.axolotltouch;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.GestureDetector;
@@ -12,7 +13,9 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
@@ -190,5 +193,63 @@ public abstract class DisplayListenerHelper extends AppCompatActivity implements
                 }
             }
         }
+    }
+
+    protected class MenuOnClickListener implements View.OnClickListener {
+        Context OwningActivity;
+
+        MenuOnClickListener(Context oA) {
+            super();
+            OwningActivity = oA;
+        }
+
+        @Override
+        @SuppressWarnings("ConstantConditions")
+        public void onClick(View view) {
+            AssetManager manager = OwningActivity.getAssets();
+            int id = view.getId();
+            Intent intent = null;
+            System.out.println("herejslkj");
+            if (id == R.id.problembuttonlayout) {
+                Toast.makeText(OwningActivity, "Problem", Toast.LENGTH_SHORT).show();
+                intent = new Intent(OwningActivity, MainActivity.class);
+            } else if (id == R.id.classicbuttonlayout) {
+                intent = new Intent(OwningActivity, PropositionalProblemsListActivity.class);
+            } else if (id == R.id.TermMatchingbuttonlayout) {
+                intent = new Intent(OwningActivity, TermMatchingProblemsListActivity.class);
+            } else if (id == R.id.nonclassicbuttonlayout) {
+                intent = new Intent(OwningActivity, NonClassicalProblemsListActivity.class);
+            } else if (id == R.id.Proofbuttonlayout) {
+                intent = new Intent(OwningActivity, ProofDisplayActivity.class);
+                Toast.makeText(OwningActivity, "View Proof", Toast.LENGTH_SHORT).show();
+            }
+            if (intent != null) {
+                intent.putExtra(AuxFunctionality.PASSPROBLEMSTATE, PS);
+                OwningActivity.startActivity(intent);
+                ((DisplayListenerHelper) OwningActivity).finish();
+            }
+        }
+    }
+
+    class textsizechangeListener implements SeekBar.OnSeekBarChangeListener {
+        Context OwningActivity;
+
+        textsizechangeListener(Context oA) {
+            super();
+            OwningActivity = oA;
+        }
+
+        public void onProgressChanged(SeekBar seekBar, int progress,
+                                      boolean fromUser) {
+            PS.textSize = (progress >= 10) ? progress : 10;
+        }
+
+        public void onStartTrackingTouch(SeekBar seekBar) {
+        }
+
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            ((DisplayUpdateHelper) OwningActivity).ActivityDecorate();
+        }
+
     }
 }

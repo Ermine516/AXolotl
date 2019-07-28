@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +44,7 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
          setSupportActionBar(toolbar);
          DrawerLayout drawer = findViewById(R.id.Drawer);
          NavigationView navigationView = findViewById(R.id.nv);
+        addMenulisteners();
          ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                  this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
          drawer.addDrawerListener(toggle);
@@ -59,6 +61,21 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
         switcher.setOnCheckedChangeListener(new ObservationListener());
         return PS;
      }
+
+    protected void addMenulisteners() {
+        LinearLayout ll = findViewById(R.id.nonclassicbuttonlayout);
+        ll.setOnClickListener(new MenuOnClickListener(this));
+        ll = findViewById(R.id.classicbuttonlayout);
+        ll.setOnClickListener(new MenuOnClickListener(this));
+        ll = findViewById(R.id.TermMatchingbuttonlayout);
+        ll.setOnClickListener(new MenuOnClickListener(this));
+        ll = findViewById(R.id.Proofbuttonlayout);
+        ll.setOnClickListener(new MenuOnClickListener(this));
+        ll = findViewById(R.id.problembuttonlayout);
+        ll.setOnClickListener(new MenuOnClickListener(this));
+        SeekBar seek = findViewById(R.id.Adjusttextseeker);
+        seek.setOnSeekBarChangeListener(new DisplayListenerHelper.textsizechangeListener(this));
+    }
 
     protected void swipeRightProblemStateUpdate() {
         if (PS.succCurrentRule.getSym().compareTo(Const.Hole.getSym()) != 0)
@@ -137,7 +154,7 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
 
     public HorizontalScrollView scrollTextSelectConstruct(String text, View.OnClickListener lis, Context ctx, boolean gravity) {
         TextView TermText = new TextView(ctx);
-        TermText.setTextSize(40);
+        TermText.setTextSize(PS.textSize);
         TermText.setText(Html.fromHtml(text));
         if (gravity) TermText.setGravity(Gravity.CENTER);
         TermText.setFreezesText(true);

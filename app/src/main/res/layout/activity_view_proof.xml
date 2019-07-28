@@ -11,9 +11,7 @@
     tools:showIn="@layout/app_proof_bar_layout">
 
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ProofDisplayActivity">
@@ -28,15 +26,16 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/proofxxxhdpi" />
 </androidx.constraintlayout.widget.ConstraintLayout>
-<com.google.android.material.navigation.NavigationView
-android:id="@+id/nv"
-android:layout_width="wrap_content"
-android:layout_height="match_parent"
-android:layout_gravity="start"
-    android:background="@color/navigationMenuColor"
-    app:headerLayout="@layout/nav_header"
-    app:itemTextColor="@color/navigationMenuTextColor"
-    app:menu="@menu/navigation_menu"></com.google.android.material.navigation.NavigationView>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nv"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:maxWidth="200dp">
+
+        <include layout="@layout/drawer_menu_layout" />
+    </com.google.android.material.navigation.NavigationView>
 
 
     </androidx.drawerlayout.widget.DrawerLayout>

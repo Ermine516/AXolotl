@@ -4,6 +4,7 @@ package com.example.axolotltouch;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -42,12 +43,12 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
         if (MatchDisplayActivity.this.PS.anteSelectedPositions.size() == 0) {
             Term succTerm = PS.getSelectedSuccTerm();
             succTerm.normalize(PS.Variables);
-            leftTerm.addView(scrollTextSelectConstruct(PS.succCurrentRule.Print(new Const(var)), null, this, true));
+            leftTerm.addView(scrollTextSelectConstruct(PS.succCurrentRule.Print(new Const(var), PS.Variables.contains(var)), null, this, true));
             rightTerm.addView(scrollTextSelectConstruct(succTerm.Print(var, PS.succCurrentRule, PS.Substitutions.get(PS.subPos).second), null, this, true));
         } else {
             ArrayList<Term> anteTerm = PS.getSelectedAnteTerm();
             for (Term t : PS.anteCurrentRule)
-                leftTerm.addView(scrollTextSelectConstruct(t.Print(new Const(var)), null, this, true));
+                leftTerm.addView(scrollTextSelectConstruct(t.Print(new Const(var), PS.Variables.contains(var)), null, this, true));
             for (Term t : anteTerm)
                 for (Term s : PS.anteCurrentRule)
                     if (PS.VarList(s).contains(var)) {
@@ -56,7 +57,7 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
                     }
         }
 
-        varDisplay.setText(var);
+        varDisplay.setText(Html.fromHtml("<b>" + var + "</b>"));
         try {
             if (PS.Substitutions.get(PS.subPos).second.Print().compareTo("") != 0)
                 subDisplay.setText(PS.Substitutions.get(PS.subPos).second.Print());

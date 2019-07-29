@@ -25,13 +25,13 @@ public interface Term extends Parcelable {
 
     String Print();
 
-    String Print(Term t);
+    String Print(Term t, boolean isvar);
 
     String Print(String var, Term compare, Term t);
 
     String PrintCons();
 
-    String PrintCons(Term t);
+    String PrintCons(Term t, boolean isvar);
 
     String PrintCons(String var, Term compare, Term t);
 

@@ -141,12 +141,11 @@ public class MainActivity extends DisplayUpdateHelper {
                 if (PS.succCurrentRule.getSym().compareTo(Const.HoleSelected.getSym()) != 0) {
                     if (PS.succSelectedPosition.compareTo("") != 0) {
                         Term succTerm = ProblemState.getTermByString(PS.succSelectedPosition, PS.succProblem);
+
                         if (TermHelper.wellformedSequents(succTerm) && TermHelper.wellformedSequents(PS.succCurrentRule)) {
                             succTerm.normalize(PS.Variables);
                             PS.succCurrentRule.normalize(PS.Variables);
                         }
-                        System.out.println(succTerm.toString() + " " + TermHelper.TermMatchWithVar(succTerm, PS.succCurrentRule, PS.Variables));
-                        System.out.println(PS.succCurrentRule.toString());
                         if (succTerm != null && TermHelper.TermMatchWithVar(succTerm, PS.succCurrentRule, PS.Variables)) {
                             PS.Substitutions = TermHelper.varTermMatch(succTerm, PS.succCurrentRule, PS);
                             HashSet<String> occurences = new HashSet<>();

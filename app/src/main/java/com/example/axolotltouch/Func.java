@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -133,43 +133,43 @@ public final class Func implements Term, Parcelable {
 
     }
 
-    public String Print(Term t) {
+    public String Print(Term t, boolean isvar) {
         if (TermHelper.TermMatch(this, t)) return "<font color=#ff0000>" + this.Print() + "</font>";
         else {
             if (this.getSym().compareTo("⊢") == 0)
-                return "(" + this.Args.get(0).Print(t) + " " + this.getSym() + " " + this.Args.get(1).Print(t) + ")";
+                return "(" + this.Args.get(0).Print(t, isvar) + " " + this.getSym() + " " + this.Args.get(1).Print(t, isvar) + ")";
             else if (this.getSym().compareTo("cons") == 0) {
-                String s = this.Args.get(1).PrintCons(t);
-                return this.Args.get(0).PrintCons(t) + ((s.compareTo("") != 0) ? " , " : "") + s;
+                String s = this.Args.get(1).PrintCons(t, isvar);
+                return this.Args.get(0).PrintCons(t, isvar) + ((s.compareTo("") != 0) ? " , " : "") + s;
 
             } else if (this.Args.size() == 2 && infix) {
                 String s = "(";
-                s += this.Args.get(0).Print(t) + " " + this.getSym() + " " + this.Args.get(1).Print(t);
+                s += this.Args.get(0).Print(t, isvar) + " " + this.getSym() + " " + this.Args.get(1).Print(t, isvar);
                 return s + ")";
             } else {
                 StringBuilder s = new StringBuilder(Sym + "(");
                 int i = 0;
                 for (; i < (this.Args.size() - 1); i++)
-                    s.append(this.Args.get(i).Print(t)).append(",");
+                    s.append(this.Args.get(i).Print(t, isvar)).append(",");
                 Term tt = this.Args.get(i);
-                String ss = tt.Print(t);
+                String ss = tt.Print(t, isvar);
                 if (this.Args.size() > 0) s.append(ss).append(")");
                 return s.toString();
             }
         }
     }
 
-    public String PrintCons(Term t) {
+    public String PrintCons(Term t, boolean isvar) {
         if (this.getSym().compareTo("cons") == 0)
             if (TermHelper.TermMatch(this, t))
                 return "<font color=#ff0000>" + this.PrintCons() + "</font>";
             else {
-                String s = this.Args.get(1).PrintCons(t);
-                return this.Args.get(0).PrintCons(t) + ((s.compareTo("") != 0) ? " , " : "") + s;
+                String s = this.Args.get(1).PrintCons(t, isvar);
+                return this.Args.get(0).PrintCons(t, isvar) + ((s.compareTo("") != 0) ? " , " : "") + s;
             }
         else if (TermHelper.TermMatch(this, t))
             return "<font color=#ff0000>" + this.Print() + "</font>";
-        else return this.Print(t);
+        else return this.Print(t, isvar);
     }
 
     public String PrintCons(String var, Term compare, Term t) {
@@ -248,7 +248,7 @@ public final class Func implements Term, Parcelable {
     }
 
     private Term leftAssociate(Term t, HashSet<String> var) {
-        ArrayList<Term> listTerms = (t.getSym().compareTo("cons") == 0) ? extractterms(t.subTerms().get(0)) : new ArrayList<>(Arrays.asList(AuxFunctionality.HashSetTermArray));
+        ArrayList<Term> listTerms = (t.getSym().compareTo("cons") == 0) ? extractterms(t.subTerms().get(0)) : new ArrayList<>(Collections.singletonList(t));
         if (t.getSym().compareTo("cons") == 0)
             listTerms.addAll((extractterms(t.subTerms().get(1))));
         if (listTerms.size() > 1) {

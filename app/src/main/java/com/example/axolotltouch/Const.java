@@ -46,10 +46,10 @@ public final class Const implements Term, Parcelable {
         else return this.Sym;
     }
 
-    public String PrintCons(Term t) {
+    public String PrintCons(Term t, boolean isvar) {
         if (this.getSym().compareTo("ε") == 0) return "";
         else if (t.subTerms().size() == 0 && t.getSym().compareTo(this.getSym()) == 0)
-            return "<font color=#ff0000>" + Print() + "</font>";
+            return "<font color=#ff0000>" + ((isvar) ? "<b>" : "") + Print() + ((isvar) ? "</b>" : "") + "</font>";
         else return Print();
     }
 
@@ -59,9 +59,10 @@ public final class Const implements Term, Parcelable {
             return "<font color=#ff0000>" + Print() + "</font>";
         else return Print();
     }
-    public String Print(Term t) {
+
+    public String Print(Term t, boolean isvar) {
         if (t.subTerms().size() == 0 && t.getSym().compareTo(this.getSym()) == 0)
-            return "<font color=#ff0000>" + Print() + "</font>";
+            return "<font color=#ff0000>" + ((isvar) ? "<b>" : "") + Print() + ((isvar) ? "</b>" : "") + "</font>";
         else return Print();
     }
 

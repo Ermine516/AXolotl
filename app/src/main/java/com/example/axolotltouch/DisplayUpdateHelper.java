@@ -38,6 +38,7 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
 
     protected abstract void ActivityDecorate();
 
+
     protected ProblemState ConstructActivity(Bundle in) {
          Toolbar toolbar = findViewById(R.id.toolbar);
          setSupportActionBar(toolbar);
@@ -194,4 +195,5 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
         for (int i = 0; i < PS.Rules.size(); i++)
             RLVV.addView(scrollTextSelectConstruct(PS.RuleTermsToString(PS.Rules.get(i).second), new DisplayUpdateHelper.RuleSelectionListener(), this, false));
     }
+
 }

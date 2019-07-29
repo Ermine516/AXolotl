@@ -1,6 +1,5 @@
 package com.example.axolotltouch;
 
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -8,13 +7,11 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
-public class ClassicalProblemsListActivity extends DisplayUpdateHelper {
+public class ClassicalProblemsListActivity extends DisplayProblemListHelper {
     public static final String HILBERTPROBLEMSLOCATION = "classical/hilbert";
-    private ArrayList<String> parsedProblems;
     public static final String SEQUENTPROBLEMSLOCATION = "classical/sequent";
-    private HashMap<String, String[]> problems;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,36 +33,10 @@ public class ClassicalProblemsListActivity extends DisplayUpdateHelper {
     }
 
     protected void ActivityDecorate() {
-        addHilbertProblems(this.getAssets(), (LinearLayout) this.findViewById(R.id.HilbertProblemList), HILBERTPROBLEMSLOCATION);
+        addProblemList(this.getAssets(), (LinearLayout) this.findViewById(R.id.HilbertProblemList), HILBERTPROBLEMSLOCATION);
         parsedProblems = new ArrayList<>();
-        addHilbertProblems(this.getAssets(), (LinearLayout) this.findViewById(R.id.SequentProblemList), SEQUENTPROBLEMSLOCATION);
+        addProblemList(this.getAssets(), (LinearLayout) this.findViewById(R.id.SequentProblemList), SEQUENTPROBLEMSLOCATION);
     }
 
-    protected void addHilbertProblems(AssetManager manager, LinearLayout ll, String directory) {
-        ll.removeAllViewsInLayout();
-        try {
-            new ArrayList<>();
-            for (int i = 0; i < Objects.requireNonNull(problems.get(directory)).length; i++) {
-                StringBuilder problemString = new StringBuilder();
-                ProblemState newPS = AuxFunctionality.loadFile(manager.open(directory + "/" + Objects.requireNonNull(problems.get(directory))[i]), Objects.requireNonNull(problems.get(directory))[i], this);
-                Term[] anteProb = newPS.anteProblem.toArray(AuxFunctionality.HashSetTermArray);
-                if (anteProb[0].Print().compareTo("∅") != 0) {
-                    for (int j = 0; j < anteProb.length; j++)
-                        if (j == anteProb.length - 1)
-                            problemString.append(anteProb[j].Print()).append(" ");
-                        else problemString.append(anteProb[j].Print()).append(" , ");
-                }
-                Term[] succProb = newPS.succProblem.toArray(AuxFunctionality.HashSetTermArray);
-                for (int j = 0; j < succProb.length; j++)
-                    if (j == succProb.length - 1) problemString.append(succProb[j].Print());
-                    else problemString.append(succProb[j].Print()).append(" , ");
-                parsedProblems.add(problemString.toString());
-                ll.addView(scrollTextSelectConstruct(problemString.toString(), new DisplayListenerHelper.ProblemSelectionListener(problems.get(directory), parsedProblems, directory), this, false));
-            }
-        } catch (IOException e) {
-            Toast.makeText(ClassicalProblemsListActivity.this, "Issues accessing Problem Database.", Toast.LENGTH_SHORT).show();
-            ll.removeAllViewsInLayout();
-        }
-    }
 
 }

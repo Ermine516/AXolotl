@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PropositionalProblemsListActivity">
+    tools:context=".ClassicalProblemsListActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/activity_propositional_problems_list" />
+    <include layout="@layout/activity_classical_problems_list" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -40,9 +40,10 @@ public class ProofDisplayActivity extends DisplayUpdateHelper {
         drawFlat();
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void drawFlat() {
         ArrayList<Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Pair<ArrayList<Term>, Term>>>> history = PS.History;
-        ArrayList<Pair<ArrayList<String>,ArrayList<String>>> proof = new ArrayList<Pair<ArrayList<String>,ArrayList<String>>>();
+        ArrayList<Pair<ArrayList<String>, ArrayList<String>>> proof = new ArrayList<>();
 
         HashSet<Term> curAnteProblem = PS.anteProblem;
         HashSet<Term> curSuccProblem = PS.succProblem;
@@ -105,33 +106,33 @@ public class ProofDisplayActivity extends DisplayUpdateHelper {
             }
             proof.add(Pair.create(anteStrings, succStrings));
         }
-        String seq = "";
+        StringBuilder seq = new StringBuilder();
         Pair<ArrayList<String>,ArrayList<String>> cur = proof.get(0);
         for(int i = 0; i < cur.first.size(); i++) {
-            seq += cur.first.get(i);
+            seq.append(cur.first.get(i));
         }
-        seq += "\u22A2";
+        seq.append("\u22A2");
         for(int i = 0; i < cur.second.size(); i++) {
-            seq += cur.second.get(i);
+            seq.append(cur.second.get(i));
         }
-        Pair<Bitmap, Pair<Float, Float>> bm = drawAxiom(seq);
+        Pair<Bitmap, Pair<Float, Float>> bm = drawAxiom(seq.toString());
         for(int j = 1; j < proof.size(); j++){
-            seq = "";
+            seq = new StringBuilder();
             cur = proof.get(j);
             for(int i = 0; i < cur.first.size(); i++) {
-                seq += cur.first.get(i);
+                seq.append(cur.first.get(i));
                 if(i < cur.first.size() - 1) {
-                    seq += ",";
+                    seq.append(",");
                 }
             }
-            seq += "\u22A2";
+            seq.append("\u22A2");
             for(int i = 0; i < cur.second.size(); i++) {
-                seq += cur.second.get(i);
+                seq.append(cur.second.get(i));
                 if(i < cur.second.size() - 1) {
-                    seq += ",";
+                    seq.append(",");
                 }
             }
-            bm = drawUnaryInference(bm, seq);
+            bm = drawUnaryInference(bm, seq.toString());
         }
         drawBitmap(bm.first);
     }
@@ -164,6 +165,7 @@ public class ProofDisplayActivity extends DisplayUpdateHelper {
         return Pair.create(bm, Pair.create(0f, (float) (bounds.width() + bounds.left)));
     }
 
+    @SuppressWarnings("ConstantConditions")
     private Pair<Bitmap, Pair<Float, Float>> drawUnaryInference(Pair<Bitmap, Pair<Float, Float>> proof, String derived) {
         Bitmap der = drawAxiom(derived).first;
 
@@ -214,6 +216,7 @@ public class ProofDisplayActivity extends DisplayUpdateHelper {
         return Pair.create(bm, Pair.create(startCons, endCons));
     }
 
+    @SuppressWarnings("ConstantConditions")
     private Pair<Bitmap, Pair<Float, Float>> drawBinaryInference(Pair<Bitmap, Pair<Float, Float>> proofLeft, Pair<Bitmap, Pair<Float, Float>> proofRight, String derived) {
         Bitmap der = drawAxiom(derived).first;
 

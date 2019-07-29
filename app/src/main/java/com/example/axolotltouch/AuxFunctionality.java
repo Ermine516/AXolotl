@@ -2,7 +2,6 @@ package com.example.axolotltouch;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.widget.Toast;
 
 import androidx.core.util.Pair;
@@ -21,13 +20,12 @@ class AuxFunctionality {
     private static final String nameParseRegex = "[a-zA-Z&\\u2194\\u25E6\\u2227\\u2228\\u00AC\\u21D2\\u21D4\\u2284\\u2285\\u22A4\\u25A1\\u25C7\\u22A2\\u03B5]+";
 
      static void SideMenuItems(int id, Activity ctx, ProblemState PS) {
-         AssetManager manager = ctx.getAssets();
          Intent intent = null;
         if (id == R.id.Problembutton) {
             Toast.makeText(ctx, "Problem", Toast.LENGTH_SHORT).show();
             intent = new Intent(ctx, MainActivity.class);
         } else if (id == R.id.PropositionalProblems) {
-            intent = new Intent(ctx, PropositionalProblemsListActivity.class);
+            intent = new Intent(ctx, ClassicalProblemsListActivity.class);
         } else if (id == R.id.TermMatchingProblems) {
             intent = new Intent(ctx, TermMatchingProblemsListActivity.class);
         } else if (id == R.id.nonclassical) {
@@ -68,7 +66,7 @@ class AuxFunctionality {
         ctx.startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
-
+    @SuppressWarnings("ConstantConditions")
     static ProblemState loadFile(InputStream IS, String file, Activity ctx) {
          ProblemState newPS = new ProblemState();
          newPS.observe = ((DisplayUpdateHelper) ctx).PS.observe;
@@ -158,7 +156,7 @@ class AuxFunctionality {
     }
 
     private static boolean parseRuleDefinition(ProblemState newPS, String[] parts) throws TermHelper.FormatException {
-        String ruleRegex = "\\[(.)*\\]";
+        String ruleRegex = "\\[(.)*]";
         if (parts.length < 2) throw new TermHelper().new FormatException();
         int anteSize = Integer.valueOf(parts[1]);
         int partsAjustedSize = parts.length;

@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -55,7 +54,6 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
         else if (in != null && in.containsKey("ProblemState"))
             PS = in.getParcelable("ProblemState");
         else PS = new ProblemState();
-        Menu menu = navigationView.getMenu();
         switcher = findViewById(R.id.observeswitchformenu);
         switcher.setChecked(PS.observe);
         switcher.setOnCheckedChangeListener(new ObservationListener());
@@ -178,15 +176,15 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
 
     protected void updateProblemSideDisplay(LinearLayout sl, Term[] t) {
         sl.removeAllViewsInLayout();
-        for (int i = 0; i < t.length; i++)
-            sl.addView(scrollTextSelectConstruct(t[i].Print(), new DisplayUpdateHelper.SideSelectionListener(), this, true));
+        for (Term term : t)
+            sl.addView(scrollTextSelectConstruct(term.Print(), new SideSelectionListener(), this, true));
     }
 
     protected void updatefutureProblemSideDisplay(LinearLayout sl, Term[] t) {
         sl.removeAllViewsInLayout();
-        for (int i = 0; i < t.length; i++) {
-            t[i].normalize(PS.Variables);
-            sl.addView(scrollTextSelectConstruct(t[i].Print(), null, this, false));
+        for (Term term : t) {
+            term.normalize(PS.Variables);
+            sl.addView(scrollTextSelectConstruct(term.Print(), null, this, false));
         }
     }
 

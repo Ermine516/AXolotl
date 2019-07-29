@@ -84,7 +84,6 @@ public final class Const implements Term, Parcelable {
     }
 
     public void normalize(HashSet<String> var) {
-        return;
     }
 
     public String toString() {

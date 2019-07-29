@@ -24,6 +24,7 @@ import static com.example.axolotltouch.AuxFunctionality.PASSPROBLEMSTATE;
 
 
 public class TermConstructActivity extends DisplayUpdateHelper  {
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +86,7 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
         ltd.setMinimumWidth((width > 75) ? width : 75);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @SuppressWarnings("ConstantConditions")
     private void TermDisplayUpdate() {
         LinearLayout RLVV = this.findViewById(R.id.TermSelectionLayout);
@@ -126,6 +128,7 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
             super(ctx);
         }
 
+        @SuppressWarnings("ConstantConditions")
         public boolean onSwipeLeft() {
             PS.subPos--;
             Intent intent;

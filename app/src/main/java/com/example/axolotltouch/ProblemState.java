@@ -215,8 +215,6 @@ public class ProblemState implements Parcelable {
 
     Term getSelectedSuccTerm() {
         for (Term t : succProblem) {
-            System.out.println(t.Print() + "  " + (t.Print().compareTo(succSelectedPosition) == 0));
-            System.out.println(succSelectedPosition + "  " + (t.Print().compareTo(succSelectedPosition) == 0));
             if (t.Print().compareTo(succSelectedPosition) == 0) return t;
         }
         return null;
@@ -267,7 +265,6 @@ public class ProblemState implements Parcelable {
                         retString.append(rule.first.get(i).PrintBold(varAsTerms)).append(" " + RULESYMBOL).append(" Δ , ");
                     else retString.append(rule.first.get(i).PrintBold(varAsTerms)).append(" , ");
             else retString.append(RULESYMBOL).append(" Δ , ");
-            System.out.println(retString + rule.second.PrintBold(varAsTerms));
             return retString + rule.second.PrintBold(varAsTerms);
         } else return "";
     }
@@ -408,7 +405,7 @@ public class ProblemState implements Parcelable {
         }
     };
 
-    public boolean SequentProblem() {
+    boolean SequentProblem() {
         for (Term t : this.succProblem)
             if (TermHelper.wellformedSequents(t)) return true;
         return false;

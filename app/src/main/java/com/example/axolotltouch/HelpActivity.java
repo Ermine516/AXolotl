@@ -16,7 +16,6 @@ protected void onCreate(Bundle savedInstanceState) {
         }
 
         protected void ActivityDecorate() {
-                return;
         }
 
 }

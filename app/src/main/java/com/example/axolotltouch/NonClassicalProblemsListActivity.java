@@ -33,21 +33,22 @@ public class NonClassicalProblemsListActivity extends DisplayUpdateHelper {
         TPLL.removeAllViewsInLayout();
         try {
             new ArrayList<>();
-            for (int i = 0; i < problems.length; i++) {
-                String problemString = "";
-                ProblemState newPS = AuxFunctionality.loadFile(manager.open("non_classical/" + problems[i]), problems[i], this);
+            for (String problem : problems) {
+                StringBuilder problemString = new StringBuilder();
+                ProblemState newPS = AuxFunctionality.loadFile(manager.open("non_classical/" + problem), problem, this);
                 Term[] anteProb = newPS.anteProblem.toArray(AuxFunctionality.HashSetTermArray);
                 if (anteProb[0].Print().compareTo("∅") != 0) {
                     for (int j = 0; j < anteProb.length; j++)
-                        if (j == anteProb.length - 1) problemString += anteProb[j].Print() + " ";
-                        else problemString += anteProb[j].Print() + " , ";
+                        if (j == anteProb.length - 1)
+                            problemString.append(anteProb[j].Print()).append(" ");
+                        else problemString.append(anteProb[j].Print()).append(" , ");
                 }
                 Term[] succProb = newPS.succProblem.toArray(AuxFunctionality.HashSetTermArray);
                 for (int j = 0; j < succProb.length; j++)
-                    if (j == succProb.length - 1) problemString += succProb[j].Print();
-                    else problemString += succProb[j].Print() + " , ";
-                parsedProblems.add(problemString);
-                TPLL.addView(scrollTextSelectConstruct(problemString, new DisplayListenerHelper.ProblemSelectionListener(problems, parsedProblems, "non_classical/"), this, false));
+                    if (j == succProb.length - 1) problemString.append(succProb[j].Print());
+                    else problemString.append(succProb[j].Print()).append(" , ");
+                parsedProblems.add(problemString.toString());
+                TPLL.addView(scrollTextSelectConstruct(problemString.toString(), new ProblemSelectionListener(problems, parsedProblems, "non_classical/"), this, false));
             }
         } catch (IOException e) {
             Toast.makeText(NonClassicalProblemsListActivity.this, "Issues accessing Problem Database.", Toast.LENGTH_SHORT).show();

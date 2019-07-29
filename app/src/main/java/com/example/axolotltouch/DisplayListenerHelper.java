@@ -2,7 +2,6 @@ package com.example.axolotltouch;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.GestureDetector;
@@ -68,12 +67,11 @@ public abstract class DisplayListenerHelper extends AppCompatActivity implements
         @Override
         public void onClick(View view) {
             if (view instanceof TextView && isMemberOf((TextView) view, (LinearLayout) DisplayListenerHelper.this.findViewById(R.id.RightSideTermLayout))) {
-                //      Cleanslection((LinearLayout) DisplayListenerHelper.this.findViewById(R.id.LeftSideTermLayout), false);
-                Cleanslection((LinearLayout) DisplayListenerHelper.this.findViewById(R.id.RightSideTermLayout), true);
+                Cleanslection((LinearLayout) DisplayListenerHelper.this.findViewById(R.id.RightSideTermLayout));
                 textViewSelected((TextView) view);
                 DisplayListenerHelper.this.PS.succSelectedPosition = ((TextView) view).getText().toString();
             } else if (view instanceof TextView && isMemberOf((TextView) view, (LinearLayout) DisplayListenerHelper.this.findViewById(R.id.LeftSideTermLayout))) {
-                Cleanslection((LinearLayout) DisplayListenerHelper.this.findViewById(R.id.RightSideTermLayout), true);
+                Cleanslection((LinearLayout) DisplayListenerHelper.this.findViewById(R.id.RightSideTermLayout));
                 if (isNotSelected((TextView) view)) {
                     textViewSelected((TextView) view);
                     DisplayListenerHelper.this.PS.anteSelectedPositions.add(((TextView) view).getText().toString());
@@ -84,13 +82,11 @@ public abstract class DisplayListenerHelper extends AppCompatActivity implements
             }
         }
 
-        private void Cleanslection(LinearLayout side, boolean leftorright) {
+        private void Cleanslection(LinearLayout side) {
             int size = side.getChildCount();
             for (int i = 0; i < size; i++)
                 textViewUnselected(((TextView) ((LinearLayout) ((HorizontalScrollView) side.getChildAt(i)).getChildAt(0)).getChildAt(0)));
             DisplayListenerHelper.this.PS.succSelectedPosition = "";
-            if (!leftorright)
-                DisplayListenerHelper.this.PS.anteSelectedPositions = new ArrayList<>();
         }
 
         private boolean isMemberOf(TextView view, LinearLayout side) {
@@ -174,14 +170,13 @@ public abstract class DisplayListenerHelper extends AppCompatActivity implements
         }
 
         @Override
-        @SuppressWarnings("ConstantConditions")
         public void onClick(View view) {
             ProblemState newPS;
             TextView text = ((TextView) view);
             for (int i = 0; i < parsedProblems.size(); i++) {
                 if (text.getText().toString().compareTo(parsedProblems.get(i)) == 0) {
                     try {
-                        newPS = AuxFunctionality.loadFile(DisplayListenerHelper.this.getAssets().open(dir + problems[i]), problems[i], DisplayListenerHelper.this);
+                        newPS = AuxFunctionality.loadFile(DisplayListenerHelper.this.getAssets().open(dir + "/" + problems[i]), problems[i], DisplayListenerHelper.this);
                     } catch (IOException e) {
                         break;
                     }
@@ -204,17 +199,14 @@ public abstract class DisplayListenerHelper extends AppCompatActivity implements
         }
 
         @Override
-        @SuppressWarnings("ConstantConditions")
         public void onClick(View view) {
-            AssetManager manager = OwningActivity.getAssets();
             int id = view.getId();
             Intent intent = null;
-            System.out.println("herejslkj");
             if (id == R.id.problembuttonlayout) {
                 Toast.makeText(OwningActivity, "Problem", Toast.LENGTH_SHORT).show();
                 intent = new Intent(OwningActivity, MainActivity.class);
             } else if (id == R.id.classicbuttonlayout) {
-                intent = new Intent(OwningActivity, PropositionalProblemsListActivity.class);
+                intent = new Intent(OwningActivity, ClassicalProblemsListActivity.class);
             } else if (id == R.id.TermMatchingbuttonlayout) {
                 intent = new Intent(OwningActivity, TermMatchingProblemsListActivity.class);
             } else if (id == R.id.nonclassicbuttonlayout) {

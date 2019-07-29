@@ -248,7 +248,7 @@ public final class Func implements Term, Parcelable {
     }
 
     private Term leftAssociate(Term t, HashSet<String> var) {
-        ArrayList<Term> listTerms = (t.getSym().compareTo("cons") == 0) ? extractterms(t.subTerms().get(0)) : new ArrayList<>(Arrays.asList(new Term[]{t}));
+        ArrayList<Term> listTerms = (t.getSym().compareTo("cons") == 0) ? extractterms(t.subTerms().get(0)) : new ArrayList<>(Arrays.asList(AuxFunctionality.HashSetTermArray));
         if (t.getSym().compareTo("cons") == 0)
             listTerms.addAll((extractterms(t.subTerms().get(1))));
         if (listTerms.size() > 1) {

@@ -25,7 +25,7 @@
             android:gravity="center"
             android:text="@string/RuleAppliedTag"
             android:textColor="#FDFDFE"
-            android:textSize="24dp"
+            android:textSize="24sp"
             app:layout_constrainedHeight="true"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toTopOf="@+id/VariableDisplayScroll"
@@ -104,6 +104,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/LeftSideTerm"
+            android:contentDescription="@string/UnificationSign"
             app:srcCompat="@drawable/unieqhdpi" />
 
         <HorizontalScrollView
@@ -123,7 +124,7 @@
             app:layout_constraintTop_toBottomOf="@+id/ruleInstanceTag2">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="horizontal">
@@ -135,7 +136,6 @@
                     android:freezesText="true"
                     android:gravity="center"
                     android:minWidth="50dp"
-                    android:text="TextView"
                     android:textColor="@android:color/black"
                     android:textSize="34sp" />
             </LinearLayout>
@@ -158,7 +158,7 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView2">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:orientation="horizontal">
@@ -170,9 +170,8 @@
                     android:freezesText="true"
                     android:gravity="center"
                     android:minWidth="50dp"
-                    android:text="TextView"
                     android:textColor="@android:color/black"
-                    android:textSize="34dp" />
+                    android:textSize="34sp" />
             </LinearLayout>
         </HorizontalScrollView>
 
@@ -203,6 +202,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/VariableDisplayScroll"
+            android:contentDescription="@string/equal_sign"
             app:srcCompat="@drawable/equal" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

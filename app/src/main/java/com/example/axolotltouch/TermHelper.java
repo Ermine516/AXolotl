@@ -3,7 +3,6 @@ package com.example.axolotltouch;
 import androidx.core.util.Pair;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
 
@@ -66,9 +65,7 @@ class TermHelper {
         if (t instanceof Const)
             return false;
         else if (t instanceof Func && t.getSym().compareTo("⊢") == 0) {
-            if (containsNestedSequents(t.subTerms().get(0)) || containsNestedSequents(t.subTerms().get(1)))
-                return false;
-            else return true;
+            return !containsNestedSequents(t.subTerms().get(0)) && !containsNestedSequents(t.subTerms().get(1));
         } else if (t instanceof Func) {
             boolean ret = false;
             for (int i = 0; i < t.subTerms().size(); i++)
@@ -86,9 +83,7 @@ class TermHelper {
                 return !(containsNestedCons(t.subTerms().get(0)));
             } else if (t.subTerms().get(1).getSym().compareTo("cons") == 0 && freeOfCons(t.subTerms().get(0))) {
                 return !(containsNestedCons(t.subTerms().get(1)));
-            } else if (freeOfCons(t.subTerms().get(0)) && freeOfCons(t.subTerms().get(1))) {
-                return true;
-            } else return false;
+            } else return freeOfCons(t.subTerms().get(0)) && freeOfCons(t.subTerms().get(1));
         } else return false;
     }
 
@@ -153,16 +148,16 @@ class TermHelper {
         return ret;
     }
 
-    private static HashMap<String, Term> varTermMatchMap(Term left, Term right, ProblemState PS) {
-        HashMap<String, Term> ret = new HashMap<>();
-        if (PS.VarList(left).size() == 0)
-            if (PS.Variables.contains(right.getSym())) ret.put(right.getSym(), left);
-            else if (left.subTerms().size() == right.subTerms().size() && left.subTerms().size() != 0)
-                for (int i = 0; i < left.subTerms().size(); i++)
-                    ret.putAll(varTermMatchMap(left.subTerms().get(i), right.subTerms().get(i), PS));
-        return ret;
-    }
-
+    /*  private static HashMap<String, Term> varTermMatchMap(Term left, Term right, ProblemState PS) {
+          HashMap<String, Term> ret = new HashMap<>();
+          if (PS.VarList(left).size() == 0)
+              if (PS.Variables.contains(right.getSym())) ret.put(right.getSym(), left);
+              else if (left.subTerms().size() == right.subTerms().size() && left.subTerms().size() != 0)
+                  for (int i = 0; i < left.subTerms().size(); i++)
+                      ret.putAll(varTermMatchMap(left.subTerms().get(i), right.subTerms().get(i), PS));
+          return ret;
+      }
+  */
     static Term applySubstitution(ArrayList<Pair<String, Term>> substitution, Term term) {
         Term tosub = term.Dup();
         for (Pair<String, Term> s : substitution)
@@ -170,7 +165,7 @@ class TermHelper {
         return tosub;
     }
 
-    //assumes a unique pairing
+   /* //assumes a unique pairing
     static ArrayList<Pair<Term, Term>> matchAnteProblemRule(ArrayList<Term> problem, ArrayList<Term> rule, ProblemState PS) {
         if (rule.size() > 0) {
             for (Term s : problem) {
@@ -216,5 +211,5 @@ class TermHelper {
             }
             return null;
         }
-    }
+    }*/
 }

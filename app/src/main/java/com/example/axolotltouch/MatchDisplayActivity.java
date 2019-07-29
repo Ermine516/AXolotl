@@ -71,6 +71,7 @@ public class MatchDisplayActivity extends DisplayUpdateHelper {
             super(ctx);
         }
 
+        @SuppressWarnings("ConstantConditions")
         public boolean onSwipeLeft() {
             try {
                 PS.subPos--;

@@ -17,13 +17,9 @@
     <string name="ProblemTag">Problem and Rules</string>
     <string name="FutureState">Resulting Problem State</string>
     <string name="ObserveMode">Observation Mode</string>
-    <string name="Options">Options</string>
     <string name="problemmenu">Problems</string>
     <string name="PropLogic">Propositional Logic</string>
     <string name="Prop01">Prop 01</string>
-    <string name="Problem1">Problem 1</string>
-    <string name="problem2">problem 2</string>
-    <string name="Problem3">Problem 3</string>
     <string name="ModalLogic">Modal Logic</string>
     <string name="RuleAppliedTag">Matching Substitution</string>
     <string name="CurrentTermConstructionTag">Term State</string>
@@ -43,8 +39,6 @@
     <string name="ConstructedTermTag">Constructed Term</string>
     <string name="VariableListTag">Variable List</string>
     <string name="SubstitutionList">Substitution List</string>
-    <string name="problem04">Problem 4</string>
-    <string name="Problem05">Problem 5</string>
     <string name="termmatchingmenu">Term Matching</string>
     <string name="nonclassical">Non-Classical</string>
     <string name="changeinstate">Change in Problem State</string>
@@ -57,5 +51,11 @@
     <string name="problem_button_menu_symbol">Problem button menu symbol</string>
     <string name="classical_logic">Classical Logic</string>
     <string name="non_classical_logic">Non-Classical Logic</string>
+    <string name="hilbert_style">Hilbert Style</string>
+    <string name="sequent_style">Sequent Style</string>
+    <string name="axolotl_for_landlayout">AXolotl for LandLayout</string>
+    <string name="equal_sign">equal sign</string>
+    <string name="help">HELP</string>
+    <string name="about">About</string>
 </resources>
 

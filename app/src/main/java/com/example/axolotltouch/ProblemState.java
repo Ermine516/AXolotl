@@ -14,7 +14,7 @@ import java.util.HashSet;
 //This contains all information concerning the problem rules and substitutions 
 //as well as functions providing important features. 
 public class ProblemState implements Parcelable {
-    private static final String RULESYMBOL = "▶";
+    private static final String RULESYMBOL = "<font color=#ff0000>\u2b05</font>";
     int subPos;
     HashMap<String, Boolean> MatchorConstruct;
     boolean observe;

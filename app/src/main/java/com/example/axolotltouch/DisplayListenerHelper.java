@@ -181,6 +181,7 @@ public abstract class DisplayListenerHelper extends AppCompatActivity implements
                         break;
                     }
                     Intent intent = new Intent(DisplayListenerHelper.this, MainActivity.class);
+                    newPS.mainActivityState = 0;
                     intent.putExtra(AuxFunctionality.PASSPROBLEMSTATE, newPS);
                     DisplayListenerHelper.this.startActivity(intent);
                     DisplayListenerHelper.this.finish();

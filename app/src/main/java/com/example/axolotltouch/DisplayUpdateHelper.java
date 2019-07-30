@@ -51,15 +51,20 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
          toggle.syncState();
          navigationView.setNavigationItemSelectedListener(this);
          Intent intent = getIntent();
-        if (intent.hasExtra(PASSPROBLEMSTATE)) PS = intent.getParcelableExtra(PASSPROBLEMSTATE);
-        else if (in != null && in.containsKey("ProblemState"))
-            PS = in.getParcelable("ProblemState");
-        else PS = new ProblemState();
+        PS = (PS == null) ? constructProblemState(in, intent) : PS;
         switcher = findViewById(R.id.observeswitchformenu);
         switcher.setChecked(PS.observe);
         switcher.setOnCheckedChangeListener(new ObservationListener());
         return PS;
      }
+
+    protected ProblemState constructProblemState(Bundle in, Intent tent) {
+        if (tent.hasExtra(PASSPROBLEMSTATE)) PS = tent.getParcelableExtra(PASSPROBLEMSTATE);
+        else if (in != null && in.containsKey("ProblemState"))
+            PS = in.getParcelable("ProblemState");
+        else PS = new ProblemState();
+        return PS;
+    }
 
     protected void addMenulisteners() {
         LinearLayout ll = findViewById(R.id.nonclassicbuttonlayout);
@@ -115,8 +120,10 @@ public abstract class DisplayUpdateHelper extends DisplayListenerHelper {
         PS.SubHistory = new HashMap<>();
         if (PS.succProblem.isEmpty()) PS.succProblem.add(Const.Empty.Dup());
         if (PS.anteProblem.isEmpty()) PS.anteProblem.add(Const.Empty.Dup());
-        if ((PS.anteProblem.containsAll(PS.succProblem) && PS.succProblem.containsAll(PS.anteProblem)))
+        if ((PS.anteProblem.containsAll(PS.succProblem) && PS.succProblem.containsAll(PS.anteProblem))) {
             Toast.makeText(DisplayUpdateHelper.this, "Congratulations! Problem Solved! ", Toast.LENGTH_SHORT).show();
+            PS.mainActivityState = 2;
+        }
         else Toast.makeText(DisplayUpdateHelper.this, "Rule Applied", Toast.LENGTH_SHORT).show();
     }
 

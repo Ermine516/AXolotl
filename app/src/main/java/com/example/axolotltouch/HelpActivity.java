@@ -5,8 +5,6 @@ import android.os.Bundle;
 
 
 public class HelpActivity extends DisplayUpdateHelper  {
-        private ProblemState PS;
-
         @Override
 protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

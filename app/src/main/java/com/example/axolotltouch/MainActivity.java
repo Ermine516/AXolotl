@@ -19,14 +19,20 @@ public class MainActivity extends DisplayUpdateHelper {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.app_main_bar_layout);
-        findViewById(R.id.OuterLayout).setOnTouchListener(new MainSwipeListener(this));
-        findViewById(R.id.OuterLayout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
-        PS = ConstructActivity(savedInstanceState);
+        PS = constructProblemState(savedInstanceState, getIntent());
+        if (PS.mainActivityState == -1) setContentView(R.layout.app_main_on_load_bar_layout);
+        else if (PS.mainActivityState == 0) {
+            setContentView(R.layout.app_main_bar_layout);
+            findViewById(R.id.OuterLayout).setOnTouchListener(new MainSwipeListener(this));
+            findViewById(R.id.OuterLayout).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                }
+            });
+
+        } else setContentView(R.layout.app_main_on_completion_bar_layout);
+        ConstructActivity(savedInstanceState);
+        if (PS.mainActivityState == 0) ActivityDecorate();
         if (ProblemState.sideContainsEmptySet(PS.anteProblem) && PS.anteProblem.size() > 1 ||
                 ProblemState.sideContainsEmptySet(PS.succProblem) && PS.succProblem.size() > 1)
             PS.problemClean();
@@ -39,7 +45,7 @@ public class MainActivity extends DisplayUpdateHelper {
             PS.observe = passobseve;
             PS.History = ProofHistory;
         }
-        ActivityDecorate();
+
     }
 
     @Override

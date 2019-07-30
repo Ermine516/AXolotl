@@ -57,5 +57,6 @@
     <string name="equal_sign">equal sign</string>
     <string name="help">HELP</string>
     <string name="about">About</string>
+    <string name="on_load_screen">On load screen</string>
 </resources>
 

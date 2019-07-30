@@ -19,6 +19,7 @@ public class ProblemState implements Parcelable {
     HashMap<String, Boolean> MatchorConstruct;
     boolean observe;
     int textSize;
+    int mainActivityState;
     HashSet<Term> anteProblem;
     ArrayList<String> anteSelectedPositions;
     HashSet<Term> succProblem;
@@ -38,6 +39,7 @@ public class ProblemState implements Parcelable {
         subPos = -1;
         observe = true;
         textSize = 25;
+        mainActivityState = -1;
         MatchorConstruct = new HashMap<>();
         anteProblem = new HashSet<>();
         anteProblem.add(Const.Hole);
@@ -64,6 +66,7 @@ public class ProblemState implements Parcelable {
         subPos = in.readInt();
         observe = in.readInt() == 1;
         textSize = in.readInt();
+        mainActivityState = in.readInt();
         int MatchorConstructSize = in.readInt();
         MatchorConstruct = new HashMap<>();
         while (MatchorConstructSize > 0) {
@@ -284,6 +287,7 @@ public class ProblemState implements Parcelable {
         out.writeInt(subPos);
         out.writeInt((observe) ? 1 : 0);
         out.writeInt(textSize);
+        out.writeInt(mainActivityState);
         out.writeInt(MatchorConstruct.size());
         for (String key : MatchorConstruct.keySet()) {
             out.writeString(key);

@@ -37,7 +37,7 @@ public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
 //        bm1 = drawUnaryInference(bm1, "HHHHH");
 //        bm1 = drawBinaryInference(bm1, bm, "a");
 //        drawBitmap(bm1.first);
-        drawFlat();
+        draw2D();
     }
 
     private void draw2D() {
@@ -54,16 +54,16 @@ public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
         HashSet<Term> curAnteProblem = PS.anteProblem;
         HashSet<Term> curSuccProblem = PS.succProblem;
         ArrayList<String> anteStrings = new ArrayList<>();
-        for(Term t : curAnteProblem) {
+        for (Term t : curAnteProblem) {
             anteStrings.add(t.Print());
         }
         ArrayList<String> succStrings = new ArrayList<>();
-        for(Term t : curSuccProblem) {
+        for (Term t : curSuccProblem) {
             succStrings.add(t.Print());
         }
         proof.add(Pair.create(anteStrings, succStrings));
 
-        for(int ind = history.size() - 1; ind >= 0; ind--) {
+        for (int ind = history.size() - 1; ind >= 0; ind--) {
             Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Pair<ArrayList<Term>, Term>>> laststep = history.get(ind);
             Pair<ArrayList<Term>, Term> rule = laststep.second.second;
             ArrayList<Term> anteSideApply = new ArrayList<>();
@@ -71,70 +71,45 @@ public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
             for (Pair<String, Term> s : laststep.second.first) {
                 succSideApply = succSideApply.replace(new Const(s.first), s.second);
             }
-            if (laststep.first.first.size() != 0) {
-                if (rule.first.size() > 0) {
-                    anteSideApply.addAll(rule.first);
-                    for (int i = 0; i < anteSideApply.size(); i++)
-                        for (Pair<String, Term> s : laststep.second.first)
-                            anteSideApply.set(i, anteSideApply.get(i).replace(new Const(s.first), s.second));
-                }
-                HashSet<Term> newAnteProblem = new HashSet<>(anteSideApply);
-                for (Term t : curAnteProblem)
-                    if (t.Print().compareTo(succSideApply.Print()) != 0)
-                        newAnteProblem.add(t);
-                curAnteProblem = newAnteProblem;
-            } else {
-                HashSet<Term> newSuccProblem = new HashSet<>();
+            HashSet<Term> newSuccProblem = new HashSet<>();
+            for (Pair<String, Term> s : laststep.second.first)
+                succSideApply = succSideApply.replace(new Const(s.first), s.second);
+            newSuccProblem.add(succSideApply);
+            for (Term t : rule.first) {
+                Term temp = t.Dup();
                 for (Pair<String, Term> s : laststep.second.first)
-                    succSideApply = succSideApply.replace(new Const(s.first), s.second);
-                newSuccProblem.add(succSideApply);
-                for (Term t : rule.first) {
-                    Term temp = t.Dup();
-                    for (Pair<String, Term> s : laststep.second.first)
-                        temp = temp.replace(new Const(s.first), s.second);
-                    anteSideApply.add(temp);
-                }
-                for (Term t : curSuccProblem) {
-                    boolean wasselected = false;
-                    for (Term s : anteSideApply)
-                        if (t.Print().compareTo(s.Print()) == 0) wasselected = true;
-                    if (!wasselected) newSuccProblem.add(t);
-                }
-                curSuccProblem = newSuccProblem;
+                    temp = temp.replace(new Const(s.first), s.second);
+                anteSideApply.add(temp);
             }
-            anteStrings = new ArrayList<>();
-            for(Term t : curAnteProblem) {
-                anteStrings.add(t.Print());
+            for (Term t : curSuccProblem) {
+                boolean wasselected = false;
+                for (Term s : anteSideApply)
+                    if (t.Print().compareTo(s.Print()) == 0) wasselected = true;
+                if (!wasselected) newSuccProblem.add(t);
             }
+            curSuccProblem = newSuccProblem;
             succStrings = new ArrayList<>();
-            for(Term t : curSuccProblem) {
+            for (Term t : curSuccProblem) {
                 succStrings.add(t.Print());
             }
             proof.add(Pair.create(anteStrings, succStrings));
         }
         StringBuilder seq = new StringBuilder();
-        Pair<ArrayList<String>,ArrayList<String>> cur = proof.get(0);
-        for(int i = 0; i < cur.first.size(); i++) {
-            seq.append(cur.first.get(i));
-        }
-        seq.append("\u22A2");
-        for(int i = 0; i < cur.second.size(); i++) {
+        Pair<ArrayList<String>, ArrayList<String>> cur = proof.get(0);
+
+        for (int i = 0; i < cur.second.size(); i++) {
             seq.append(cur.second.get(i));
+            if (i < cur.second.size() - 1) {
+                seq.append(",");
+            }
         }
         Pair<Bitmap, Pair<Float, Float>> bm = Proof.drawAxiom(seq.toString());
-        for(int j = 1; j < proof.size(); j++){
+        for (int j = 1; j < proof.size(); j++) {
             seq = new StringBuilder();
             cur = proof.get(j);
-            for(int i = 0; i < cur.first.size(); i++) {
-                seq.append(cur.first.get(i));
-                if(i < cur.first.size() - 1) {
-                    seq.append(",");
-                }
-            }
-            seq.append("\u22A2");
-            for(int i = 0; i < cur.second.size(); i++) {
+            for (int i = 0; i < cur.second.size(); i++) {
                 seq.append(cur.second.get(i));
-                if(i < cur.second.size() - 1) {
+                if (i < cur.second.size() - 1) {
                     seq.append(",");
                 }
             }

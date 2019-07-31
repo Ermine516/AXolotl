@@ -15,10 +15,20 @@ public class Proof {
 
     ArrayList<Proof> antecedents;
     String formula;
+    boolean finished;
+    boolean drawLine = true;
 
     public Proof(String formula) {
         antecedents = new ArrayList<>();
         this.formula = formula;
+        finished = false;
+    }
+
+    static Proof incomplete() {
+        Proof result = new Proof("?");
+        result.setFinished(true);
+        result.drawLine = false;
+        return result;
     }
 
     public boolean isAxiom() {
@@ -33,38 +43,51 @@ public class Proof {
         antecedents.add(antecedent);
     }
 
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
+
     public Pair<Bitmap, Pair<Float, Float>> draw() {
+        Pair<Bitmap, Pair<Float, Float>> result;
+        if(!finished) {
+            addAntecedent(incomplete());
+        }
         if(isAxiom()) {
-            return drawAxiom(formula);
+            if(drawLine) {
+                result = drawAxiom(formula);
+            } else {
+                result = drawText(formula);
+            }
         } else if(antecedents.size() == 1) {
-            return drawUnaryInference(antecedents.get(0).draw(), formula);
+            result =  drawUnaryInference(antecedents.get(0).draw(), formula);
         } else if(antecedents.size() == 2) {
-            return drawBinaryInference(antecedents.get(0).draw(), antecedents.get(1).draw(), formula);
+            result =  drawBinaryInference(antecedents.get(0).draw(), antecedents.get(1).draw(), formula);
         } else {
             ArrayList<Pair<Bitmap, Pair<Float, Float>>> prev = new ArrayList<>();
             for(Proof antecedent : antecedents) {
                 prev.add(antecedent.draw());
             }
-            return drawNaryInference(prev, formula);
+            result = drawNaryInference(prev, formula);
         }
+        if(!finished) {
+            antecedents.remove(antecedents.size() - 1);
+        }
+        return result;
     }
 
     static Proof extractProof(ProblemState PS) {
         ArrayList<Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Pair<ArrayList<Term>, Term>>>> history = PS.History;
         ArrayList<Pair<ArrayList<String>, ArrayList<String>>> proof = new ArrayList<>();
 
-        HashSet<Term> curAnteProblem = PS.anteProblem;
         HashSet<Term> curSuccProblem = PS.succProblem;
         ArrayList<String> anteStrings = new ArrayList<>();
-        for(Term t : curAnteProblem) {
-            anteStrings.add(t.Print());
-        }
         ArrayList<String> succStrings = new ArrayList<>();
         for(Term t : curSuccProblem) {
             succStrings.add(t.Print());
         }
         proof.add(Pair.create(anteStrings, succStrings));
 
+        ArrayList<Proof> cur = new ArrayList<>();
         for(int ind = history.size() - 1; ind >= 0; ind--) {
             Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Pair<ArrayList<Term>, Term>>> laststep = history.get(ind);
             Pair<ArrayList<Term>, Term> rule = laststep.second.second;
@@ -73,56 +96,54 @@ public class Proof {
             for (Pair<String, Term> s : laststep.second.first) {
                 succSideApply = succSideApply.replace(new Const(s.first), s.second);
             }
-            if (laststep.first.first.size() != 0) {
-                if (rule.first.size() > 0) {
-                    anteSideApply.addAll(rule.first);
-                    for (int i = 0; i < anteSideApply.size(); i++)
-                        for (Pair<String, Term> s : laststep.second.first)
-                            anteSideApply.set(i, anteSideApply.get(i).replace(new Const(s.first), s.second));
-                }
-                HashSet<Term> newAnteProblem = new HashSet<>(anteSideApply);
-                for (Term t : curAnteProblem)
-                    if (t.Print().compareTo(succSideApply.Print()) != 0)
-                        newAnteProblem.add(t);
-                curAnteProblem = newAnteProblem;
-            } else {
-                HashSet<Term> newSuccProblem = new HashSet<>();
+            HashSet<Term> newSuccProblem = new HashSet<>();
+            for (Pair<String, Term> s : laststep.second.first)
+                succSideApply = succSideApply.replace(new Const(s.first), s.second);
+            newSuccProblem.add(succSideApply);
+
+            //make a new proof with the formula that we just derived
+            Proof der = new Proof(succSideApply.Print());
+            der.setFinished(true);
+
+            for (Term t : rule.first) {
+                Term temp = t.Dup();
                 for (Pair<String, Term> s : laststep.second.first)
-                    succSideApply = succSideApply.replace(new Const(s.first), s.second);
-                newSuccProblem.add(succSideApply);
-                for (Term t : rule.first) {
-                    Term temp = t.Dup();
-                    for (Pair<String, Term> s : laststep.second.first)
-                        temp = temp.replace(new Const(s.first), s.second);
-                    anteSideApply.add(temp);
+                    temp = temp.replace(new Const(s.first), s.second);
+                anteSideApply.add(temp);
+            }
+            for (Term t : curSuccProblem) {
+                boolean wasselected = false;
+                for (Term s : anteSideApply)
+                    if (t.Print().compareTo(s.Print()) == 0) wasselected = true;
+                if (!wasselected) newSuccProblem.add(t);
+            }
+
+            //find all the antecedents that were used in our derivation
+            for (Term s : anteSideApply){
+                boolean availabe = false;
+                Proof instance = null;
+                for (Proof t : cur) {
+                    if (t.formula.compareTo(s.Print()) == 0) {
+                        availabe = true;
+                        der.addAntecedent(t);
+                        instance = t;
+                    }
                 }
-                for (Term t : curSuccProblem) {
-                    boolean wasselected = false;
-                    for (Term s : anteSideApply)
-                        if (t.Print().compareTo(s.Print()) == 0) wasselected = true;
-                    if (!wasselected) newSuccProblem.add(t);
+                if(!availabe) {
+                    Proof underived = new Proof(s.Print());
+                    underived.setFinished(false);
+                    der.addAntecedent(underived);
+                } else {
+                    cur.remove(instance);
                 }
-                curSuccProblem = newSuccProblem;
             }
-            anteStrings = new ArrayList<>();
-            for(Term t : curAnteProblem) {
-                anteStrings.add(t.Print());
-            }
-            succStrings = new ArrayList<>();
-            for(Term t : curSuccProblem) {
-                succStrings.add(t.Print());
-            }
-            proof.add(Pair.create(anteStrings, succStrings));
+            cur.add(der);
+            curSuccProblem = newSuccProblem;
         }
-
-        Proof result = new Proof(proof.remove(proof.size() - 1).second.get(0));
-        ArrayList<Proof> cur = new ArrayList<>();
-        cur.add(result);
-
-        return result;
+        return cur.get(0);
     }
 
-    static Pair<Bitmap, Pair<Float, Float>> drawAxiom(String ax) {
+    static Pair<Bitmap, Pair<Float, Float>> drawText(String ax) {
         Paint paint = new Paint();
         Rect bounds = new Rect();
         paint.setTextSize(48);
@@ -142,9 +163,28 @@ public class Proof {
         return Pair.create(bm, Pair.create(0f, (float) (bounds.width() + bounds.left)));
     }
 
+    static Pair<Bitmap, Pair<Float, Float>> drawAxiom(String ax) {
+        Paint paint = new Paint();
+        Rect bounds = new Rect();
+        paint.setTextSize(48);
+        paint.getTextBounds(ax, 0, ax.length(), bounds);
+        Rect bounds1 = new Rect();
+        String test = "`1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./~!@#$%^&*()_+QWERTYUIOP{}|ASDFGHJKL:\"ZXCVBNM<>?";
+        paint.getTextBounds(test, 0, test.length(), bounds1);
+
+        Bitmap bm = Bitmap.createBitmap(bounds.left + bounds.width(), bounds1.bottom + bounds1.height(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bm);
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawPaint(paint);
+        canvas.drawText(ax, 0, bounds1.height(), paint);
+        Pair<Bitmap, Pair<Float, Float>> empty = Pair.create(bm, Pair.create(0f, (float) (bounds.width() + bounds.left)));
+        return drawUnaryInference(empty, ax);
+    }
+
     @SuppressWarnings("ConstantConditions")
     static Pair<Bitmap, Pair<Float, Float>> drawUnaryInference(Pair<Bitmap, Pair<Float, Float>> proof, String derived) {
-        Bitmap der = drawAxiom(derived).first;
+        Bitmap der = drawText(derived).first;
 
         Bitmap bmOld = proof.first;
 
@@ -195,7 +235,7 @@ public class Proof {
 
     @SuppressWarnings("ConstantConditions")
     static Pair<Bitmap, Pair<Float, Float>> drawBinaryInference(Pair<Bitmap, Pair<Float, Float>> proofLeft, Pair<Bitmap, Pair<Float, Float>> proofRight, String derived) {
-        Bitmap der = drawAxiom(derived).first;
+        Bitmap der = drawText(derived).first;
 
         Bitmap bmLeft = proofLeft.first;
         Bitmap bmRight = proofRight.first;
@@ -218,7 +258,7 @@ public class Proof {
 
         //add the two previous proofs
         int topLeft = Math.max(bmLeft.getHeight(), bmRight.getHeight()) - bmLeft.getHeight();
-        int topRight = Math.max(bmLeft.getHeight(), bmRight.getHeight()) - bmRight.getHeight();
+        int topRight = Math.max(bmRight.getHeight(), bmLeft.getHeight()) - bmRight.getHeight();
         canvas.drawBitmap(bmLeft, offsetLeft, topLeft, null);
         canvas.drawBitmap(bmRight, offsetLeft + bmLeft.getWidth() + 50, topRight, null);
 
@@ -247,10 +287,11 @@ public class Proof {
 
         return Pair.create(bm, Pair.create(startCons, endCons));
     }
+
     @SuppressWarnings("ConstantConditions")
     static Pair<Bitmap, Pair<Float, Float>> drawNaryInference(ArrayList<Pair<Bitmap, Pair<Float, Float>>> proofs, String derived) {
         assert(proofs.size() > 2);
-        Bitmap der = drawAxiom(derived).first;
+        Bitmap der = drawText(derived).first;
 
 
         //get the size of the new proof
@@ -270,7 +311,7 @@ public class Proof {
 
         //create Bitmap which fits everything
         int width = Math.round(offsetLeft) + totalSize + Math.round(offsetRight);
-        Bitmap bm = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Bitmap bm = Bitmap.createBitmap(width, height + der.getHeight(), Bitmap.Config.ARGB_8888);
         //paint it white
         Paint paint = new Paint();
         Canvas canvas = new Canvas(bm);

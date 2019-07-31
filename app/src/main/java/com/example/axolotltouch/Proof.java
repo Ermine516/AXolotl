@@ -80,12 +80,9 @@ public class Proof {
         ArrayList<Pair<ArrayList<String>, ArrayList<String>>> proof = new ArrayList<>();
 
         HashSet<Term> curSuccProblem = PS.succProblem;
-        ArrayList<String> anteStrings = new ArrayList<>();
-        ArrayList<String> succStrings = new ArrayList<>();
-        for(Term t : curSuccProblem) {
-            succStrings.add(t.Print());
+        if(history.size() == 0) {
+            return new Proof(curSuccProblem.iterator().next().Print());
         }
-        proof.add(Pair.create(anteStrings, succStrings));
 
         ArrayList<Proof> cur = new ArrayList<>();
         for(int ind = history.size() - 1; ind >= 0; ind--) {

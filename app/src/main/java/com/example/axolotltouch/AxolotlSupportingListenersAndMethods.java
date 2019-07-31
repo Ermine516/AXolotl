@@ -113,11 +113,11 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
         @Override
         public void onClick(View view) {
             if (view instanceof TextView && isMemberOf((TextView) view, (LinearLayout) AxolotlSupportingListenersAndMethods.this.findViewById(R.id.RightSideTermLayout))) {
-                Cleanslection((LinearLayout) AxolotlSupportingListenersAndMethods.this.findViewById(R.id.RightSideTermLayout));
+                cleanSlection((LinearLayout) AxolotlSupportingListenersAndMethods.this.findViewById(R.id.RightSideTermLayout));
                 textViewSelected((TextView) view);
                 AxolotlSupportingListenersAndMethods.this.PS.succSelectedPosition = ((TextView) view).getText().toString();
             } else if (view instanceof TextView && isMemberOf((TextView) view, (LinearLayout) AxolotlSupportingListenersAndMethods.this.findViewById(R.id.LeftSideTermLayout))) {
-                Cleanslection((LinearLayout) AxolotlSupportingListenersAndMethods.this.findViewById(R.id.RightSideTermLayout));
+                cleanSlection((LinearLayout) AxolotlSupportingListenersAndMethods.this.findViewById(R.id.RightSideTermLayout));
                 if (isNotSelected((TextView) view)) {
                     textViewSelected((TextView) view);
                     AxolotlSupportingListenersAndMethods.this.PS.anteSelectedPositions.add(((TextView) view).getText().toString());
@@ -133,7 +133,7 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
          * @author David M. Cerna
          * @param side The layout which will be reset to default contrast settings.
          */
-        private void Cleanslection(LinearLayout side) {
+        private void cleanSlection(LinearLayout side) {
             int size = side.getChildCount();
             for (int i = 0; i < size; i++)
                 textViewUnselected(((TextView) ((LinearLayout) ((HorizontalScrollView) side.getChildAt(i)).getChildAt(0)).getChildAt(0)));
@@ -362,7 +362,6 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
 
     /**
      * Used for the seekbar which sets the size of the text within the app.
-     *
      * @author David M. Cerna
      */
     class TextSizeChangeListener implements SeekBar.OnSeekBarChangeListener {

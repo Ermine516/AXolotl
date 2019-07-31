@@ -99,17 +99,17 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
      */
     protected void addMenulisteners() {
         LinearLayout ll = findViewById(R.id.nonclassicbuttonlayout);
-        ll.setOnClickListener(new MenuOnClickListener(this));
+        ll.setOnClickListener(new MenuOnClickListener());
         ll = findViewById(R.id.classicbuttonlayout);
-        ll.setOnClickListener(new MenuOnClickListener(this));
+        ll.setOnClickListener(new MenuOnClickListener());
         ll = findViewById(R.id.TermMatchingbuttonlayout);
-        ll.setOnClickListener(new MenuOnClickListener(this));
+        ll.setOnClickListener(new MenuOnClickListener());
         ll = findViewById(R.id.Proofbuttonlayout);
-        ll.setOnClickListener(new MenuOnClickListener(this));
+        ll.setOnClickListener(new MenuOnClickListener());
         ll = findViewById(R.id.problembuttonlayout);
-        ll.setOnClickListener(new MenuOnClickListener(this));
+        ll.setOnClickListener(new MenuOnClickListener());
         SeekBar seek = findViewById(R.id.Adjusttextseeker);
-        seek.setOnSeekBarChangeListener(new AxolotlSupportingListenersAndMethods.textsizechangeListener(this));
+        seek.setOnSeekBarChangeListener(new TextSizeChangeListener());
     }
 
     /**

@@ -14,9 +14,9 @@ import androidx.core.util.Pair;
 
 import java.util.ArrayList;
 
-import static com.example.axolotltouch.AuxFunctionality.PASSPROBLEMSTATE;
+import static com.example.axolotltouch.AxolotlMessagingAndIO.PASSPROBLEMSTATE;
 
-public class MatchDisplayActivity extends DisplayUpdateHelper {
+public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

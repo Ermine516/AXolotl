@@ -4,7 +4,7 @@ package com.example.axolotltouch;
 import android.os.Bundle;
 
 
-public class HelpActivity extends DisplayUpdateHelper  {
+public class HelpActivity extends AxolotlSupportingFunctionality {
         @Override
 protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

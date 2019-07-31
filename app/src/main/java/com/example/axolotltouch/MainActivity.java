@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import static com.example.axolotltouch.AuxFunctionality.PASSPROBLEMSTATE;
+import static com.example.axolotltouch.AxolotlMessagingAndIO.PASSPROBLEMSTATE;
 
-public class MainActivity extends DisplayUpdateHelper {
+public class MainActivity extends AxolotlSupportingFunctionality {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +67,7 @@ public class MainActivity extends DisplayUpdateHelper {
     }
 
     private void UpdateProblemDisplay() {
-        updateProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), PS.succProblem.toArray(AuxFunctionality.HashSetTermArray));
+        updateProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), PS.succProblem.toArray(AxolotlMessagingAndIO.HashSetTermArray));
     }
 
 

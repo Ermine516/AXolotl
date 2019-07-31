@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class NonClassicalProblemsListActivity extends DisplayProblemListHelper {
+public class NonClassicalProblemsListActivity extends AxolotlSupportingFunctionalityProblemList {
     public static final String NONCLASSICALPROBLEMSLOCATION = "non_classical";
     @Override
     protected void onCreate(Bundle savedInstanceState) {

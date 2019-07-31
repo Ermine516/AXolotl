@@ -20,10 +20,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import static com.example.axolotltouch.AuxFunctionality.PASSPROBLEMSTATE;
+import static com.example.axolotltouch.AxolotlMessagingAndIO.PASSPROBLEMSTATE;
 
 
-public class TermConstructActivity extends DisplayUpdateHelper  {
+public class TermConstructActivity extends AxolotlSupportingFunctionality {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +66,11 @@ public class TermConstructActivity extends DisplayUpdateHelper  {
                 temp.add(tosub);
             }
             HashSet<Term> updated = PS.replaceSelectedSuccTerm(temp);
-            updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), updated.toArray(AuxFunctionality.HashSetTermArray));
+            updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), updated.toArray(AxolotlMessagingAndIO.HashSetTermArray));
         } else {
             Term tosub = TermHelper.applySubstitution(localSubstitution, PS.succCurrentRule.Dup());
             HashSet<Term> updated = PS.replaceSelectedAnteTerms(tosub);
-            updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), updated.toArray(AuxFunctionality.HashSetTermArray));
+            updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), updated.toArray(AxolotlMessagingAndIO.HashSetTermArray));
 
         }
 

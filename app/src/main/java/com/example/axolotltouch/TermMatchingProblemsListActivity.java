@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class TermMatchingProblemsListActivity extends DisplayProblemListHelper {
+public class TermMatchingProblemsListActivity extends AxolotlSupportingFunctionalityProblemList {
     public static final String TERMPROBLEMSLOCATION = "termMatchingProblems";
 
     @Override

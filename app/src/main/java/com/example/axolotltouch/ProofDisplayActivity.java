@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 
-public class ProofDisplayActivity extends DisplayUpdateHelper {
+public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
     private ProblemState PS;
 
     @Override

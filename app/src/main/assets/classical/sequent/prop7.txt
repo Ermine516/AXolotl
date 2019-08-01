@@ -10,7 +10,7 @@ Variable: w
 Problem: 0 1 ⊢(∧(A,∨(B,C)),∨(∧(A,B),∧(A,C)))
 Rule: 2 ⊢(w,cons(x,z)) ⊢(w,cons(y,z)) ⊢(w,cons(∧(x,y),z)) [∧:r]
 Rule: 1  ⊢(w,cons(x,cons(y,z))) ⊢(w,cons(∨(x,y),z)) [∨:r]
-Rule: 2 ⊢(cons(y,z),w) ⊢(cons(y,z),w) ⊢(cons(∨(x,y),z),w) [∨:l]
+Rule: 2 ⊢(cons(x,z),w) ⊢(cons(y,z),w) ⊢(cons(∨(x,y),z),w) [∨:l]
 Rule: 1  ⊢(cons(x,cons(y,z)),w) ⊢(cons(∧(x,y),z),w) [∧:l]
 Rule: 1 ⊢(w,cons(cons(y,z),x)) ⊢(w,cons(x,cons(y,z))) [shift:r]
 Rule: 1 ⊢(cons(cons(y,z),x),w)  ⊢(cons(x,cons(y,z)),w) [shift:l]

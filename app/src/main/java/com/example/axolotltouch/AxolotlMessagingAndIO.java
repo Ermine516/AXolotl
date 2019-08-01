@@ -34,7 +34,7 @@ class AxolotlMessagingAndIO {
     /**
      * a list of allowed symbols for AXolotl files. May be extended
      */
-    private static final String nameParseRegex = "[a-zA-Z&\\u2194\\u25E6\\u2227\\u2228\\u00AC\\u21D2\\u21D4\\u2284\\u2285\\u22A4\\u25A1\\u25C7\\u22A2\\u03B5]+";
+    private static final String nameParseRegex = "[a-zA-Z&\\u2194\\u25E6\\u2227\\u2228\\u00AC\\u21D2\\u21D4\\u2284\\u2285\\u22A4\\u22A5\\u25A1\\u25C7\\u22A2\\u03B5]+";
 
     /**
      * @author David M. Cerna

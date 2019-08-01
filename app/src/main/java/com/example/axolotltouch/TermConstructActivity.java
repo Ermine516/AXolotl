@@ -92,34 +92,39 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
         LinearLayout RLVV = this.findViewById(R.id.TermSelectionLayout);
         RLVV.removeAllViewsInLayout();
         for (Pair<String, Pair<Integer, Boolean>> p : PS.Functions) {
-            int arity = p.second.first;
-            boolean infix = p.second.second;
-            ArrayList<Term> args = new ArrayList<>();
-            while (arity > 0) {
-                args.add(new Const(Const.Hole.getSym()));
-                arity--;
+            if (p.first.compareTo("cons") != 0 && p.first.compareTo("⊢") != 0) {
+                int arity = p.second.first;
+                boolean infix = p.second.second;
+                ArrayList<Term> args = new ArrayList<>();
+                while (arity > 0) {
+                    args.add(new Const(Const.Hole.getSym()));
+                    arity--;
+                }
+                String funcText = new Func(p.first, args, infix).Print();
+                TextView functext = new TextView(this);
+                functext.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.NO_GRAVITY));
+                functext.setTextSize(32);
+                functext.setText(funcText);
+                functext.setPadding(40, 0, 40, 0);
+                functext.setOnClickListener(new SymbolSelectionListener());
+                functext.setOnTouchListener(new OnTouchHapticListener());
+                RLVV.addView(functext);
             }
-            String funcText = new Func(p.first, args, infix).Print();
-            TextView functext = new TextView(this);
-            functext.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.NO_GRAVITY));
-            functext.setTextSize(32);
-            functext.setText(funcText);
-            functext.setPadding(40, 0, 40, 0);
-            functext.setOnClickListener(new SymbolSelectionListener());
-            functext.setOnTouchListener(new OnTouchHapticListener());
-            RLVV.addView(functext);
+
         }
         for (String cons : PS.Constants) {
-            String funcText = new Const(cons).Print();
-            TextView functext = new TextView(this);
-            functext.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.NO_GRAVITY));
-            functext.setTextSize(32);
-            functext.setText(funcText);
-            functext.setPadding(40, 0, 40, 0);
-            functext.setOnClickListener(new SymbolSelectionListener());
-            functext.setOnTouchListener(new OnTouchHapticListener());
+            if (cons.compareTo("ε") != 0) {
+                String funcText = new Const(cons).Print();
+                TextView functext = new TextView(this);
+                functext.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.NO_GRAVITY));
+                functext.setTextSize(32);
+                functext.setText(funcText);
+                functext.setPadding(40, 0, 40, 0);
+                functext.setOnClickListener(new SymbolSelectionListener());
+                functext.setOnTouchListener(new OnTouchHapticListener());
 
-            RLVV.addView(functext);
+                RLVV.addView(functext);
+            }
         }
     }
 
@@ -199,14 +204,14 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
             int position = -1;
             for (int i = 0; i < tl.getChildCount(); i++)
                 if (((TextView) tl.getChildAt(i)).getText().toString().compareTo(((TextView) view).getText().toString()) == 0)
-                    position = i;
+                    position = i += 2;
             Term replacement;
             if (position < PS.Functions.size()) {
                 Pair<String, Pair<Integer, Boolean>> thereplace = PS.Functions.get(position);
                 ArrayList<Term> args = new ArrayList<>();
                 for (int i = 0; i < thereplace.second.first; i++) args.add(Const.Hole.Dup());
                 replacement = new Func(thereplace.first, args, thereplace.second.second);
-            } else replacement = new Const(PS.Constants.get(position - PS.Functions.size()));
+            } else replacement = new Const(PS.Constants.get(position + 1 - PS.Functions.size()));
             replacement = pschange.Substitutions.get(pschange.subPos).second.replace(Const.HoleSelected, replacement).replaceLeft(Const.Hole, Const.HoleSelected.Dup());
             pschange.Substitutions.set(pschange.subPos, new Pair<>(pschange.Substitutions.get(pschange.subPos).first, replacement));
             ArrayList<Term> history = pschange.SubHistory.get(PS.Substitutions.get(PS.subPos).first);

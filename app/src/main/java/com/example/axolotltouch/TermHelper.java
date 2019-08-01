@@ -154,16 +154,6 @@ class TermHelper {
         return ret;
     }
 
-    /*  private static HashMap<String, Term> varTermMatchMap(Term left, Term right, ProblemState PS) {
-          HashMap<String, Term> ret = new HashMap<>();
-          if (PS.VarList(left).size() == 0)
-              if (PS.Variables.contains(right.getSym())) ret.put(right.getSym(), left);
-              else if (left.subTerms().size() == right.subTerms().size() && left.subTerms().size() != 0)
-                  for (int i = 0; i < left.subTerms().size(); i++)
-                      ret.putAll(varTermMatchMap(left.subTerms().get(i), right.subTerms().get(i), PS));
-          return ret;
-      }
-  */
     static Term applySubstitution(ArrayList<Pair<String, Term>> substitution, Term term) {
         Term tosub = term.Dup();
         for (Pair<String, Term> s : substitution)
@@ -171,51 +161,4 @@ class TermHelper {
         return tosub;
     }
 
-   /* //assumes a unique pairing
-    static ArrayList<Pair<Term, Term>> matchAnteProblemRule(ArrayList<Term> problem, ArrayList<Term> rule, ProblemState PS) {
-        if (rule.size() > 0) {
-            for (Term s : problem) {
-                HashMap<String, Term> varMatching = new HashMap<>(TermHelper.varTermMatchMap(s, rule.get(0), PS));
-                if (varMatching.size() == PS.VarList(rule.get(0)).size()) {
-                    ArrayList<Term> internalProblem = new ArrayList<>(problem);
-                    internalProblem.remove(s);
-                    ArrayList<Pair<Term, Term>> matches = matchHelper(internalProblem, rule, 1, varMatching, PS);
-                    if (matches != null) {
-                        matches.add(new Pair<>(rule.get(0), s));
-                        return matches;
-                    }
-                }
-            }
-        }
-        return null;
-
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    private static ArrayList<Pair<Term, Term>> matchHelper(ArrayList<Term> problem, ArrayList<Term> rule, int pos, HashMap<String, Term> sub, ProblemState PS) {
-        if (pos == rule.size()) return new ArrayList<>();
-        else {
-            for (Term s : problem) {
-                HashMap<String, Term> retsub = new HashMap<>(sub);
-                HashMap<String, Term> varMatching = new HashMap<>(TermHelper.varTermMatchMap(s, rule.get(pos), PS));
-                boolean mismatch = false;
-                for (String var : sub.keySet()) {
-                    if (varMatching.keySet().contains(var) && varMatching.get(var).Print().compareTo(sub.get(var).Print()) != 0)
-                        mismatch = true;
-                    else if (!varMatching.keySet().contains(var))
-                        retsub.put(var, varMatching.get(var));
-                }
-                if (varMatching.size() == PS.VarList(rule.get(pos)).size() && !mismatch) {
-                    ArrayList<Term> internalProblem = new ArrayList<>(problem);
-                    internalProblem.remove(s);
-                    ArrayList<Pair<Term, Term>> matches = matchHelper(internalProblem, rule, pos + 1, retsub, PS);
-                    if (matches != null) {
-                        matches.add(new Pair<>(rule.get(pos), s));
-                        return matches;
-                    }
-                }
-            }
-            return null;
-        }
-    }*/
 }

@@ -152,13 +152,11 @@ public class MainActivity extends AxolotlSupportingFunctionality {
                             succTerm.normalize(PS.Variables);
                             PS.succCurrentRule.normalize(PS.Variables);
                         }
-                        System.out.println("here  " + succTerm.toString() + "  " + PS.succProblem.toArray(AxolotlMessagingAndIO.HashSetTermArray)[0].toString());
                         if (succTerm != null && TermHelper.TermMatchWithVar(succTerm, PS.succCurrentRule, PS.Variables)) {
                             PS.Substitutions = TermHelper.varTermMatch(succTerm, PS.succCurrentRule, PS);
                             HashSet<String> occurences = new HashSet<>();
                             HashMap<String, Term> subCleaned = new HashMap<>();
                             for (Pair<String, Term> p : PS.Substitutions) {
-                                System.out.println("here " + p.first + "  " + p.second.toString());
                                 if (!occurences.contains(p.first)) {
                                     subCleaned.put(p.first, p.second);
                                     occurences.add(p.first);

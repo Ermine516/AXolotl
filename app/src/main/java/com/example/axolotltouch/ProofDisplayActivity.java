@@ -103,7 +103,7 @@ public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
                 seq.append(",");
             }
         }
-        Pair<Bitmap, Pair<Float, Float>> bm = Proof.drawAxiom(seq.toString());
+        Pair<Bitmap, Pair<Float, Float>> bm = Proof.drawAxiom(seq.toString(), Proof.FORMULA_SIZE);
         for (int j = 1; j < proof.size(); j++) {
             seq = new StringBuilder();
             cur = proof.get(j);

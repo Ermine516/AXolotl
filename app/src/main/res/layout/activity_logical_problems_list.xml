@@ -7,15 +7,15 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ClassicalProblemsListActivity"
-    tools:showIn="@layout/app_propositional_problems_list_bar_layout">
+    tools:context=".LogicalProblemsListActivity"
+    tools:showIn="@layout/app_logical_problems_list_bar_layout">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/OuterLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:minWidth="50dp"
-        tools:context=".TermMatchingProblemsListActivity">
+        tools:context=".LogicalProblemsListActivity">
 
         <TextView
             android:id="@+id/hilberttag"

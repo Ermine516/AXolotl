@@ -28,6 +28,10 @@ class AxolotlMessagingAndIO {
      */
     static final String PASSPROBLEMSTATE = "com.example.android.AXolotlTouch.extra.problemstate";
     /**
+     * Code for passing the correct problem list within an intent
+     */
+    static final String PASSPROBLEMLIST = "com.example.android.AXolotlTouch.extra.ProblemList";
+    /**
      * Code required for the open file activity
      */
     static final int READ_REQUEST_CODE = 42;
@@ -119,8 +123,7 @@ class AxolotlMessagingAndIO {
             newPS.Functions = cleanedFunctions;
             newPS.Constants = cleanedConstants;
         }
-        newPS.anteCurrentRule = new ArrayList<>();
-        newPS.anteCurrentRule.add(Const.HoleSelected);
+        newPS.currentRule = new Rule();
         return newPS;
     }
 
@@ -216,7 +219,7 @@ class AxolotlMessagingAndIO {
                 throw new TermHelper().new FormatException();
             else if (i != partsAjustedSize - 1) anteRule.add(succRule);
         }
-        PS.Rules.add(new Pair<>(ruleLabel, new Pair<>(anteRule, succRule)));
+        PS.Rules.add(new Rule(ruleLabel, anteRule, succRule));
         return true;
     }
 

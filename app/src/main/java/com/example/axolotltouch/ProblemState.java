@@ -24,15 +24,13 @@ public class ProblemState implements Parcelable {
     ArrayList<String> anteSelectedPositions;
     HashSet<Term> succProblem;
     String succSelectedPosition;
-    ArrayList<Term> anteCurrentRule;
-    Term succCurrentRule;
-
+    Rule currentRule;
     HashSet<String> Variables;
     ArrayList<String> Constants;
     ArrayList<Pair<String, Pair<Integer, Boolean>>> Functions;
     ArrayList<Pair<String, Term>> Substitutions;
-    ArrayList<Pair<String, Pair<ArrayList<Term>, Term>>> Rules;
-    ArrayList<Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Pair<ArrayList<Term>, Term>>>> History;
+    ArrayList<Rule> Rules;
+    ArrayList<Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Rule>>> History;
     HashMap<String, ArrayList<Term>> SubHistory;
 
     public ProblemState() {
@@ -47,9 +45,7 @@ public class ProblemState implements Parcelable {
         succProblem = new HashSet<>();
         succProblem.add(Const.Hole);
         succSelectedPosition = "";
-        anteCurrentRule = new ArrayList<>();
-        anteCurrentRule.add(Const.HoleSelected);
-        succCurrentRule = Const.HoleSelected.Dup();
+        currentRule = new Rule("", new ArrayList<Term>(), Const.HoleSelected.Dup());
 
         SubHistory = new HashMap<>();
 		Rules = new ArrayList<>();
@@ -92,13 +88,7 @@ public class ProblemState implements Parcelable {
             succProblemsize--;
         }
         succSelectedPosition = in.readString();
-        int anteCurrentRuleSize = in.readInt();
-        anteCurrentRule = new ArrayList<>();
-        while (anteCurrentRuleSize > 0) {
-            anteCurrentRule.add(in.readTypedObject(Term.CREATOR));
-            anteCurrentRuleSize--;
-        }
-        succCurrentRule = in.readTypedObject(Term.CREATOR);
+        currentRule = in.readTypedObject(Rule.CREATOR);
         String[] tempVar = new String[in.readInt()];
         in.readStringArray(tempVar);
         Variables = new HashSet<>();
@@ -124,19 +114,8 @@ public class ProblemState implements Parcelable {
 		}
         int rulesSize= in.readInt();
 		Rules = new ArrayList<>();
-        if (rulesSize > 0)
-        	while( rulesSize>0){
-                String label = in.readString();
-                int ruleSize = in.readInt();
-                ArrayList<Term> rule;
-                if (ruleSize > 0) {
-                    rule = new ArrayList<>();
-                    for (int ri = 0; ri < ruleSize; ri++)
-                        rule.add(in.readTypedObject(Term.CREATOR));
-                } else rule = new ArrayList<>();
-                Rules.add(new Pair<>(label, new Pair<>(rule, in.readTypedObject(Term.CREATOR))));
-				rulesSize--;
-			}
+        for (int i = 0; i < rulesSize; i++) Rules.add(in.readTypedObject(Rule.CREATOR));
+
 
 		int hisSize = in.readInt();
 		History = new ArrayList<>();
@@ -161,14 +140,7 @@ public class ProblemState implements Parcelable {
                             subhissize--;
                         }
                     }
-                    int hisruleleftsize = in.readInt();
-                    ArrayList<Term> hisruleleft = new ArrayList<>();
-                    while (hisruleleftsize > 0) {
-                        hisruleleft.add(in.readTypedObject(Term.CREATOR));
-                        hisruleleftsize--;
-                    }
-                    Term hisruleright = in.readTypedObject(Term.CREATOR);
-                    History.add(new Pair<>(new Pair<>(anteselected, ""), new Pair<>(hissubs, new Pair<>(hisruleleft, hisruleright))));
+                    History.add(new Pair<>(new Pair<>(anteselected, ""), new Pair<>(hissubs, in.readTypedObject(Rule.CREATOR))));
                     hisSize--;
                 } else {
                     String succside = in.readString();
@@ -182,14 +154,7 @@ public class ProblemState implements Parcelable {
                             subhissize--;
                         }
                     }
-                    int hisruleleftsize = in.readInt();
-                    ArrayList<Term> hisruleleft = new ArrayList<>();
-                    while (hisruleleftsize > 0) {
-                        hisruleleft.add(in.readTypedObject(Term.CREATOR));
-                        hisruleleftsize--;
-                    }
-                    Term hisruleright = in.readTypedObject(Term.CREATOR);
-                    History.add(new Pair<>(new Pair<>(new ArrayList<String>(), succside), new Pair<>(hissubs, new Pair<>(hisruleleft, hisruleright))));
+                    History.add(new Pair<>(new Pair<>(new ArrayList<String>(), succside), new Pair<>(hissubs, in.readTypedObject(Rule.CREATOR))));
                     hisSize--;
                 }
 			}
@@ -253,22 +218,23 @@ public class ProblemState implements Parcelable {
 
     }
 
-    String RuleTermsToString(Pair<ArrayList<Term>, Term> rule) {
-        if (rule != null && rule.first != null && rule.second != null) {
+    String RuleTermsToString(Rule rule) {
+        if (rule != null && rule.Conclusions != null && rule.argument != null) {
             StringBuilder retString = new StringBuilder("Δ ");
             ArrayList<Term> varAsTerms = new ArrayList<>();
             for (String var : Variables) varAsTerms.add(new Const(var));
-            if (rule.first.size() > 0)
-                for (int i = 0; i < rule.first.size(); i++)
-                    if (i == 0 && i != rule.first.size() - 1)
-                        retString.append(", ").append(rule.first.get(i).PrintBold(varAsTerms)).append(" , ");
-                    else if (0 == rule.first.size() - 1)
-                        retString.append(", ").append(rule.first.get(i).PrintBold(varAsTerms)).append(" " + RULESYMBOL).append(" Δ , ");
-                    else if (i == rule.first.size() - 1)
-                        retString.append(rule.first.get(i).PrintBold(varAsTerms)).append(" " + RULESYMBOL).append(" Δ , ");
-                    else retString.append(rule.first.get(i).PrintBold(varAsTerms)).append(" , ");
+            if (rule.Conclusions.size() > 0)
+                for (int i = 0; i < rule.Conclusions.size(); i++)
+                    if (i == 0 && i != rule.Conclusions.size() - 1)
+                        retString.append(", ").append(rule.Conclusions.get(i).PrintBold(varAsTerms)).append(" , ");
+                    else if (0 == rule.Conclusions.size() - 1)
+                        retString.append(", ").append(rule.Conclusions.get(i).PrintBold(varAsTerms)).append(" " + RULESYMBOL).append(" Δ , ");
+                    else if (i == rule.Conclusions.size() - 1)
+                        retString.append(rule.Conclusions.get(i).PrintBold(varAsTerms)).append(" " + RULESYMBOL).append(" Δ , ");
+                    else
+                        retString.append(rule.Conclusions.get(i).PrintBold(varAsTerms)).append(" , ");
             else retString.append(RULESYMBOL).append(" Δ , ");
-            return retString + rule.second.PrintBold(varAsTerms);
+            return retString + rule.argument.PrintBold(varAsTerms);
         } else return "";
     }
 
@@ -300,9 +266,7 @@ public class ProblemState implements Parcelable {
         out.writeInt(succProblem.size());
         for (Term t : succProblem) out.writeTypedObject(t, flags);
         out.writeString(succSelectedPosition);
-        out.writeInt(anteCurrentRule.size());
-        for (Term t : anteCurrentRule) out.writeTypedObject(t, flags);
-        out.writeTypedObject(succCurrentRule, flags);
+        out.writeTypedObject(currentRule, flags);
 		out.writeInt(Variables.size());
 		out.writeStringArray(Variables.toArray(new String[0]));
     	out.writeInt(Constants.size());
@@ -319,18 +283,13 @@ public class ProblemState implements Parcelable {
             out.writeTypedObject(Substitutions.get(i).second, flags);
 		}
 		out.writeInt(Rules.size());
-        for (Pair<String, Pair<ArrayList<Term>, Term>> rule : Rules) {
-            out.writeString(rule.first);
-            out.writeInt(rule.second.first.size());
-            for (int i = 0; i < rule.second.first.size(); i++)
-                out.writeTypedObject(rule.second.first.get(i), flags);
-            out.writeTypedObject(rule.second.second, flags);
-        }
+        for (Rule rule : Rules) out.writeTypedObject(rule, flags);
+
 		out.writeInt(History.size());
-        for (Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Pair<ArrayList<Term>, Term>>> his : History) {
+        for (Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Rule>> his : History) {
             Pair<ArrayList<String>, String> selection = his.first;
             ArrayList<Pair<String, Term>> substitution = his.second.first;
-            Pair<ArrayList<Term>, Term> rule = his.second.second;
+            Rule rule = his.second.second;
             if (selection.first.size() != 0) {
                 out.writeInt(0);
                 out.writeInt(selection.first.size());
@@ -344,9 +303,7 @@ public class ProblemState implements Parcelable {
                 out.writeString(substitution.get(i).first);
                 out.writeTypedObject(substitution.get(i).second, flags);
             }
-            out.writeInt(rule.first.size());
-            for (Term t : rule.first) out.writeTypedObject(t, flags);
-            out.writeTypedObject(rule.second, flags);
+            out.writeTypedObject(rule, flags);
         }
         out.writeInt(SubHistory.size());
         for (String key : SubHistory.keySet()) {

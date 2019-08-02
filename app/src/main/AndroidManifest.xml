@@ -23,13 +23,10 @@
             android:name=".ProofDisplayActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ClassicalProblemsListActivity"
+            android:name=".LogicalProblemsListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".TermMatchingProblemsListActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".NonClassicalProblemsListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MainActivity"

@@ -119,24 +119,10 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
      * @author David M. Cerna
      */
     protected void swipeRightProblemStateUpdate() {
-        if (PS.succCurrentRule.getSym().compareTo(Const.Hole.getSym()) != 0)
-            PS.History.add(new Pair<>(new Pair<>(PS.anteSelectedPositions, PS.succSelectedPosition), new Pair<>(PS.Substitutions, new Pair<>(PS.anteCurrentRule, PS.succCurrentRule.Dup()))));
-        if ((PS.anteSelectedPositions.size() != 0)) {
-            Term temp = PS.succCurrentRule.Dup();
-            for (Pair<String, Term> s : PS.Substitutions)
-                temp = temp.replace(new Const(s.first), s.second);
-            HashSet<Term> newProblemAnte = new HashSet<>();
-            for (Term t : PS.anteProblem) {
-                boolean selectedTerm = false;
-                for (String s : PS.anteSelectedPositions)
-                    if (t.Print().compareTo(s) == 0) selectedTerm = true;
-                if (!selectedTerm || PS.anteCurrentRule.size() == 0) newProblemAnte.add(t.Dup());
-            }
-            newProblemAnte.add(temp);
-            PS.anteProblem = newProblemAnte;
-        } else {
+        if (PS.currentRule.argument.getSym().compareTo(new Rule().argument.getSym()) != 0)
+            PS.History.add(new Pair<>(new Pair<>(PS.anteSelectedPositions, PS.succSelectedPosition), new Pair<>(PS.Substitutions, PS.currentRule)));
             ArrayList<Term> temp = new ArrayList<>();
-            for (Term t : PS.anteCurrentRule) temp.add(t.Dup());
+        for (Term t : PS.currentRule.Conclusions) temp.add(t.Dup());
             for (Pair<String, Term> s : PS.Substitutions)
                 for (int i = 0; i < temp.size(); i++)
                     temp.set(i, temp.get(i).replace(new Const(s.first), s.second));
@@ -146,13 +132,10 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
                 if (t.Print().compareTo(PS.succSelectedPosition) != 0) newProblemsucc.add(t);
             newProblemsucc.addAll(temp);
             PS.succProblem = newProblemsucc;
-        }
         PS.anteSelectedPositions = new ArrayList<>();
         PS.succSelectedPosition = "";
         PS.subPos = -1;
-        PS.anteCurrentRule = new ArrayList<>();
-        PS.anteCurrentRule.add(Const.HoleSelected);
-        PS.succCurrentRule = Const.HoleSelected;
+        PS.currentRule = new Rule();
         PS.Substitutions = new ArrayList<>();
         PS.SubHistory = new HashMap<>();
         if (PS.succProblem.isEmpty()) PS.succProblem.add(Const.Empty.Dup());
@@ -268,7 +251,7 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         LinearLayout RLVV = this.findViewById(R.id.RuleListVerticalLayout);
         RLVV.removeAllViewsInLayout();
         for (int i = 0; i < PS.Rules.size(); i++)
-            RLVV.addView(scrollTextSelectConstruct(PS.RuleTermsToString(PS.Rules.get(i).second), new AxolotlSupportingFunctionality.RuleSelectionListener(), this, false));
+            RLVV.addView(scrollTextSelectConstruct(PS.RuleTermsToString(PS.Rules.get(i)), new AxolotlSupportingFunctionality.RuleSelectionListener(), this, false));
     }
 
 }

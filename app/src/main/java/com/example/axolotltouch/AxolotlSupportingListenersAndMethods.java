@@ -261,8 +261,8 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
             for (int i = 0; i < rlvv.getChildCount(); i++) {
                 TextView theText = ((TextView) ((LinearLayout) ((HorizontalScrollView) rlvv.getChildAt(i)).getChildAt(0)).getChildAt(0));
                 if (theText.getText().toString().compareTo(((TextView) view).getText().toString()) == 0) {
-                    AxolotlSupportingListenersAndMethods.this.PS.anteCurrentRule = AxolotlSupportingListenersAndMethods.this.PS.Rules.get(i).second.first;
-                    AxolotlSupportingListenersAndMethods.this.PS.succCurrentRule = AxolotlSupportingListenersAndMethods.this.PS.Rules.get(i).second.second;
+                    AxolotlSupportingListenersAndMethods.this.PS.currentRule.Conclusions = AxolotlSupportingListenersAndMethods.this.PS.Rules.get(i).Conclusions;
+                    AxolotlSupportingListenersAndMethods.this.PS.currentRule.argument = AxolotlSupportingListenersAndMethods.this.PS.Rules.get(i).argument;
                     textViewSelected(((TextView) view));
                 } else textViewUnselected(theText);
             }
@@ -343,11 +343,14 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
                 Toast.makeText(AxolotlSupportingListenersAndMethods.this, "Problem", Toast.LENGTH_SHORT).show();
                 intent = new Intent(AxolotlSupportingListenersAndMethods.this, MainActivity.class);
             } else if (id == R.id.classicbuttonlayout) {
-                intent = new Intent(AxolotlSupportingListenersAndMethods.this, ClassicalProblemsListActivity.class);
+                intent = new Intent(AxolotlSupportingListenersAndMethods.this, LogicalProblemsListActivity.class);
+                intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMLIST, 0);
             } else if (id == R.id.TermMatchingbuttonlayout) {
                 intent = new Intent(AxolotlSupportingListenersAndMethods.this, TermMatchingProblemsListActivity.class);
+                intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMLIST, 0);
             } else if (id == R.id.nonclassicbuttonlayout) {
-                intent = new Intent(AxolotlSupportingListenersAndMethods.this, NonClassicalProblemsListActivity.class);
+                intent = new Intent(AxolotlSupportingListenersAndMethods.this, LogicalProblemsListActivity.class);
+                intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMLIST, 1);
             } else if (id == R.id.Proofbuttonlayout) {
                 intent = new Intent(AxolotlSupportingListenersAndMethods.this, ProofDisplayActivity.class);
                 Toast.makeText(AxolotlSupportingListenersAndMethods.this, "View Proof", Toast.LENGTH_SHORT).show();

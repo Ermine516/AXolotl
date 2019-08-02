@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.os.Bundle;
 
 import androidx.core.util.Pair;
@@ -48,7 +47,7 @@ public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
 
     @SuppressWarnings("ConstantConditions")
     private void drawFlat() {
-        ArrayList<Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Pair<ArrayList<Term>, Term>>>> history = PS.History;
+        ArrayList<Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Rule>>> history = PS.History;
         ArrayList<Pair<ArrayList<String>, ArrayList<String>>> proof = new ArrayList<>();
 
         HashSet<Term> curAnteProblem = PS.anteProblem;
@@ -64,10 +63,10 @@ public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
         proof.add(Pair.create(anteStrings, succStrings));
 
         for (int ind = history.size() - 1; ind >= 0; ind--) {
-            Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Pair<ArrayList<Term>, Term>>> laststep = history.get(ind);
-            Pair<ArrayList<Term>, Term> rule = laststep.second.second;
+            Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Rule>> laststep = history.get(ind);
+            Rule rule = laststep.second.second;
             ArrayList<Term> anteSideApply = new ArrayList<>();
-            Term succSideApply = rule.second.Dup();
+            Term succSideApply = rule.argument.Dup();
             for (Pair<String, Term> s : laststep.second.first) {
                 succSideApply = succSideApply.replace(new Const(s.first), s.second);
             }
@@ -75,7 +74,7 @@ public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
             for (Pair<String, Term> s : laststep.second.first)
                 succSideApply = succSideApply.replace(new Const(s.first), s.second);
             newSuccProblem.add(succSideApply);
-            for (Term t : rule.first) {
+            for (Term t : rule.Conclusions) {
                 Term temp = t.Dup();
                 for (Pair<String, Term> s : laststep.second.first)
                     temp = temp.replace(new Const(s.first), s.second);

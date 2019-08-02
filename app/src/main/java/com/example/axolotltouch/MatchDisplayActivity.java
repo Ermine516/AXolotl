@@ -43,14 +43,14 @@ public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
         if (MatchDisplayActivity.this.PS.anteSelectedPositions.size() == 0) {
             Term succTerm = PS.getSelectedSuccTerm();
             succTerm.normalize(PS.Variables);
-            leftTerm.addView(scrollTextSelectConstruct(PS.succCurrentRule.Print(new Const(var), PS.Variables.contains(var)), null, this, true));
-            rightTerm.addView(scrollTextSelectConstruct(succTerm.Print(var, PS.succCurrentRule, PS.Substitutions.get(PS.subPos).second), null, this, true));
+            leftTerm.addView(scrollTextSelectConstruct(PS.currentRule.argument.Print(new Const(var), PS.Variables.contains(var)), null, this, true));
+            rightTerm.addView(scrollTextSelectConstruct(succTerm.Print(var, PS.currentRule.argument, PS.Substitutions.get(PS.subPos).second), null, this, true));
         } else {
             ArrayList<Term> anteTerm = PS.getSelectedAnteTerm();
-            for (Term t : PS.anteCurrentRule)
+            for (Term t : PS.currentRule.Conclusions)
                 leftTerm.addView(scrollTextSelectConstruct(t.Print(new Const(var), PS.Variables.contains(var)), null, this, true));
             for (Term t : anteTerm)
-                for (Term s : PS.anteCurrentRule)
+                for (Term s : PS.currentRule.Conclusions)
                     if (PS.VarList(s).contains(var)) {
                         rightTerm.addView(scrollTextSelectConstruct(t.Print(var, s, PS.Substitutions.get(PS.subPos).second), null, this, true));
                         break;

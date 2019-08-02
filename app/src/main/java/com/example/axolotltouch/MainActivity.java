@@ -40,12 +40,13 @@ public class MainActivity extends AxolotlSupportingFunctionality {
         if (PS.succProblem.size() == 0) PS.succProblem.add(Const.Empty.Dup());
         if (PS.anteProblem.containsAll(PS.succProblem) && PS.succProblem.containsAll(PS.anteProblem)) {
             boolean passobseve = PS.observe;
-            ArrayList<Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Pair<ArrayList<Term>, Term>>>> ProofHistory = PS.History;
+            ArrayList<Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Rule>>> ProofHistory = PS.History;
             PS = new ProblemState();
             PS.observe = passobseve;
             PS.History = ProofHistory;
         }
-
+        if (PS.History.size() > 0)
+            System.out.println(PS.RuleTermsToString(PS.History.get(PS.History.size() - 1).second.second));
     }
 
     @Override
@@ -80,15 +81,15 @@ public class MainActivity extends AxolotlSupportingFunctionality {
         public boolean onSwipeLeft() {
             if (PS.History.size() != 0) {
                 try {
-                    Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Pair<ArrayList<Term>, Term>>> laststep = PS.History.remove(PS.History.size() - 1);
-                    Pair<ArrayList<Term>, Term> rule = laststep.second.second;
+                    Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Rule>> laststep = PS.History.remove(PS.History.size() - 1);
+                    Rule rule = laststep.second.second;
                     ArrayList<Term> anteSideApply = new ArrayList<>();
-                    Term succSideApply = rule.second.Dup();
+                    Term succSideApply = rule.argument.Dup();
                     for (Pair<String, Term> s : laststep.second.first)
                         succSideApply = succSideApply.replace(new Const(s.first), s.second);
                     if (laststep.first.first.size() != 0) {
-                        if (rule.first.size() > 0) {
-                            anteSideApply.addAll(rule.first);
+                        if (rule.Conclusions.size() > 0) {
+                            anteSideApply.addAll(rule.Conclusions);
                             for (int i = 0; i < anteSideApply.size(); i++)
                                 for (Pair<String, Term> s : laststep.second.first)
                                     anteSideApply.set(i, anteSideApply.get(i).replace(new Const(s.first), s.second));
@@ -104,7 +105,7 @@ public class MainActivity extends AxolotlSupportingFunctionality {
                         for (Pair<String, Term> s : laststep.second.first)
                             succSideApply = succSideApply.replace(new Const(s.first), s.second);
                         newSuccProblem.add(succSideApply);
-                        for (Term t : rule.first) {
+                        for (Term t : rule.Conclusions) {
                             Term temp = t.Dup();
                             for (Pair<String, Term> s : laststep.second.first)
                                 temp = temp.replace(new Const(s.first), s.second);
@@ -125,8 +126,7 @@ public class MainActivity extends AxolotlSupportingFunctionality {
                 PS.anteSelectedPositions = new ArrayList<>();
                 PS.succSelectedPosition = "";
                 PS.subPos = -1;
-                PS.anteCurrentRule = new ArrayList<>();
-                PS.anteCurrentRule.add(Const.HoleSelected);
+                PS.currentRule = new Rule();
                 PS.Substitutions = new ArrayList<>();
                 Intent intent = new Intent(MainActivity.this, MainActivity.class);
                 intent.putExtra(PASSPROBLEMSTATE, PS);
@@ -144,16 +144,16 @@ public class MainActivity extends AxolotlSupportingFunctionality {
             ProblemState PS = MainActivity.this.PS;
             Intent intent;
             try {
-                if (PS.succCurrentRule.getSym().compareTo(Const.HoleSelected.getSym()) != 0) {
+                if (PS.currentRule.argument.getSym().compareTo(Const.HoleSelected.getSym()) != 0) {
                     if (PS.succSelectedPosition.compareTo("") != 0) {
                         Term succTerm = ProblemState.getTermByString(PS.succSelectedPosition, PS.succProblem);
 
-                        if (TermHelper.wellformedSequents(succTerm) && TermHelper.wellformedSequents(PS.succCurrentRule)) {
+                        if (TermHelper.wellformedSequents(succTerm) && TermHelper.wellformedSequents(PS.currentRule.argument)) {
                             succTerm.normalize(PS.Variables);
-                            PS.succCurrentRule.normalize(PS.Variables);
+                            PS.currentRule.argument.normalize(PS.Variables);
                         }
-                        if (succTerm != null && TermHelper.TermMatchWithVar(succTerm, PS.succCurrentRule, PS.Variables)) {
-                            PS.Substitutions = TermHelper.varTermMatch(succTerm, PS.succCurrentRule, PS);
+                        if (succTerm != null && TermHelper.TermMatchWithVar(succTerm, PS.currentRule.argument, PS.Variables)) {
+                            PS.Substitutions = TermHelper.varTermMatch(succTerm, PS.currentRule.argument, PS);
                             HashSet<String> occurences = new HashSet<>();
                             HashMap<String, Term> subCleaned = new HashMap<>();
                             for (Pair<String, Term> p : PS.Substitutions) {
@@ -171,10 +171,10 @@ public class MainActivity extends AxolotlSupportingFunctionality {
                                     PS.Substitutions.add(new Pair<>(s, subCleaned.get(s)));
 
                                 HashSet<String> singleSide = new HashSet<>();
-                                for (Term t : PS.anteCurrentRule) {
+                                for (Term t : PS.currentRule.Conclusions) {
                                     HashSet<String> vars = PS.VarList(t);
                                     for (String s : vars)
-                                        if (!PS.VarList(PS.succCurrentRule).contains(s))
+                                        if (!PS.VarList(PS.currentRule.argument).contains(s))
                                             singleSide.add(s);
                                 }
                                 for (String s : singleSide)

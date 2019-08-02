@@ -61,14 +61,14 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
         }
         if (PS.anteSelectedPositions.size() == 0) {
             ArrayList<Term> temp = new ArrayList<>();
-            for (Term t : PS.anteCurrentRule) {
+            for (Term t : PS.currentRule.Conclusions) {
                 Term tosub = TermHelper.applySubstitution(localSubstitution, t.Dup());
                 temp.add(tosub);
             }
             HashSet<Term> updated = PS.replaceSelectedSuccTerm(temp);
             updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), updated.toArray(AxolotlMessagingAndIO.HashSetTermArray));
         } else {
-            Term tosub = TermHelper.applySubstitution(localSubstitution, PS.succCurrentRule.Dup());
+            Term tosub = TermHelper.applySubstitution(localSubstitution, PS.currentRule.argument.Dup());
             HashSet<Term> updated = PS.replaceSelectedAnteTerms(tosub);
             updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), updated.toArray(AxolotlMessagingAndIO.HashSetTermArray));
 

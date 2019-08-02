@@ -58,5 +58,6 @@
     <string name="help">HELP</string>
     <string name="about">About</string>
     <string name="on_load_screen">On load screen</string>
+    <string name="natural_deduction">Natural Deduction</string>
 </resources>
 

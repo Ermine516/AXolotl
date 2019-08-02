@@ -76,13 +76,50 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:scrollbars="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/naturalstyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/sequentstyle">
 
             <LinearLayout
                 android:id="@+id/SequentProblemList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
+
+
+        <TextView
+            android:id="@+id/naturalstyle"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:background="#E05E8E"
+            android:gravity="center"
+            android:text="@string/natural_deduction"
+            android:textColor="#FDFDFE"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/ListofNaturalProblems"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ListofSequentProblems" />
+
+        <ScrollView
+            android:id="@+id/ListofNaturalProblems"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/naturalstyle">
+
+            <LinearLayout
+                android:id="@+id/NaturalProblemList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />

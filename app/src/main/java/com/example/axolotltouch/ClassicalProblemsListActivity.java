@@ -23,7 +23,10 @@ public class ClassicalProblemsListActivity extends AxolotlSupportingFunctionalit
      * Location of the Axolotl files associated with classical logic sequent style problems
      */
     public static final String SEQUENTPROBLEMSLOCATION = "classical/sequent";
-
+    /**
+     * Location of the Axolotl files associated with classical logic Natural Deduction style problems
+     */
+    public static final String NATURALPROBLEMSLOCATION = "classical/natural";
 
     /**
      * This method overrides the onCreate method of AppCompatActivity.
@@ -40,11 +43,15 @@ public class ClassicalProblemsListActivity extends AxolotlSupportingFunctionalit
         try {
             problems.put(HILBERTPROBLEMSLOCATION, this.getAssets().list(HILBERTPROBLEMSLOCATION));
             problems.put(SEQUENTPROBLEMSLOCATION, this.getAssets().list(SEQUENTPROBLEMSLOCATION));
+            problems.put(NATURALPROBLEMSLOCATION, this.getAssets().list(NATURALPROBLEMSLOCATION));
+
 
         } catch (IOException e) {
             Toast.makeText(ClassicalProblemsListActivity.this, "Issues accessing Problem Database.", Toast.LENGTH_SHORT).show();
             problems.put(HILBERTPROBLEMSLOCATION, new String[]{});
             problems.put(SEQUENTPROBLEMSLOCATION, new String[]{});
+            problems.put(NATURALPROBLEMSLOCATION, new String[]{});
+
         }
         parsedProblems = new ArrayList<>();
         ActivityDecorate();
@@ -59,6 +66,8 @@ public class ClassicalProblemsListActivity extends AxolotlSupportingFunctionalit
         addProblemList(this.getAssets(), (LinearLayout) this.findViewById(R.id.HilbertProblemList), HILBERTPROBLEMSLOCATION);
         parsedProblems = new ArrayList<>();
         addProblemList(this.getAssets(), (LinearLayout) this.findViewById(R.id.SequentProblemList), SEQUENTPROBLEMSLOCATION);
+        parsedProblems = new ArrayList<>();
+        addProblemList(this.getAssets(), (LinearLayout) this.findViewById(R.id.NaturalProblemList), NATURALPROBLEMSLOCATION);
     }
 
 

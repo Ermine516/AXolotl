@@ -122,17 +122,16 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         HashSet<Term> newProblemsucc = PS.Substitutions.apply(PS.currentRule.Conclusions);
         for (Term t : newProblemsucc)
             System.out.println(t);
-        for (Term t : PS.succProblem)
+        for (Term t : PS.problem)
             if (t.Print().compareTo(PS.succSelectedPosition) != 0) newProblemsucc.add(t);
-        PS.succProblem = newProblemsucc;
+        PS.problem = newProblemsucc;
         PS.succSelectedPosition = "";
         PS.subPos = -1;
         PS.currentRule = new Rule();
         PS.Substitutions = new Substitution();
         PS.SubHistory = new HashMap<>();
-        if (PS.succProblem.isEmpty()) PS.succProblem.add(Const.Empty.Dup());
-        if (PS.anteProblem.isEmpty()) PS.anteProblem.add(Const.Empty.Dup());
-        if ((PS.anteProblem.containsAll(PS.succProblem) && PS.succProblem.containsAll(PS.anteProblem))) {
+        if (PS.problem.isEmpty()) PS.problem.add(Const.Empty.Dup());
+        if ((PS.problem.size() == 0 || PS.problem.iterator().next().getSym().compareTo("∅") == 0)) {
             Toast.makeText(AxolotlSupportingFunctionality.this, "Congratulations! Problem Solved! ", Toast.LENGTH_SHORT).show();
             PS.mainActivityState = 2;
         } else

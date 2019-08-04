@@ -18,15 +18,15 @@ public class ProblemState implements Parcelable {
     private static final String EMPTYLIST = "ε";
     private static final String HOLESELECTEDSYM = Const.HoleSelected.getSym();
     private static final String HOLESYM = Const.Hole.getSym();
-    public static final String[] RESERVEDCONSTANTS = new String[]{EMPTYLIST, HOLESELECTEDSYM, HOLESYM};
+    private static final String EMPTYSYM = Const.Empty.getSym();
+    public static final String[] RESERVEDCONSTANTS = new String[]{EMPTYLIST, HOLESELECTEDSYM, HOLESYM, EMPTYSYM};
 
     int subPos;
     HashMap<String, Boolean> MatchorConstruct;
     boolean observe;
     int textSize;
     int mainActivityState;
-    HashSet<Term> anteProblem;
-    HashSet<Term> succProblem;
+    HashSet<Term> problem;
     String succSelectedPosition;
     Rule currentRule;
     HashSet<String> Variables;
@@ -43,10 +43,8 @@ public class ProblemState implements Parcelable {
         textSize = 25;
         mainActivityState = -1;
         MatchorConstruct = new HashMap<>();
-        anteProblem = new HashSet<>();
-        anteProblem.add(Const.Hole);
-        succProblem = new HashSet<>();
-        succProblem.add(Const.Hole);
+        problem = new HashSet<>();
+        problem.add(Const.Hole);
         succSelectedPosition = "";
         currentRule = new Rule("", new ArrayList<Term>(), Const.HoleSelected.Dup(), new HashSet<>());
         SubHistory = new HashMap<>();
@@ -65,24 +63,17 @@ public class ProblemState implements Parcelable {
         observe = in.readInt() == 1;
         textSize = in.readInt();
         mainActivityState = in.readInt();
-
         int MatchorConstructSize = in.readInt();
         MatchorConstruct = new HashMap<>();
         while (MatchorConstructSize > 0) {
             MatchorConstruct.put(in.readString(), in.readInt() == 1);
             MatchorConstructSize--;
         }
-        int anteProblemsize = in.readInt();
-        anteProblem = new HashSet<>();
-        while (anteProblemsize > 0) {
-            anteProblem.add(in.readTypedObject(Term.CREATOR));
-            anteProblemsize--;
-        }
-        int succProblemsize = in.readInt();
-        succProblem = new HashSet<>();
-        while (succProblemsize > 0) {
-            succProblem.add(in.readTypedObject(Term.CREATOR));
-            succProblemsize--;
+        int problemsize = in.readInt();
+        problem = new HashSet<>();
+        while (problemsize > 0) {
+            problem.add(in.readTypedObject(Term.CREATOR));
+            problemsize--;
         }
         succSelectedPosition = in.readString();
         currentRule = in.readTypedObject(Rule.CREATOR);
@@ -133,7 +124,7 @@ public class ProblemState implements Parcelable {
     }
 
     Term getSelectedSuccTerm() {
-        for (Term t : succProblem) {
+        for (Term t : problem) {
             if (t.Print().compareTo(succSelectedPosition) == 0) return t;
         }
         return null;
@@ -165,7 +156,7 @@ public class ProblemState implements Parcelable {
 
     HashSet<Term> replaceSelectedSuccTerm(HashSet<Term> replacement) {
         HashSet<Term> succupdate = new HashSet<>();
-        for (Term t : succProblem)
+        for (Term t : problem)
             if (t.Print().compareTo(succSelectedPosition) != 0) succupdate.add(t);
             else succupdate.addAll(replacement);
         return succupdate;
@@ -180,14 +171,10 @@ public class ProblemState implements Parcelable {
     }
 
     void problemClean() {
-        HashSet<Term> newAnte = new HashSet<>();
         HashSet<Term> newSucc = new HashSet<>();
-        for (Term t : anteProblem)
-            if (t.getSym().compareTo(Const.Empty.getSym()) != 0) newAnte.add(t);
-        for (Term t : succProblem)
+        for (Term t : problem)
             if (t.getSym().compareTo(Const.Empty.getSym()) != 0) newSucc.add(t);
-        anteProblem = newAnte;
-        succProblem = newSucc;
+        problem = newSucc;
     }
 
     //Checks if every symbol within a term is indexed
@@ -226,7 +213,7 @@ public class ProblemState implements Parcelable {
     };
 
     boolean SequentProblem() {
-        for (Term t : this.succProblem)
+        for (Term t : this.problem)
             if (TermHelper.wellformedSequents(t)) return true;
         return false;
     }
@@ -244,10 +231,8 @@ public class ProblemState implements Parcelable {
             out.writeString(key);
             out.writeInt((MatchorConstruct.get(key)) ? 1 : 0);
         }
-        out.writeInt(anteProblem.size());
-        for (Term t : anteProblem) out.writeTypedObject(t, flags);
-        out.writeInt(succProblem.size());
-        for (Term t : succProblem) out.writeTypedObject(t, flags);
+        out.writeInt(problem.size());
+        for (Term t : problem) out.writeTypedObject(t, flags);
         out.writeString(succSelectedPosition);
         out.writeTypedObject(currentRule, flags);
 		out.writeInt(Variables.size());

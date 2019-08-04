@@ -43,14 +43,7 @@ public abstract class AxolotlSupportingFunctionalityProblemList extends AxolotlS
             for (int i = 0; i < Objects.requireNonNull(problems.get(directory)).length; i++) {
                 StringBuilder problemString = new StringBuilder();
                 ProblemState newPS = AxolotlMessagingAndIO.loadFile(manager.open(directory + "/" + Objects.requireNonNull(problems.get(directory))[i]), Objects.requireNonNull(problems.get(directory))[i], this);
-                Term[] anteProb = newPS.anteProblem.toArray(AxolotlMessagingAndIO.HashSetTermArray);
-                if (anteProb[0].Print().compareTo("∅") != 0) {
-                    for (int j = 0; j < anteProb.length; j++)
-                        if (j == anteProb.length - 1)
-                            problemString.append(anteProb[j].Print()).append(" ");
-                        else problemString.append(anteProb[j].Print()).append(" , ");
-                }
-                Term[] succProb = newPS.succProblem.toArray(AxolotlMessagingAndIO.HashSetTermArray);
+                Term[] succProb = newPS.problem.toArray(AxolotlMessagingAndIO.HashSetTermArray);
                 for (int j = 0; j < succProb.length; j++)
                     if (j == succProb.length - 1) problemString.append(succProb[j].Print());
                     else problemString.append(succProb[j].Print()).append(" , ");

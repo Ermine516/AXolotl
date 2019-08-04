@@ -6,7 +6,7 @@ Function: d 0
 Variable: x
 Variable: y
 Variable: z
-Problem: 0 1 ◦(d,◦(c,◦(b,a)))
+Problem: 1 ◦(d,◦(c,◦(b,a)))
 Rule: 1 ◦(z,◦(x,y)) ◦(z,◦(y,x))
 Rule: 1 ◦(◦(x,y),z) ◦(◦(y,x),z)
 Rule: 1 ◦(x,◦(y,z)) ◦(◦(x,y),z)

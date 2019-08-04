@@ -83,7 +83,7 @@ public class Proof {
         ArrayList<State> history = PS.History;
         ArrayList<Pair<ArrayList<String>, ArrayList<String>>> proof = new ArrayList<>();
 
-        HashSet<Term> curSuccProblem = PS.succProblem;
+        HashSet<Term> curSuccProblem = PS.problem;
         if(history.size() == 0) {
             return new Proof(curSuccProblem.iterator().next().Print());
         }

@@ -7,7 +7,7 @@ Variable: x
 Variable: y
 Variable: z
 Variable: w
-Problem: 0 1 ⊢(cons(⇒(p,⊥),p),q)
+Problem: 1 ⊢(cons(⇒(p,⊥),p),q)
 Rule: 1 ⊢(cons(x,z),y) ⊢(z,⇒(x,y)) [⇒:E]
 Rule: 2 ⊢(w,y) ⊢(w,⇒(y,x)) ⊢(w,x) [⇒:I]
 Rule: 3 ⊢(w,∨(y,z)) ⊢(cons(y,w),x) ⊢(cons(z,w),x) ⊢(w,x) [∨:E]

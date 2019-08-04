@@ -6,7 +6,7 @@ Variable: x
 Variable: y
 Variable: z
 Variable: w
-Problem: 0 1 ⊢(ε,↔(¬(¬(A)),A))
+Problem: 1 ⊢(ε,↔(¬(¬(A)),A))
 Rule: 2 ⊢(w,cons(⇒(x,y),z)) ⊢(w,cons(⇒(y,x),z)) ⊢(w,cons(↔(x,y),z)) [↔:r]
 Rule: 1 ⊢(cons(x,w),cons(y,z)) ⊢(w,cons(⇒(x,y),z)) [⇒:r]
 Rule: 1 ⊢(cons(x,w),z) ⊢(w,cons(¬(x),z)) [¬:r]

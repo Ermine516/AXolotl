@@ -50,12 +50,8 @@ public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
         ArrayList<State> history = PS.History;
         ArrayList<Pair<ArrayList<String>, ArrayList<String>>> proof = new ArrayList<>();
 
-        HashSet<Term> curAnteProblem = PS.anteProblem;
-        HashSet<Term> curSuccProblem = PS.succProblem;
+        HashSet<Term> curSuccProblem = PS.problem;
         ArrayList<String> anteStrings = new ArrayList<>();
-        for (Term t : curAnteProblem) {
-            anteStrings.add(t.Print());
-        }
         ArrayList<String> succStrings = new ArrayList<>();
         for (Term t : curSuccProblem) {
             succStrings.add(t.Print());

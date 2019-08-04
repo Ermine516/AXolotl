@@ -10,7 +10,7 @@ Function: h 0
 Variable: x
 Variable: y
 Variable: z
-Problem: 0 1 ◦(◦(◦(a,b),◦(c,d)),◦(◦(e,f),◦(g,h)))
+Problem: 1 ◦(◦(◦(a,b),◦(c,d)),◦(◦(e,f),◦(g,h)))
 Rule: 1 x ◦(x,y)
 Rule: 1 y ◦(x,y)
 Rule: 1 ◦(x,◦(y,z)) ◦(◦(x,y),z)

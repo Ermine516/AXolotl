@@ -96,7 +96,7 @@ class AxolotlMessagingAndIO {
                     parseFunctionSymbol(newPS, parts);
                 else if (parts[0].compareTo("Rule:") == 0)
                     foundProblemOrRule = parseRuleDefinition(newPS, parts);
-                else if (parts[0].compareTo("Problem:") == 0 && newPS.anteProblem.size() == 1 && newPS.anteProblem.toArray(HashSetTermArray)[0].getSym().compareTo(Const.Hole.getSym()) == 0)
+                else if (parts[0].compareTo("Problem:") == 0)
                     foundProblemOrRule = parseProblemDefinition(newPS, parts);
                 else if (parts[0].compareTo("Variable:") == 0 && !foundProblemOrRule)
                     parsevariableSymbol(newPS, parts);
@@ -140,13 +140,11 @@ class AxolotlMessagingAndIO {
      * @author David M. Cerna
      */
     private static boolean parseProblemDefinition(ProblemState PS, String[] parts) throws TermHelper.FormatException {
-        if (parts.length < 3) throw new TermHelper().new FormatException();
-        int anteSize = Integer.valueOf(parts[1]);
-        int succSize = Integer.valueOf(parts[2]);
-        if (parts.length != anteSize + succSize + 3) throw new TermHelper().new FormatException();
-        PS.anteProblem = new HashSet<>();
-        PS.succProblem = new HashSet<>();
-        for (int i = 3; i < anteSize + 3; i++) {
+        if (parts.length < 2) throw new TermHelper().new FormatException();
+        int succSize = Integer.valueOf(parts[1]);
+        if (parts.length != succSize + 2) throw new TermHelper().new FormatException();
+        PS.problem = new HashSet<>();
+        for (int i = 2; i < parts.length; i++) {
             Term temp = TermHelper.parse(parts[i], PS);
             if (!PS.isIndexed(temp) && !TermHelper.containsNestedSequents(temp))
                 throw new TermHelper().new FormatException();
@@ -154,19 +152,7 @@ class AxolotlMessagingAndIO {
                 throw new TermHelper().new FormatException();
             else if (!temp.Print().contains("⊢") && !TermHelper.freeOfCons(temp))
                 throw new TermHelper().new FormatException();
-            else PS.anteProblem.add(temp);
-
-        }
-        if (PS.anteProblem.size() == 0) PS.anteProblem.add(Const.Empty.Dup());
-        for (int i = anteSize + 3; i < parts.length; i++) {
-            Term temp = TermHelper.parse(parts[i], PS);
-            if (!PS.isIndexed(temp) && !TermHelper.containsNestedSequents(temp))
-                throw new TermHelper().new FormatException();
-            else if (temp.Print().contains("⊢") && !TermHelper.wellformedSequents(temp))
-                throw new TermHelper().new FormatException();
-            else if (!temp.Print().contains("⊢") && !TermHelper.freeOfCons(temp))
-                throw new TermHelper().new FormatException();
-            else PS.succProblem.add(temp);
+            else PS.problem.add(temp);
         }
         return true;
     }

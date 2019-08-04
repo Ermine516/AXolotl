@@ -7,7 +7,7 @@ Variable: x
 Variable: y
 Variable: z
 Variable: w
-Problem: 0 1 ⊢(∨(∧(A,B),∧(A,C)),∧(A,∨(B,C)))
+Problem: 1 ⊢(∨(∧(A,B),∧(A,C)),∧(A,∨(B,C)))
 Rule: 2 ⊢(w,cons(x,z)) ⊢(w,cons(y,z)) ⊢(w,cons(∧(x,y),z)) [∧:r]
 Rule: 1  ⊢(w,cons(x,cons(y,z))) ⊢(w,cons(∨(x,y),z)) [∨:r]
 Rule: 2 ⊢(cons(x,z),w) ⊢(cons(y,z),w) ⊢(cons(∨(x,y),z),w) [∨:l]

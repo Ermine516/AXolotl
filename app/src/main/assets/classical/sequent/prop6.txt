@@ -6,7 +6,7 @@ Variable: x
 Variable: y
 Variable: z
 Variable: w
-Problem: 0 1 ⊢(cons(⇒(B,C),⇒(A,B)),⇒(A,C))
+Problem: 1 ⊢(cons(⇒(B,C),⇒(A,B)),⇒(A,C))
 Rule: 1 ⊢(cons(w,x),cons(y,z)) ⊢(w,cons(⇒(x,y),z)) [⇒:r]
 Rule: 2 ⊢(z,cons(x,w)) ⊢(cons(y,z),w)  ⊢(cons(⇒(x,y),z),w) [⇒:l]
 Rule: 1 ⊢(w,cons(cons(y,z),x)) ⊢(w,cons(x,cons(y,z))) [shift:r]

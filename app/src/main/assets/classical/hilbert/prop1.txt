@@ -7,7 +7,7 @@ Variable: x
 Variable: y
 Variable: z
 Variable: w
-Problem: 0 1  ⇒(p,p)
+Problem: 1  ⇒(p,p)
 Rule: 2 x ⇒(x,y)  y [MP]
 Rule: 0  ⇒(x,⇒(y,x)) [Weak]
 Rule: 0  ⇒(⇒(x,⇒(y,z)),⇒(⇒(x,y),⇒(x,z))) [⇒-Trans]

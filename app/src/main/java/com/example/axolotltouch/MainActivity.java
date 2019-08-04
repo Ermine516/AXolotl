@@ -30,12 +30,10 @@ public class MainActivity extends AxolotlSupportingFunctionality {
         } else setContentView(R.layout.app_main_on_completion_bar_layout);
         ConstructActivity(savedInstanceState);
         if (PS.mainActivityState == 0) ActivityDecorate();
-        if (ProblemState.sideContainsEmptySet(PS.anteProblem) && PS.anteProblem.size() > 1 ||
-                ProblemState.sideContainsEmptySet(PS.succProblem) && PS.succProblem.size() > 1)
+        if (ProblemState.sideContainsEmptySet(PS.problem) && PS.problem.size() > 1)
             PS.problemClean();
-        if (PS.anteProblem.size() == 0) PS.anteProblem.add(Const.Empty.Dup());
-        if (PS.succProblem.size() == 0) PS.succProblem.add(Const.Empty.Dup());
-        if (PS.anteProblem.containsAll(PS.succProblem) && PS.succProblem.containsAll(PS.anteProblem)) {
+        if (PS.problem.size() == 0) PS.problem.add(Const.Empty.Dup());
+        if (PS.problem.size() == 0 || PS.problem.iterator().next().getSym().compareTo(Const.Empty.getSym()) == 0) {
             boolean passobseve = PS.observe;
             ArrayList<State> ProofHistory = PS.History;
             PS = new ProblemState();
@@ -63,7 +61,7 @@ public class MainActivity extends AxolotlSupportingFunctionality {
     }
 
     private void UpdateProblemDisplay() {
-        updateProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), PS.succProblem.toArray(AxolotlMessagingAndIO.HashSetTermArray));
+        updateProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), PS.problem.toArray(AxolotlMessagingAndIO.HashSetTermArray));
     }
 
 
@@ -82,13 +80,13 @@ public class MainActivity extends AxolotlSupportingFunctionality {
                     succSideApply = laststep.substitution.apply(succSideApply);
                     newSuccProblem.add(succSideApply);
                     anteSideApply = laststep.substitution.apply(laststep.rule.Conclusions);
-                    for (Term t : PS.succProblem) {
+                    for (Term t : PS.problem) {
                         boolean wasselected = false;
                         for (Term s : anteSideApply)
                             if (t.Print().compareTo(s.Print()) == 0) wasselected = true;
                         if (!wasselected) newSuccProblem.add(t);
                     }
-                    PS.succProblem = newSuccProblem;
+                    PS.problem = newSuccProblem;
 
                 } catch (NullPointerException e) {
                     Toast.makeText(MainActivity.this, "Problems accessing History", Toast.LENGTH_SHORT).show();
@@ -115,7 +113,7 @@ public class MainActivity extends AxolotlSupportingFunctionality {
             try {
                 if (PS.currentRule.argument.getSym().compareTo(Const.HoleSelected.getSym()) != 0) {
                     if (PS.succSelectedPosition.compareTo("") != 0) {
-                        Term succTerm = ProblemState.getTermByString(PS.succSelectedPosition, PS.succProblem);
+                        Term succTerm = ProblemState.getTermByString(PS.succSelectedPosition, PS.problem);
 
                         if (TermHelper.wellformedSequents(succTerm) && TermHelper.wellformedSequents(PS.currentRule.argument)) {
                             succTerm.normalize(PS.Variables);

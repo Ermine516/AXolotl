@@ -94,7 +94,6 @@ public class MainActivity extends AxolotlSupportingFunctionality {
                     Toast.makeText(MainActivity.this, "Problems accessing History", Toast.LENGTH_SHORT).show();
                     return true;
                 }
-                PS.anteSelectedPositions = new ArrayList<>();
                 PS.succSelectedPosition = "";
                 PS.subPos = -1;
                 PS.currentRule = new Rule();

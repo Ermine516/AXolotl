@@ -10,8 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
 import static com.example.axolotltouch.AxolotlMessagingAndIO.PASSPROBLEMSTATE;
 
 public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
@@ -38,22 +36,10 @@ public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
         leftTerm.removeAllViewsInLayout();
         rightTerm.removeAllViewsInLayout();
         String var = PS.Substitutions.get(PS.subPos).variable;
-        if (MatchDisplayActivity.this.PS.anteSelectedPositions.size() == 0) {
-            Term succTerm = PS.getSelectedSuccTerm();
-            succTerm.normalize(PS.Variables);
-            leftTerm.addView(scrollTextSelectConstruct(PS.currentRule.argument.Print(new Const(var), PS.Variables.contains(var)), null, this, true));
-            rightTerm.addView(scrollTextSelectConstruct(succTerm.Print(var, PS.currentRule.argument, PS.Substitutions.get(PS.subPos).replacement), null, this, true));
-        } else {
-            ArrayList<Term> anteTerm = PS.getSelectedAnteTerm();
-            for (Term t : PS.currentRule.Conclusions)
-                leftTerm.addView(scrollTextSelectConstruct(t.Print(new Const(var), PS.Variables.contains(var)), null, this, true));
-            for (Term t : anteTerm)
-                for (Term s : PS.currentRule.Conclusions)
-                    if (PS.VarList(s).contains(var)) {
-                        rightTerm.addView(scrollTextSelectConstruct(t.Print(var, s, PS.Substitutions.get(PS.subPos).replacement), null, this, true));
-                        break;
-                    }
-        }
+        Term succTerm = PS.getSelectedSuccTerm();
+        succTerm.normalize(PS.Variables);
+        leftTerm.addView(scrollTextSelectConstruct(PS.currentRule.argument.Print(new Const(var), PS.Variables.contains(var)), null, this, true));
+        rightTerm.addView(scrollTextSelectConstruct(succTerm.Print(var, PS.currentRule.argument, PS.Substitutions.get(PS.subPos).replacement), null, this, true));
         varDisplay.setText(Html.fromHtml("<b>" + var + "</b>"));
         try {
             if (PS.Substitutions.get(PS.subPos).replacement.Print().compareTo("") != 0)
@@ -76,7 +62,6 @@ public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
                 Intent intent;
                 if (MatchDisplayActivity.this.PS.subPos == -1 || !PS.observe) {
                     MatchDisplayActivity.this.PS.subPos = -1;
-                    PS.anteSelectedPositions = new ArrayList<>();
                     PS.succSelectedPosition = "";
                     PS.Substitutions = new Substitution();
                     intent = new Intent(MatchDisplayActivity.this, MainActivity.class);

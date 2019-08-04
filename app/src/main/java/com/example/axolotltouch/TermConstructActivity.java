@@ -50,10 +50,7 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
     private void FurtureProblemDisplay() {
         ProblemState PS = TermConstructActivity.this.PS;
         Substitution localSubstitution = PS.Substitutions.simplifyWithRespectTo(PS.Substitutions.get(PS.subPos).variable);
-        if (PS.anteSelectedPositions.size() == 0)
             updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), PS.replaceSelectedSuccTerm(localSubstitution.apply(PS.currentRule.Conclusions)).toArray(AxolotlMessagingAndIO.HashSetTermArray));
-        else
-            updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), PS.replaceSelectedAnteTerms(localSubstitution.apply(PS.currentRule.argument)).toArray(AxolotlMessagingAndIO.HashSetTermArray));
     }
 
     private void UpdateTermDisplay() {
@@ -119,7 +116,6 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
             try {
                 if (TermConstructActivity.this.PS.subPos == -1 || !PS.observe) {
                     TermConstructActivity.this.PS.subPos = -1;
-                    PS.anteSelectedPositions = new ArrayList<>();
                     PS.succSelectedPosition = "";
                     PS.Substitutions = new Substitution();
                     intent = new Intent(TermConstructActivity.this, MainActivity.class);

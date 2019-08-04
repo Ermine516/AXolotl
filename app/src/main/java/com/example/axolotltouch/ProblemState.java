@@ -26,7 +26,6 @@ public class ProblemState implements Parcelable {
     int textSize;
     int mainActivityState;
     HashSet<Term> anteProblem;
-    ArrayList<String> anteSelectedPositions;
     HashSet<Term> succProblem;
     String succSelectedPosition;
     Rule currentRule;
@@ -46,7 +45,6 @@ public class ProblemState implements Parcelable {
         MatchorConstruct = new HashMap<>();
         anteProblem = new HashSet<>();
         anteProblem.add(Const.Hole);
-        anteSelectedPositions = new ArrayList<>();
         succProblem = new HashSet<>();
         succProblem.add(Const.Hole);
         succSelectedPosition = "";
@@ -79,12 +77,6 @@ public class ProblemState implements Parcelable {
         while (anteProblemsize > 0) {
             anteProblem.add(in.readTypedObject(Term.CREATOR));
             anteProblemsize--;
-        }
-        int anteSelectedPositionssize = in.readInt();
-        anteSelectedPositions = new ArrayList<>();
-        while (anteSelectedPositionssize > 0) {
-            anteSelectedPositions.add(in.readString());
-            anteSelectedPositionssize--;
         }
         int succProblemsize = in.readInt();
         succProblem = new HashSet<>();
@@ -157,27 +149,9 @@ public class ProblemState implements Parcelable {
         return false;
     }
 
-    HashSet<Term> replaceSelectedAnteTerms(Term replacement) {
-        HashSet<Term> anteUpdate = new HashSet<>();
-        boolean replaced = false;
-        for (Term t : anteProblem)
-            if (!anteSelectedPositions.contains(t.Print())) anteUpdate.add(t);
-            else if (!replaced) {
-                anteUpdate.add(replacement);
-                replaced = true;
-            }
-        return anteUpdate;
-    }
-
-    ArrayList<Term> getSelectedAnteTerm() {
-        ArrayList<Term> termlist = new ArrayList<>();
-        for (Term t : anteProblem)
-            for (String s : anteSelectedPositions)
-                if (t.Print().compareTo(s) == 0) termlist.add(t);
-        return termlist;
 
 
-    }
+
 
 
 
@@ -272,8 +246,6 @@ public class ProblemState implements Parcelable {
         }
         out.writeInt(anteProblem.size());
         for (Term t : anteProblem) out.writeTypedObject(t, flags);
-        out.writeInt(anteSelectedPositions.size());
-        for (String t : anteSelectedPositions) out.writeString(t);
         out.writeInt(succProblem.size());
         for (Term t : succProblem) out.writeTypedObject(t, flags);
         out.writeString(succSelectedPosition);

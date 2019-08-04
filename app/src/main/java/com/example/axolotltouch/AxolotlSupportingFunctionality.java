@@ -21,7 +21,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
@@ -126,7 +125,6 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         for (Term t : PS.succProblem)
             if (t.Print().compareTo(PS.succSelectedPosition) != 0) newProblemsucc.add(t);
         PS.succProblem = newProblemsucc;
-        PS.anteSelectedPositions = new ArrayList<>();
         PS.succSelectedPosition = "";
         PS.subPos = -1;
         PS.currentRule = new Rule();

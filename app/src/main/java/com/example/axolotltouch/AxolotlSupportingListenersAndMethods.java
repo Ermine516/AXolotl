@@ -116,15 +116,6 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
                 cleanSlection((LinearLayout) AxolotlSupportingListenersAndMethods.this.findViewById(R.id.RightSideTermLayout));
                 textViewSelected((TextView) view);
                 AxolotlSupportingListenersAndMethods.this.PS.succSelectedPosition = ((TextView) view).getText().toString();
-            } else if (view instanceof TextView && isMemberOf((TextView) view, (LinearLayout) AxolotlSupportingListenersAndMethods.this.findViewById(R.id.LeftSideTermLayout))) {
-                cleanSlection((LinearLayout) AxolotlSupportingListenersAndMethods.this.findViewById(R.id.RightSideTermLayout));
-                if (isNotSelected((TextView) view)) {
-                    textViewSelected((TextView) view);
-                    AxolotlSupportingListenersAndMethods.this.PS.anteSelectedPositions.add(((TextView) view).getText().toString());
-                } else {
-                    textViewUnselected((TextView) view);
-                    AxolotlSupportingListenersAndMethods.this.PS.anteSelectedPositions.remove(((TextView) view).getText().toString());
-                }
             }
         }
 

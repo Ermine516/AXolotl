@@ -138,21 +138,6 @@ class TermHelper {
 
     }
 
-    static ArrayList<Pair<String, Term>> varTermMatch(Term left, Term right, ProblemState PS) {
-        ArrayList<Pair<String, Term>> ret = new ArrayList<>();
-        if (PS.VarList(left).size() == 0)
-            if (PS.Variables.contains(right.getSym())) {
-                if (left.getSym().compareTo("cons") == 0) {
-                    if (left.subTerms().get(1).getSym().compareTo("ε") == 0)
-                        ret.add(new Pair<>(right.getSym(), left.subTerms().get(0)));
-                    else ret.add(new Pair<>(right.getSym(), left));
-                } else ret.add(new Pair<>(right.getSym(), left));
-            }
-            else if (left.subTerms().size() == right.subTerms().size() && left.subTerms().size() != 0)
-                for (int i = 0; i < left.subTerms().size(); i++)
-                    ret.addAll(varTermMatch(left.subTerms().get(i), right.subTerms().get(i), PS));
-        return ret;
-    }
 
     static Term applySubstitution(ArrayList<Pair<String, Term>> substitution, Term term) {
         Term tosub = term.Dup();

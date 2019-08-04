@@ -14,7 +14,12 @@ import java.util.HashSet;
 //This contains all information concerning the problem rules and substitutions 
 //as well as functions providing important features. 
 public class ProblemState implements Parcelable {
-    private static final String RULESYMBOL = "<font color=#ff0000>\u2b05</font>";
+    public static final String SEQUENT = "⊢";
+    public static final String LIST = "cons";
+    public static final String EMPTYLIST = "ε";
+    public static final String[] RESERVEDFUNCTIONS = new String[]{SEQUENT, LIST};
+    public static final String[] RESERVEDCONSTANTS = new String[]{EMPTYLIST};
+
     int subPos;
     HashMap<String, Boolean> MatchorConstruct;
     boolean observe;
@@ -28,9 +33,9 @@ public class ProblemState implements Parcelable {
     HashSet<String> Variables;
     ArrayList<String> Constants;
     ArrayList<Pair<String, Pair<Integer, Boolean>>> Functions;
-    ArrayList<Pair<String, Term>> Substitutions;
+    Substitution Substitutions;
     ArrayList<Rule> Rules;
-    ArrayList<Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Rule>>> History;
+    ArrayList<Pair<Pair<ArrayList<String>, String>, Pair<Substitution, Rule>>> History;
     HashMap<String, ArrayList<Term>> SubHistory;
 
     public ProblemState() {
@@ -45,11 +50,11 @@ public class ProblemState implements Parcelable {
         succProblem = new HashSet<>();
         succProblem.add(Const.Hole);
         succSelectedPosition = "";
-        currentRule = new Rule("", new ArrayList<Term>(), Const.HoleSelected.Dup());
+        currentRule = new Rule("", new ArrayList<Term>(), Const.HoleSelected.Dup(), new HashSet<>());
 
         SubHistory = new HashMap<>();
 		Rules = new ArrayList<>();
-        Substitutions = new ArrayList<>();
+        Substitutions = new Substitution(new ArrayList<SingletonSubstitution>());
         Functions = new ArrayList<>();
         Functions.add(new Pair<>("cons", new Pair<>(2, false)));
         Functions.add(new Pair<>("⊢", new Pair<>(2, true)));
@@ -63,6 +68,7 @@ public class ProblemState implements Parcelable {
         observe = in.readInt() == 1;
         textSize = in.readInt();
         mainActivityState = in.readInt();
+
         int MatchorConstructSize = in.readInt();
         MatchorConstruct = new HashMap<>();
         while (MatchorConstructSize > 0) {
@@ -89,6 +95,7 @@ public class ProblemState implements Parcelable {
         }
         succSelectedPosition = in.readString();
         currentRule = in.readTypedObject(Rule.CREATOR);
+
         String[] tempVar = new String[in.readInt()];
         in.readStringArray(tempVar);
         Variables = new HashSet<>();
@@ -105,13 +112,7 @@ public class ProblemState implements Parcelable {
             boolean infix = in.readInt() == 1;
             Functions.add(new Pair<>(key, new Pair<>(arity, infix)));
         }
-        Substitutions = new ArrayList<>();
-		int subsize = in.readInt();
-		for(int i = 0; i< subsize; i++){
-			String key  = in.readString();
-            Term temp = in.readTypedObject(Term.CREATOR);
-            Substitutions.add(new Pair<>(key, temp));
-		}
+        Substitutions = in.readTypedObject(Substitution.CREATOR);
         int rulesSize= in.readInt();
 		Rules = new ArrayList<>();
         for (int i = 0; i < rulesSize; i++) Rules.add(in.readTypedObject(Rule.CREATOR));
@@ -129,31 +130,12 @@ public class ProblemState implements Parcelable {
                         anteselected.add(in.readString());
                         antesize--;
                     }
-
-                    int subhissize = in.readInt();
-                    ArrayList<Pair<String, Term>> hissubs = new ArrayList<>();
-                    if (subhissize != 0) {
-                        while (subhissize > 0) {
-                            String hisvar = in.readString();
-                            Term hissubterm = in.readTypedObject(Term.CREATOR);
-                            hissubs.add(new Pair<>(hisvar, hissubterm));
-                            subhissize--;
-                        }
-                    }
+                    Substitution hissubs = in.readTypedObject(Substitution.CREATOR);
                     History.add(new Pair<>(new Pair<>(anteselected, ""), new Pair<>(hissubs, in.readTypedObject(Rule.CREATOR))));
                     hisSize--;
                 } else {
                     String succside = in.readString();
-                    int subhissize = in.readInt();
-                    ArrayList<Pair<String, Term>> hissubs = new ArrayList<>();
-                    if (subhissize != 0) {
-                        while (subhissize > 0) {
-                            String hisvar = in.readString();
-                            Term hissubterm = in.readTypedObject(Term.CREATOR);
-                            hissubs.add(new Pair<>(hisvar, hissubterm));
-                            subhissize--;
-                        }
-                    }
+                    Substitution hissubs = in.readTypedObject(Substitution.CREATOR);
                     History.add(new Pair<>(new Pair<>(new ArrayList<String>(), succside), new Pair<>(hissubs, in.readTypedObject(Rule.CREATOR))));
                     hisSize--;
                 }
@@ -188,12 +170,14 @@ public class ProblemState implements Parcelable {
         return null;
     }
 
-    HashSet<Term> replaceSelectedSuccTerm(ArrayList<Term> replacement) {
-        HashSet<Term> succupdate = new HashSet<>();
-        for (Term t : succProblem)
-            if (t.Print().compareTo(succSelectedPosition) != 0) succupdate.add(t);
-            else succupdate.addAll(replacement);
-        return succupdate;
+    static boolean isReserved(String func) {
+        for (String s : RESERVEDFUNCTIONS) {
+            if (s.compareTo(func) == 0) return true;
+        }
+        for (String s : RESERVEDCONSTANTS) {
+            if (s.compareTo(func) == 0) return true;
+        }
+        return false;
     }
 
     HashSet<Term> replaceSelectedAnteTerms(Term replacement) {
@@ -218,25 +202,7 @@ public class ProblemState implements Parcelable {
 
     }
 
-    String RuleTermsToString(Rule rule) {
-        if (rule != null && rule.Conclusions != null && rule.argument != null) {
-            StringBuilder retString = new StringBuilder("Δ ");
-            ArrayList<Term> varAsTerms = new ArrayList<>();
-            for (String var : Variables) varAsTerms.add(new Const(var));
-            if (rule.Conclusions.size() > 0)
-                for (int i = 0; i < rule.Conclusions.size(); i++)
-                    if (i == 0 && i != rule.Conclusions.size() - 1)
-                        retString.append(", ").append(rule.Conclusions.get(i).PrintBold(varAsTerms)).append(" , ");
-                    else if (0 == rule.Conclusions.size() - 1)
-                        retString.append(", ").append(rule.Conclusions.get(i).PrintBold(varAsTerms)).append(" " + RULESYMBOL).append(" Δ , ");
-                    else if (i == rule.Conclusions.size() - 1)
-                        retString.append(rule.Conclusions.get(i).PrintBold(varAsTerms)).append(" " + RULESYMBOL).append(" Δ , ");
-                    else
-                        retString.append(rule.Conclusions.get(i).PrintBold(varAsTerms)).append(" , ");
-            else retString.append(RULESYMBOL).append(" Δ , ");
-            return retString + rule.argument.PrintBold(varAsTerms);
-        } else return "";
-    }
+
 
     @SuppressWarnings("ConstantConditions")
     boolean containsFunctionSymbol(String func) {
@@ -246,70 +212,12 @@ public class ProblemState implements Parcelable {
         return contained;
     }
 
-    // write your object's data to the passed-in Parcel
-    @Override
-    @SuppressWarnings("ConstantConditions")
-    public void writeToParcel(Parcel out, int flags) {
-        out.writeInt(subPos);
-        out.writeInt((observe) ? 1 : 0);
-        out.writeInt(textSize);
-        out.writeInt(mainActivityState);
-        out.writeInt(MatchorConstruct.size());
-        for (String key : MatchorConstruct.keySet()) {
-            out.writeString(key);
-            out.writeInt((MatchorConstruct.get(key)) ? 1 : 0);
-        }
-        out.writeInt(anteProblem.size());
-        for (Term t : anteProblem) out.writeTypedObject(t, flags);
-        out.writeInt(anteSelectedPositions.size());
-        for (String t : anteSelectedPositions) out.writeString(t);
-        out.writeInt(succProblem.size());
-        for (Term t : succProblem) out.writeTypedObject(t, flags);
-        out.writeString(succSelectedPosition);
-        out.writeTypedObject(currentRule, flags);
-		out.writeInt(Variables.size());
-		out.writeStringArray(Variables.toArray(new String[0]));
-    	out.writeInt(Constants.size());
-		out.writeStringArray(Constants.toArray(new String[0]));
-        out.writeInt(Functions.size());
-        for (int i = 0; i < Functions.size(); i++) {
-            out.writeString(Functions.get(i).first);
-            out.writeInt(Functions.get(i).second.first);
-            out.writeInt((Functions.get(i).second.second) ? 1 : 0);
-        }
-        out.writeInt(Substitutions.size());
-        for (int i = 0; i < Substitutions.size(); i++) {
-            out.writeString(Substitutions.get(i).first);
-            out.writeTypedObject(Substitutions.get(i).second, flags);
-		}
-		out.writeInt(Rules.size());
-        for (Rule rule : Rules) out.writeTypedObject(rule, flags);
-
-		out.writeInt(History.size());
-        for (Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Rule>> his : History) {
-            Pair<ArrayList<String>, String> selection = his.first;
-            ArrayList<Pair<String, Term>> substitution = his.second.first;
-            Rule rule = his.second.second;
-            if (selection.first.size() != 0) {
-                out.writeInt(0);
-                out.writeInt(selection.first.size());
-                for (String s : selection.first) out.writeString(s);
-            } else {
-                out.writeInt(1);
-                out.writeString(selection.second);
-            }
-            out.writeInt(substitution.size());
-            for (int i = 0; i < substitution.size(); i++) {
-                out.writeString(substitution.get(i).first);
-                out.writeTypedObject(substitution.get(i).second, flags);
-            }
-            out.writeTypedObject(rule, flags);
-        }
-        out.writeInt(SubHistory.size());
-        for (String key : SubHistory.keySet()) {
-            out.writeString(key);
-            out.writeTypedList(SubHistory.get(key));
-        }
+    HashSet<Term> replaceSelectedSuccTerm(HashSet<Term> replacement) {
+        HashSet<Term> succupdate = new HashSet<>();
+        for (Term t : succProblem)
+            if (t.Print().compareTo(succSelectedPosition) != 0) succupdate.add(t);
+            else succupdate.addAll(replacement);
+        return succupdate;
     }
 
     //Finds all variables within a term
@@ -370,5 +278,63 @@ public class ProblemState implements Parcelable {
         for (Term t : this.succProblem)
             if (TermHelper.wellformedSequents(t)) return true;
         return false;
+    }
+
+    // write your object's data to the passed-in Parcel
+    @Override
+    @SuppressWarnings("ConstantConditions")
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeInt(subPos);
+        out.writeInt((observe) ? 1 : 0);
+        out.writeInt(textSize);
+        out.writeInt(mainActivityState);
+        out.writeInt(MatchorConstruct.size());
+        for (String key : MatchorConstruct.keySet()) {
+            out.writeString(key);
+            out.writeInt((MatchorConstruct.get(key)) ? 1 : 0);
+        }
+        out.writeInt(anteProblem.size());
+        for (Term t : anteProblem) out.writeTypedObject(t, flags);
+        out.writeInt(anteSelectedPositions.size());
+        for (String t : anteSelectedPositions) out.writeString(t);
+        out.writeInt(succProblem.size());
+        for (Term t : succProblem) out.writeTypedObject(t, flags);
+        out.writeString(succSelectedPosition);
+        out.writeTypedObject(currentRule, flags);
+		out.writeInt(Variables.size());
+		out.writeStringArray(Variables.toArray(new String[0]));
+    	out.writeInt(Constants.size());
+		out.writeStringArray(Constants.toArray(new String[0]));
+        out.writeInt(Functions.size());
+        for (int i = 0; i < Functions.size(); i++) {
+            out.writeString(Functions.get(i).first);
+            out.writeInt(Functions.get(i).second.first);
+            out.writeInt((Functions.get(i).second.second) ? 1 : 0);
+        }
+        out.writeTypedObject(Substitutions, flags);
+        out.writeInt(Rules.size());
+        for (Rule rule : Rules) out.writeTypedObject(rule, flags);
+
+		out.writeInt(History.size());
+        for (Pair<Pair<ArrayList<String>, String>, Pair<Substitution, Rule>> his : History) {
+            Pair<ArrayList<String>, String> selection = his.first;
+            Substitution substitution = his.second.first;
+            Rule rule = his.second.second;
+            if (selection.first.size() != 0) {
+                out.writeInt(0);
+                out.writeInt(selection.first.size());
+                for (String s : selection.first) out.writeString(s);
+            } else {
+                out.writeInt(1);
+                out.writeString(selection.second);
+            }
+            out.writeTypedObject(substitution, flags);
+            out.writeTypedObject(rule, flags);
+        }
+        out.writeInt(SubHistory.size());
+        for (String key : SubHistory.keySet()) {
+            out.writeString(key);
+            out.writeTypedList(SubHistory.get(key));
+        }
     }
 }

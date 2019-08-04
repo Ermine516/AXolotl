@@ -80,7 +80,7 @@ public class Proof {
     }
 
     static Proof extractProof(ProblemState PS) {
-        ArrayList<Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Rule>>> history = PS.History;
+        ArrayList<Pair<Pair<ArrayList<String>, String>, Pair<Substitution, Rule>>> history = PS.History;
         ArrayList<Pair<ArrayList<String>, ArrayList<String>>> proof = new ArrayList<>();
 
         HashSet<Term> curSuccProblem = PS.succProblem;
@@ -90,28 +90,20 @@ public class Proof {
 
         ArrayList<Proof> cur = new ArrayList<>();
         for(int ind = history.size() - 1; ind >= 0; ind--) {
-            Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Rule>> laststep = history.get(ind);
+            Pair<Pair<ArrayList<String>, String>, Pair<Substitution, Rule>> laststep = history.get(ind);
             Rule rule = laststep.second.second;
             ArrayList<Term> anteSideApply = new ArrayList<>();
-            Term succSideApply = rule.argument.Dup();
-            for (Pair<String, Term> s : laststep.second.first) {
-                succSideApply = succSideApply.replace(new Const(s.first), s.second);
-            }
+            Term succSideApply = laststep.second.first.apply(rule.argument);
             HashSet<Term> newSuccProblem = new HashSet<>();
-            for (Pair<String, Term> s : laststep.second.first)
-                succSideApply = succSideApply.replace(new Const(s.first), s.second);
             newSuccProblem.add(succSideApply);
 
             //make a new proof with the formula that we just derived
             Proof der = new Proof(succSideApply.Print());
             der.setFinished(true);
 
-            for (Term t : rule.Conclusions) {
-                Term temp = t.Dup();
-                for (Pair<String, Term> s : laststep.second.first)
-                    temp = temp.replace(new Const(s.first), s.second);
-                anteSideApply.add(temp);
-            }
+            for (Term t : rule.Conclusions)
+                anteSideApply.add(laststep.second.first.apply(t));
+
             for (Term t : curSuccProblem) {
                 boolean wasselected = false;
                 for (Term s : anteSideApply)

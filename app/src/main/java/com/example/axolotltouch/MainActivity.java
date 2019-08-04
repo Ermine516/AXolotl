@@ -10,7 +10,6 @@ import android.widget.Toast;
 import androidx.core.util.Pair;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
 import static com.example.axolotltouch.AxolotlMessagingAndIO.PASSPROBLEMSTATE;
@@ -40,13 +39,11 @@ public class MainActivity extends AxolotlSupportingFunctionality {
         if (PS.succProblem.size() == 0) PS.succProblem.add(Const.Empty.Dup());
         if (PS.anteProblem.containsAll(PS.succProblem) && PS.succProblem.containsAll(PS.anteProblem)) {
             boolean passobseve = PS.observe;
-            ArrayList<Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Rule>>> ProofHistory = PS.History;
+            ArrayList<Pair<Pair<ArrayList<String>, String>, Pair<Substitution, Rule>>> ProofHistory = PS.History;
             PS = new ProblemState();
             PS.observe = passobseve;
             PS.History = ProofHistory;
         }
-        if (PS.History.size() > 0)
-            System.out.println(PS.RuleTermsToString(PS.History.get(PS.History.size() - 1).second.second));
     }
 
     @Override
@@ -81,36 +78,23 @@ public class MainActivity extends AxolotlSupportingFunctionality {
         public boolean onSwipeLeft() {
             if (PS.History.size() != 0) {
                 try {
-                    Pair<Pair<ArrayList<String>, String>, Pair<ArrayList<Pair<String, Term>>, Rule>> laststep = PS.History.remove(PS.History.size() - 1);
+                    Pair<Pair<ArrayList<String>, String>, Pair<Substitution, Rule>> laststep = PS.History.remove(PS.History.size() - 1);
                     Rule rule = laststep.second.second;
-                    ArrayList<Term> anteSideApply = new ArrayList<>();
-                    Term succSideApply = rule.argument.Dup();
-                    for (Pair<String, Term> s : laststep.second.first)
-                        succSideApply = succSideApply.replace(new Const(s.first), s.second);
+                    HashSet<Term> anteSideApply = new HashSet<>();
+                    Term succSideApply = laststep.second.first.apply(rule.argument.Dup());
                     if (laststep.first.first.size() != 0) {
-                        if (rule.Conclusions.size() > 0) {
-                            anteSideApply.addAll(rule.Conclusions);
-                            for (int i = 0; i < anteSideApply.size(); i++)
-                                for (Pair<String, Term> s : laststep.second.first)
-                                    anteSideApply.set(i, anteSideApply.get(i).replace(new Const(s.first), s.second));
-                        }
+                        if (rule.Conclusions.size() > 0)
+                            anteSideApply.addAll(laststep.second.first.apply(rule.Conclusions));
                         HashSet<Term> newAnteProblem = new HashSet<>(anteSideApply);
                         for (Term t : PS.anteProblem)
                             if (t.Print().compareTo(succSideApply.Print()) != 0)
                                 newAnteProblem.add(t);
                         PS.anteProblem = newAnteProblem;
                     } else {
-
                         HashSet<Term> newSuccProblem = new HashSet<>();
-                        for (Pair<String, Term> s : laststep.second.first)
-                            succSideApply = succSideApply.replace(new Const(s.first), s.second);
+                        succSideApply = laststep.second.first.apply(succSideApply);
                         newSuccProblem.add(succSideApply);
-                        for (Term t : rule.Conclusions) {
-                            Term temp = t.Dup();
-                            for (Pair<String, Term> s : laststep.second.first)
-                                temp = temp.replace(new Const(s.first), s.second);
-                            anteSideApply.add(temp);
-                        }
+                        anteSideApply = laststep.second.first.apply(rule.Conclusions);
                         for (Term t : PS.succProblem) {
                             boolean wasselected = false;
                             for (Term s : anteSideApply)
@@ -127,7 +111,7 @@ public class MainActivity extends AxolotlSupportingFunctionality {
                 PS.succSelectedPosition = "";
                 PS.subPos = -1;
                 PS.currentRule = new Rule();
-                PS.Substitutions = new ArrayList<>();
+                PS.Substitutions = new Substitution();
                 Intent intent = new Intent(MainActivity.this, MainActivity.class);
                 intent.putExtra(PASSPROBLEMSTATE, PS);
                 MainActivity.this.startActivity(intent);
@@ -139,7 +123,6 @@ public class MainActivity extends AxolotlSupportingFunctionality {
             return true;
         }
 
-        @SuppressWarnings("ConstantConditions")
         public boolean onSwipeRight() {
             ProblemState PS = MainActivity.this.PS;
             Intent intent;
@@ -153,23 +136,9 @@ public class MainActivity extends AxolotlSupportingFunctionality {
                             PS.currentRule.argument.normalize(PS.Variables);
                         }
                         if (succTerm != null && TermHelper.TermMatchWithVar(succTerm, PS.currentRule.argument, PS.Variables)) {
-                            PS.Substitutions = TermHelper.varTermMatch(succTerm, PS.currentRule.argument, PS);
-                            HashSet<String> occurences = new HashSet<>();
-                            HashMap<String, Term> subCleaned = new HashMap<>();
-                            for (Pair<String, Term> p : PS.Substitutions) {
-                                if (!occurences.contains(p.first)) {
-                                    subCleaned.put(p.first, p.second);
-                                    occurences.add(p.first);
-                                } else if (p.second.toString().compareTo(subCleaned.get(p.first).toString()) != 0) {
-                                    subCleaned = null;
-                                    break;
-                                }
-                            }
-                            if (subCleaned != null) {
-                                PS.Substitutions = new ArrayList<>();
-                                for (String s : subCleaned.keySet())
-                                    PS.Substitutions.add(new Pair<>(s, subCleaned.get(s)));
-
+                            PS.Substitutions = Substitution.substitutionConstruct(succTerm, PS.currentRule.argument, PS);
+                            try {
+                                PS.Substitutions = PS.Substitutions.clean();
                                 HashSet<String> singleSide = new HashSet<>();
                                 for (Term t : PS.currentRule.Conclusions) {
                                     HashSet<String> vars = PS.VarList(t);
@@ -178,30 +147,29 @@ public class MainActivity extends AxolotlSupportingFunctionality {
                                             singleSide.add(s);
                                 }
                                 for (String s : singleSide)
-                                    PS.Substitutions.add(new Pair<>(s, Const.HoleSelected.Dup()));
+                                    PS.Substitutions.varIsPartial(s);
                                 PS.subPos = 0;
-                                PS.MatchorConstruct = new HashMap<>();
-                                for (Pair<String, Term> p : PS.Substitutions)
-                                    PS.MatchorConstruct.put(p.first, p.second.getSym().compareTo(Const.HoleSelected.getSym()) == 0);
+                                PS.MatchorConstruct = PS.Substitutions.partialOrNot();
 
                                 if (!PS.observe)
-                                    while (PS.subPos < PS.Substitutions.size() && !PS.Substitutions.get(PS.subPos).second.contains(Const.HoleSelected))
+                                    while (PS.Substitutions.isPosition(PS.subPos) && !PS.Substitutions.get(PS.subPos).replacement.contains(Const.HoleSelected))
                                         PS.subPos++;
-                                if (PS.subPos < PS.Substitutions.size() && PS.Substitutions.get(PS.subPos).second.contains(Const.HoleSelected))
+                                if (PS.Substitutions.isPosition(PS.subPos) && PS.Substitutions.get(PS.subPos).replacement.contains(Const.HoleSelected))
                                     intent = new Intent(MainActivity.this, TermConstructActivity.class);
-                                else if (PS.subPos < PS.Substitutions.size())
+                                else if (PS.Substitutions.isPosition(PS.subPos))
                                     intent = new Intent(MainActivity.this, MatchDisplayActivity.class);
                                 else {
                                     MainActivity.this.swipeRightProblemStateUpdate();
                                     intent = new Intent(MainActivity.this, MainActivity.class);
                                 }
                                 if (PS.subPos != -1)
-                                    Toast.makeText(MainActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).first, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).variable, Toast.LENGTH_SHORT).show();
                                 intent.putExtra(PASSPROBLEMSTATE, PS);
                                 MainActivity.this.startActivity(intent);
                                 MainActivity.this.finish();
-                            } else
+                            } catch (Substitution.NotASubtitutionException e) {
                                 Toast.makeText(MainActivity.this, "Rule not applicable", Toast.LENGTH_SHORT).show();
+                            }
                         } else
                             Toast.makeText(MainActivity.this, "Rule not applicable", Toast.LENGTH_SHORT).show();
                     } else

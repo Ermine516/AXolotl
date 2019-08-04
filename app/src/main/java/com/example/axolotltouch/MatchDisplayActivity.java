@@ -10,8 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.util.Pair;
-
 import java.util.ArrayList;
 
 import static com.example.axolotltouch.AxolotlMessagingAndIO.PASSPROBLEMSTATE;
@@ -39,12 +37,12 @@ public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
         LinearLayout rightTerm = this.findViewById(R.id.RightSideTermLayout);
         leftTerm.removeAllViewsInLayout();
         rightTerm.removeAllViewsInLayout();
-        String var = PS.Substitutions.get(PS.subPos).first;
+        String var = PS.Substitutions.get(PS.subPos).variable;
         if (MatchDisplayActivity.this.PS.anteSelectedPositions.size() == 0) {
             Term succTerm = PS.getSelectedSuccTerm();
             succTerm.normalize(PS.Variables);
             leftTerm.addView(scrollTextSelectConstruct(PS.currentRule.argument.Print(new Const(var), PS.Variables.contains(var)), null, this, true));
-            rightTerm.addView(scrollTextSelectConstruct(succTerm.Print(var, PS.currentRule.argument, PS.Substitutions.get(PS.subPos).second), null, this, true));
+            rightTerm.addView(scrollTextSelectConstruct(succTerm.Print(var, PS.currentRule.argument, PS.Substitutions.get(PS.subPos).replacement), null, this, true));
         } else {
             ArrayList<Term> anteTerm = PS.getSelectedAnteTerm();
             for (Term t : PS.currentRule.Conclusions)
@@ -52,15 +50,14 @@ public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
             for (Term t : anteTerm)
                 for (Term s : PS.currentRule.Conclusions)
                     if (PS.VarList(s).contains(var)) {
-                        rightTerm.addView(scrollTextSelectConstruct(t.Print(var, s, PS.Substitutions.get(PS.subPos).second), null, this, true));
+                        rightTerm.addView(scrollTextSelectConstruct(t.Print(var, s, PS.Substitutions.get(PS.subPos).replacement), null, this, true));
                         break;
                     }
         }
-
         varDisplay.setText(Html.fromHtml("<b>" + var + "</b>"));
         try {
-            if (PS.Substitutions.get(PS.subPos).second.Print().compareTo("") != 0)
-                subDisplay.setText(PS.Substitutions.get(PS.subPos).second.Print());
+            if (PS.Substitutions.get(PS.subPos).replacement.Print().compareTo("") != 0)
+                subDisplay.setText(PS.Substitutions.get(PS.subPos).replacement.Print());
             else subDisplay.setText("ε");
         } catch (NullPointerException e) {
             Toast.makeText(MatchDisplayActivity.this, "Unable to Display State", Toast.LENGTH_SHORT).show();
@@ -81,16 +78,16 @@ public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
                     MatchDisplayActivity.this.PS.subPos = -1;
                     PS.anteSelectedPositions = new ArrayList<>();
                     PS.succSelectedPosition = "";
-                    PS.Substitutions = new ArrayList<>();
+                    PS.Substitutions = new Substitution();
                     intent = new Intent(MatchDisplayActivity.this, MainActivity.class);
                     Toast.makeText(MatchDisplayActivity.this, "Select Rule and Problem Side", Toast.LENGTH_SHORT).show();
-                } else if (PS.MatchorConstruct.get(PS.Substitutions.get(PS.subPos).first)) {
-                    PS.Substitutions.set(PS.subPos, new Pair<>(PS.Substitutions.get(PS.subPos).first, Const.HoleSelected.Dup()));
+                } else if (PS.MatchorConstruct.get(PS.Substitutions.get(PS.subPos).variable)) {
+                    PS.Substitutions.alter(PS.subPos, PS.Substitutions.get(PS.subPos).variable, Const.HoleSelected.Dup());
                     intent = new Intent(MatchDisplayActivity.this, TermConstructActivity.class);
-                    Toast.makeText(MatchDisplayActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).first, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MatchDisplayActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).variable, Toast.LENGTH_SHORT).show();
                 } else {
                     intent = new Intent(MatchDisplayActivity.this, MatchDisplayActivity.class);
-                    Toast.makeText(MatchDisplayActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).first, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MatchDisplayActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).variable, Toast.LENGTH_SHORT).show();
                 }
                 intent.putExtra(PASSPROBLEMSTATE, PS);
                 MatchDisplayActivity.this.startActivity(intent);
@@ -106,17 +103,17 @@ public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
             ProblemState PS = MatchDisplayActivity.this.PS;
             Intent intent;
             try {
-                if (!PS.Substitutions.get(PS.subPos).second.contains(Const.HoleSelected)) {
+                if (!PS.Substitutions.get(PS.subPos).replacement.contains(Const.HoleSelected)) {
                     MatchDisplayActivity.this.PS.subPos++;
                     if (!PS.observe)
-                        while (PS.subPos < PS.Substitutions.size() && !PS.Substitutions.get(PS.subPos).second.contains(Const.HoleSelected))
+                        while (PS.Substitutions.isPosition(PS.subPos) && !PS.Substitutions.get(PS.subPos).replacement.contains(Const.HoleSelected))
                             PS.subPos++;
-                    if (MatchDisplayActivity.this.PS.subPos < MatchDisplayActivity.this.PS.Substitutions.size()) {
-                        if (PS.Substitutions.get(PS.subPos).second.contains(Const.HoleSelected))
+                    if (PS.Substitutions.isPosition(PS.subPos)) {
+                        if (PS.Substitutions.get(PS.subPos).replacement.contains(Const.HoleSelected))
                             intent = new Intent(MatchDisplayActivity.this, TermConstructActivity.class);
                         else
                             intent = new Intent(MatchDisplayActivity.this, MatchDisplayActivity.class);
-                        Toast.makeText(MatchDisplayActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).first, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MatchDisplayActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).variable, Toast.LENGTH_SHORT).show();
                     } else {
                         MatchDisplayActivity.this.swipeRightProblemStateUpdate();
                         intent = new Intent(MatchDisplayActivity.this, MainActivity.class);

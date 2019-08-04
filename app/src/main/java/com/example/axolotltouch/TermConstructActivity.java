@@ -18,7 +18,6 @@ import androidx.core.util.Pair;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import static com.example.axolotltouch.AxolotlMessagingAndIO.PASSPROBLEMSTATE;
 
@@ -39,8 +38,8 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
         fab.setOnTouchListener(new OnTouchHapticListener());
         fab.setOnClickListener(new UndoSubstitutionListener());
         PS = ConstructActivity(savedInstanceState);
-        if (!PS.SubHistory.keySet().contains(PS.Substitutions.get(PS.subPos).first))
-            PS.SubHistory.put(PS.Substitutions.get(PS.subPos).first, new ArrayList<Term>());
+        if (!PS.SubHistory.keySet().contains(PS.Substitutions.get(PS.subPos).variable))
+            PS.SubHistory.put(PS.Substitutions.get(PS.subPos).variable, new ArrayList<Term>());
         ActivityDecorate();
     }
 
@@ -50,37 +49,19 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
         TermDisplayUpdate();
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void FurtureProblemDisplay() {
         ProblemState PS = TermConstructActivity.this.PS;
-        ArrayList<Pair<String, Term>> localSubstitution = new ArrayList<>();
-        for (Pair<String, Term> p : PS.Substitutions) {
-            if (p.first.compareTo(PS.Substitutions.get(PS.subPos).first) != 0 && p.second.getSym().compareTo(Const.HoleSelected.getSym()) == 0)
-                localSubstitution.add(new Pair<String, Term>(p.first, new Const(p.first)));
-            else localSubstitution.add(p);
-        }
-        if (PS.anteSelectedPositions.size() == 0) {
-            ArrayList<Term> temp = new ArrayList<>();
-            for (Term t : PS.currentRule.Conclusions) {
-                Term tosub = TermHelper.applySubstitution(localSubstitution, t.Dup());
-                temp.add(tosub);
-            }
-            HashSet<Term> updated = PS.replaceSelectedSuccTerm(temp);
-            updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), updated.toArray(AxolotlMessagingAndIO.HashSetTermArray));
-        } else {
-            Term tosub = TermHelper.applySubstitution(localSubstitution, PS.currentRule.argument.Dup());
-            HashSet<Term> updated = PS.replaceSelectedAnteTerms(tosub);
-            updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), updated.toArray(AxolotlMessagingAndIO.HashSetTermArray));
-
-        }
-
+        Substitution localSubstitution = PS.Substitutions.simplifyWithRespectTo(PS.Substitutions.get(PS.subPos).variable);
+        if (PS.anteSelectedPositions.size() == 0)
+            updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), PS.replaceSelectedSuccTerm(localSubstitution.apply(PS.currentRule.Conclusions)).toArray(AxolotlMessagingAndIO.HashSetTermArray));
+        else
+            updatefutureProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), PS.replaceSelectedAnteTerms(localSubstitution.apply(PS.currentRule.argument)).toArray(AxolotlMessagingAndIO.HashSetTermArray));
     }
 
-    @SuppressWarnings("ConstantConditions")
     private void UpdateTermDisplay() {
         TextView td = this.findViewById(R.id.TermDisplay);
         LinearLayout ltd = this.findViewById(R.id.TermInstancceLayout);
-        td.setText(PS.Substitutions.get(PS.subPos).second.Print());
+        td.setText(PS.Substitutions.get(PS.subPos).replacement.Print());
         int width = ((int) td.getPaint().measureText(td.getText().toString())) + 20;
         td.setWidth((width > 75) ? width : 75);
         ltd.setMinimumWidth((width > 75) ? width : 75);
@@ -92,7 +73,7 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
         LinearLayout RLVV = this.findViewById(R.id.TermSelectionLayout);
         RLVV.removeAllViewsInLayout();
         for (Pair<String, Pair<Integer, Boolean>> p : PS.Functions) {
-            if (p.first.compareTo("cons") != 0 && p.first.compareTo("⊢") != 0) {
+            if (!ProblemState.isReserved(p.first)) {
                 int arity = p.second.first;
                 boolean infix = p.second.second;
                 ArrayList<Term> args = new ArrayList<>();
@@ -113,7 +94,7 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
 
         }
         for (String cons : PS.Constants) {
-            if (cons.compareTo("ε") != 0) {
+            if (!ProblemState.isReserved(cons)) {
                 String funcText = new Const(cons).Print();
                 TextView functext = new TextView(this);
                 functext.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.NO_GRAVITY));
@@ -142,16 +123,16 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
                     TermConstructActivity.this.PS.subPos = -1;
                     PS.anteSelectedPositions = new ArrayList<>();
                     PS.succSelectedPosition = "";
-                    PS.Substitutions = new ArrayList<>();
+                    PS.Substitutions = new Substitution();
                     intent = new Intent(TermConstructActivity.this, MainActivity.class);
                     Toast.makeText(TermConstructActivity.this, "Select Rule and Problem Side", Toast.LENGTH_SHORT).show();
                 } else {
-                    if (PS.MatchorConstruct.get(PS.Substitutions.get(PS.subPos).first)) {
-                        PS.Substitutions.set(PS.subPos, new Pair<>(PS.Substitutions.get(PS.subPos).first, Const.HoleSelected.Dup()));
+                    if (PS.MatchorConstruct.get(PS.Substitutions.get(PS.subPos).variable)) {
+                        PS.Substitutions.alter(PS.subPos, PS.Substitutions.get(PS.subPos).variable, Const.HoleSelected.Dup());
                         intent = new Intent(TermConstructActivity.this, TermConstructActivity.class);
                     } else
                         intent = new Intent(TermConstructActivity.this, MatchDisplayActivity.class);
-                    Toast.makeText(TermConstructActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).first, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TermConstructActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).variable, Toast.LENGTH_SHORT).show();
                 }
                 intent.putExtra(PASSPROBLEMSTATE, PS);
                 TermConstructActivity.this.startActivity(intent);
@@ -163,22 +144,21 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
             return true;
         }
 
-        @SuppressWarnings("ConstantConditions")
         public boolean onSwipeRight() {
             ProblemState PS = TermConstructActivity.this.PS;
             Intent intent;
             try {
-                if (!PS.Substitutions.get(PS.subPos).second.contains(Const.HoleSelected)) {
+                if (!PS.Substitutions.get(PS.subPos).replacement.contains(Const.HoleSelected)) {
                     TermConstructActivity.this.PS.subPos++;
                     if (!PS.observe)
-                        while (PS.subPos < PS.Substitutions.size() && !PS.Substitutions.get(PS.subPos).second.contains(Const.HoleSelected))
+                        while (PS.Substitutions.isPosition(PS.subPos) && !PS.Substitutions.get(PS.subPos).replacement.contains(Const.HoleSelected))
                             PS.subPos++;
-                    if (TermConstructActivity.this.PS.subPos < TermConstructActivity.this.PS.Substitutions.size()) {
-                        if (PS.Substitutions.get(PS.subPos).second.contains(Const.HoleSelected))
+                    if (PS.Substitutions.isPosition(PS.subPos)) {
+                        if (PS.Substitutions.get(PS.subPos).replacement.contains(Const.HoleSelected))
                             intent = new Intent(TermConstructActivity.this, TermConstructActivity.class);
                         else
                             intent = new Intent(TermConstructActivity.this, MatchDisplayActivity.class);
-                        Toast.makeText(TermConstructActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).first, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TermConstructActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).variable, Toast.LENGTH_SHORT).show();
                     } else {
                         TermConstructActivity.this.swipeRightProblemStateUpdate();
                         intent = new Intent(TermConstructActivity.this, MainActivity.class);
@@ -212,9 +192,9 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
                 for (int i = 0; i < thereplace.second.first; i++) args.add(Const.Hole.Dup());
                 replacement = new Func(thereplace.first, args, thereplace.second.second);
             } else replacement = new Const(PS.Constants.get(position + 1 - PS.Functions.size()));
-            replacement = pschange.Substitutions.get(pschange.subPos).second.replace(Const.HoleSelected, replacement).replaceLeft(Const.Hole, Const.HoleSelected.Dup());
-            pschange.Substitutions.set(pschange.subPos, new Pair<>(pschange.Substitutions.get(pschange.subPos).first, replacement));
-            ArrayList<Term> history = pschange.SubHistory.get(PS.Substitutions.get(PS.subPos).first);
+            replacement = pschange.Substitutions.get(pschange.subPos).replacement.replace(Const.HoleSelected, replacement).replaceLeft(Const.Hole, Const.HoleSelected.Dup());
+            pschange.Substitutions.alter(pschange.subPos, pschange.Substitutions.get(pschange.subPos).variable, replacement);
+            ArrayList<Term> history = pschange.SubHistory.get(PS.Substitutions.get(PS.subPos).variable);
             history.add(replacement.Dup());
             TermConstructActivity.this.ActivityDecorate();
         }
@@ -225,16 +205,16 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
         @Override
         public void onClick(View view) {
             ProblemState PS = TermConstructActivity.this.PS;
-            if (PS.SubHistory.get(PS.Substitutions.get(PS.subPos).first).isEmpty())
-                PS.Substitutions.set(PS.subPos, new Pair<>(PS.Substitutions.get(PS.subPos).first, Const.HoleSelected.Dup()));
+            if (PS.SubHistory.get(PS.Substitutions.get(PS.subPos).variable).isEmpty())
+                PS.Substitutions.alter(PS.subPos, PS.Substitutions.get(PS.subPos).variable, Const.HoleSelected.Dup());
             else {
-                ArrayList<Term> temp = PS.SubHistory.get(PS.Substitutions.get(PS.subPos).first);
-                temp.remove(PS.SubHistory.get(PS.Substitutions.get(PS.subPos).first).size() - 1);
-                PS.SubHistory.put(PS.Substitutions.get(PS.subPos).first, temp);
-                if (PS.SubHistory.get(PS.Substitutions.get(PS.subPos).first).isEmpty())
-                    PS.Substitutions.set(PS.subPos, new Pair<>(PS.Substitutions.get(PS.subPos).first, Const.HoleSelected.Dup()));
+                ArrayList<Term> temp = PS.SubHistory.get(PS.Substitutions.get(PS.subPos).variable);
+                temp.remove(PS.SubHistory.get(PS.Substitutions.get(PS.subPos).variable).size() - 1);
+                PS.SubHistory.put(PS.Substitutions.get(PS.subPos).variable, temp);
+                if (PS.SubHistory.get(PS.Substitutions.get(PS.subPos).variable).isEmpty())
+                    PS.Substitutions.alter(PS.subPos, PS.Substitutions.get(PS.subPos).variable, Const.HoleSelected.Dup());
                 else
-                    PS.Substitutions.set(PS.subPos, new Pair<>(PS.Substitutions.get(PS.subPos).first, PS.SubHistory.get(PS.Substitutions.get(PS.subPos).first).get(PS.SubHistory.get(PS.Substitutions.get(PS.subPos).first).size() - 1)));
+                    PS.Substitutions.alter(PS.subPos, PS.Substitutions.get(PS.subPos).variable, PS.SubHistory.get(PS.Substitutions.get(PS.subPos).variable).get(PS.SubHistory.get(PS.Substitutions.get(PS.subPos).variable).size() - 1));
             }
             TermConstructActivity.this.ActivityDecorate();
         }

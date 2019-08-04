@@ -121,22 +121,17 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
     protected void swipeRightProblemStateUpdate() {
         if (PS.currentRule.argument.getSym().compareTo(new Rule().argument.getSym()) != 0)
             PS.History.add(new Pair<>(new Pair<>(PS.anteSelectedPositions, PS.succSelectedPosition), new Pair<>(PS.Substitutions, PS.currentRule)));
-            ArrayList<Term> temp = new ArrayList<>();
-        for (Term t : PS.currentRule.Conclusions) temp.add(t.Dup());
-            for (Pair<String, Term> s : PS.Substitutions)
-                for (int i = 0; i < temp.size(); i++)
-                    temp.set(i, temp.get(i).replace(new Const(s.first), s.second));
-            HashSet<Term> newProblemsucc;
-            newProblemsucc = new HashSet<>();
-            for (Term t : PS.succProblem)
-                if (t.Print().compareTo(PS.succSelectedPosition) != 0) newProblemsucc.add(t);
-            newProblemsucc.addAll(temp);
-            PS.succProblem = newProblemsucc;
+        HashSet<Term> newProblemsucc = PS.Substitutions.apply(PS.currentRule.Conclusions);
+        for (Term t : newProblemsucc)
+            System.out.println(t);
+        for (Term t : PS.succProblem)
+            if (t.Print().compareTo(PS.succSelectedPosition) != 0) newProblemsucc.add(t);
+        PS.succProblem = newProblemsucc;
         PS.anteSelectedPositions = new ArrayList<>();
         PS.succSelectedPosition = "";
         PS.subPos = -1;
         PS.currentRule = new Rule();
-        PS.Substitutions = new ArrayList<>();
+        PS.Substitutions = new Substitution();
         PS.SubHistory = new HashMap<>();
         if (PS.succProblem.isEmpty()) PS.succProblem.add(Const.Empty.Dup());
         if (PS.anteProblem.isEmpty()) PS.anteProblem.add(Const.Empty.Dup());
@@ -251,7 +246,7 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         LinearLayout RLVV = this.findViewById(R.id.RuleListVerticalLayout);
         RLVV.removeAllViewsInLayout();
         for (int i = 0; i < PS.Rules.size(); i++)
-            RLVV.addView(scrollTextSelectConstruct(PS.RuleTermsToString(PS.Rules.get(i)), new AxolotlSupportingFunctionality.RuleSelectionListener(), this, false));
+            RLVV.addView(scrollTextSelectConstruct(Rule.RuleTermsToString(PS.Rules.get(i)), new AxolotlSupportingFunctionality.RuleSelectionListener(), this, false));
     }
 
 }

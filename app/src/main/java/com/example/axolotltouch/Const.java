@@ -41,6 +41,9 @@ public final class Const implements Term, Parcelable {
     public void normalize(HashSet<String> var) {
     }
 
+    public void modalizeIfNeed() {
+    }
+
     //Creates a duplicate term ojbject
     public Term Dup() {
         return new Const(this.Sym);

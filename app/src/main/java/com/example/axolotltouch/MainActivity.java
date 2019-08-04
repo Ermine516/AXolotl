@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import static com.example.axolotltouch.AxolotlMessagingAndIO.PASSPROBLEMSTATE;
+import static com.example.axolotltouch.TermHelper.TermMatchWithVar;
 
 public class MainActivity extends AxolotlSupportingFunctionality {
     @Override
@@ -122,7 +123,8 @@ public class MainActivity extends AxolotlSupportingFunctionality {
                             succTerm.normalize(PS.Variables);
                             PS.currentRule.argument.normalize(PS.Variables);
                         }
-                        if (succTerm != null && TermHelper.TermMatchWithVar(succTerm, PS.currentRule.argument, PS.Variables)) {
+
+                        if (succTerm != null && TermMatchWithVar(succTerm, PS.currentRule.argument, PS.Variables)) {
                             PS.Substitutions = Substitution.substitutionConstruct(succTerm, PS.currentRule.argument, PS);
                             try {
                                 PS.Substitutions = PS.Substitutions.clean();

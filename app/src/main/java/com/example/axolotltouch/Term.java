@@ -61,5 +61,6 @@ public interface Term extends Parcelable {
     boolean equals(Object o);
 
     int hashCode();
+
 }
 

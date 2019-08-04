@@ -122,8 +122,9 @@ class TermHelper {
         if (left instanceof Const && right instanceof Const && (left.getSym().compareTo(right.getSym()) == 0 ||
                 var.contains(left.getSym()) || var.contains(right.getSym())))
             return true;
-        else if ((left instanceof Func && right instanceof Const && var.contains(right.getSym())))
+        else if ((left instanceof Func && right instanceof Const && var.contains(right.getSym()))) {
             return true;
+        }
         else if ((right instanceof Func && left instanceof Const && var.contains(left.getSym())))
             return true;
         else if (left instanceof Func && right instanceof Func && left.getSym().compareTo(right.getSym()) == 0) {
@@ -131,7 +132,9 @@ class TermHelper {
             for (int i = 0; i < left.subTerms().size(); i++)
                 ret &= TermMatchWithVar(left.subTerms().get(i), right.subTerms().get(i), var);
             return ret;
-        } else return false;
+        } else
+            return false;
+
 
     }
 

@@ -3,7 +3,6 @@ package com.example.axolotltouch;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,14 +50,7 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
         v.setTextColor(Color.BLACK);
     }
 
-    /**
-     * Checks if the text view has not been selected
-     * @author David M. Cerna
-     * @param v The associated text view.
-     */
-    public boolean isNotSelected(TextView v) {
-        return ((ColorDrawable) v.getBackground()).getColor() != Color.BLACK;
-    }
+
 
     /**
      * Inflates the option menu.
@@ -246,7 +238,6 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
          * @param view The text view containing the term of the problem state
          */
         @Override
-        @SuppressWarnings("ConstantConditions")
         public void onClick(View view) {
             LinearLayout rlvv = AxolotlSupportingListenersAndMethods.this.findViewById(R.id.RuleListVerticalLayout);
             for (int i = 0; i < rlvv.getChildCount(); i++) {
@@ -271,6 +262,8 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
         private String[] problems;
         private ArrayList<String> parsedProblems;
         private String dir;
+        private int textsize;
+        private boolean observe;
 
         /**
          * The constructor for this listener requires additional information in order to properly apply
@@ -280,11 +273,13 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
          * @param parProb The list of problems as printed terms.
          * @param direct the directory from the assets where the problems may be found.
          */
-        ProblemSelectionListener(String[] prob, ArrayList<String> parProb, String direct) {
+        ProblemSelectionListener(String[] prob, ArrayList<String> parProb, String direct, int t, boolean o) {
             super();
             problems = prob;
             parsedProblems = parProb;
             dir = direct;
+            textsize = t;
+            observe = o;
         }
 
         /**
@@ -306,6 +301,8 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
                     }
                     Intent intent = new Intent(AxolotlSupportingListenersAndMethods.this, MainActivity.class);
                     newPS.mainActivityState = 0;
+                    newPS.textSize = textsize;
+                    newPS.observe = observe;
                     intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, newPS);
                     AxolotlSupportingListenersAndMethods.this.startActivity(intent);
                     AxolotlSupportingListenersAndMethods.this.finish();

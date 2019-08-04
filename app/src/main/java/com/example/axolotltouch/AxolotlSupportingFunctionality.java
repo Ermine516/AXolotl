@@ -38,6 +38,8 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
      * This is the switch located in the navigation menu which turns observation mode on and off
      */
     androidx.appcompat.widget.SwitchCompat switcher;
+    androidx.appcompat.widget.AppCompatSeekBar seeker;
+
 
     /**
      * This is an abstract method used to decorate the layout of the activities implementing this
@@ -69,6 +71,8 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         switcher = findViewById(R.id.observeswitchformenu);
         switcher.setChecked(PS.observe);
         switcher.setOnCheckedChangeListener(new ObservationListener());
+        seeker = findViewById(R.id.Adjusttextseeker);
+        seeker.setProgress(PS.textSize);
         return PS;
     }
 

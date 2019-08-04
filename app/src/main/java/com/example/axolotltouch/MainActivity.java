@@ -56,12 +56,15 @@ public class MainActivity extends AxolotlSupportingFunctionality {
     }
 
     protected void ActivityDecorate() {
-        UpdateProblemDisplay();
-        RuleDisplayUpdate();
+        if (PS.mainActivityState == 0) {
+            UpdateProblemDisplay();
+            RuleDisplayUpdate();
+        }
     }
 
     private void UpdateProblemDisplay() {
-        updateProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), PS.problem.toArray(AxolotlMessagingAndIO.HashSetTermArray));
+        if (PS.mainActivityState == 0)
+            updateProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), PS.problem.toArray(AxolotlMessagingAndIO.HashSetTermArray));
     }
 
 

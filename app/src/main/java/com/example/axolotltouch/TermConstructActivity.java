@@ -67,7 +67,7 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
         LinearLayout RLVV = this.findViewById(R.id.TermSelectionLayout);
         RLVV.removeAllViewsInLayout();
         for (FunctionDefinition p : PS.Functions) {
-            if (!ProblemState.isReserved(p.name)) {
+            if (ProblemState.isNotReserved(p.name)) {
                 int arity = p.arity;
                 boolean infix = p.fixity;
                 ArrayList<Term> args = new ArrayList<>();
@@ -88,7 +88,7 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
 
         }
         for (String cons : PS.Constants) {
-            if (!ProblemState.isReserved(cons)) {
+            if (ProblemState.isNotReserved(cons)) {
                 String funcText = new Const(cons).Print();
                 TextView functext = new TextView(this);
                 functext.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.NO_GRAVITY));

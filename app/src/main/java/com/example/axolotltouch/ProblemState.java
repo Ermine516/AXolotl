@@ -130,14 +130,13 @@ public class ProblemState implements Parcelable {
         return null;
     }
 
-    static boolean isReserved(String func) {
-        for (String s : RESERVEDFUNCTIONS) {
-            if (s.compareTo(func) == 0) return true;
-        }
-        for (String s : RESERVEDCONSTANTS) {
-            if (s.compareTo(func) == 0) return true;
-        }
-        return false;
+    static boolean isNotReserved(String func) {
+        for (String s : RESERVEDFUNCTIONS)
+            if (s.compareTo(func) == 0) return false;
+        for (String s : RESERVEDCONSTANTS)
+            if (s.compareTo(func) == 0) return false;
+
+        return true;
     }
 
     boolean containsFunctionSymbol(String func) {

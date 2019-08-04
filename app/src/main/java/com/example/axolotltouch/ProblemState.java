@@ -14,10 +14,10 @@ import java.util.HashSet;
 //This contains all information concerning the problem rules and substitutions 
 //as well as functions providing important features. 
 public class ProblemState implements Parcelable {
-    public static final String SEQUENT = "⊢";
-    public static final String LIST = "cons";
-    public static final String EMPTYLIST = "ε";
+    private static final String SEQUENT = "⊢";
+    private static final String LIST = "cons";
     public static final String[] RESERVEDFUNCTIONS = new String[]{SEQUENT, LIST};
+    private static final String EMPTYLIST = "ε";
     public static final String[] RESERVEDCONSTANTS = new String[]{EMPTYLIST};
 
     int subPos;

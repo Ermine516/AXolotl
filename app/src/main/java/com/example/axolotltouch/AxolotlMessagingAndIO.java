@@ -83,7 +83,6 @@ class AxolotlMessagingAndIO {
      * @param ctx The activity which requested the file to be read.
      * @return A ProblemState containing the Information stored in the file.
      */
-    @SuppressWarnings("ConstantConditions")
     static ProblemState loadFile(InputStream IS, String file, Activity ctx) {
         ProblemState newPS = new ProblemState();
         System.out.println(newPS.Functions.size());
@@ -111,19 +110,6 @@ class AxolotlMessagingAndIO {
             newPS = new ProblemState();
             newPS.observe = ((AxolotlSupportingFunctionality) ctx).PS.observe;
         }
-        /*if (!newPS.SequentProblem()) {
-            ArrayList<Pair<String, Pair<Integer, Boolean>>> cleanedFunctions = new ArrayList<>();
-            for (Pair<String, Pair<Integer, Boolean>> p : newPS.Functions)
-                if (p.first.compareTo("cons") != 0)
-                    if (p.first.compareTo("⊢") != 0)
-                        cleanedFunctions.add(p);
-            ArrayList<String> cleanedConstants = new ArrayList<>();
-            for (String s : newPS.Constants)
-                if (s.compareTo("ε") != 0)
-                    cleanedConstants.add(s);
-            newPS.Functions = cleanedFunctions;
-            newPS.Constants = cleanedConstants;
-        }*/
         newPS.currentRule = new Rule();
         System.out.println(newPS.Functions.size());
         return newPS;
@@ -221,10 +207,8 @@ class AxolotlMessagingAndIO {
                 throw new TermHelper().new FormatException();
             else if (i != partsAjustedSize - 1) anteRule.add(succRule);
         }
-        HashSet<String> ruleVar = new HashSet<>();
-        for (String s : PS.Variables)
-            ruleVar.add(s);
-        PS.Rules.add(new Rule(ruleLabel, anteRule, succRule, PS.Variables));
+        HashSet<String> ruleVar = new HashSet<>(PS.Variables);
+        PS.Rules.add(new Rule(ruleLabel, anteRule, succRule, ruleVar));
         return true;
     }
 

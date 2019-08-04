@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
 
 public class Substitution implements Parcelable {
     public static final Creator<Substitution> CREATOR = new Creator<Substitution>() {
@@ -80,14 +81,14 @@ public class Substitution implements Parcelable {
         for (SingletonSubstitution s : replacements) out.writeTypedObject(s, flags);
     }
 
-    public HashSet<Term> apply(ArrayList<Term> terms) {
+    HashSet<Term> apply(ArrayList<Term> terms) {
         HashSet<Term> newterms = new HashSet<>();
         for (Term t : terms)
             newterms.add(apply(t));
         return newterms;
     }
 
-    public Term apply(Term t) {
+    Term apply(Term t) {
         Term temp = t.Dup();
         for (SingletonSubstitution s : replacements)
             temp = temp.replace(new Const(s.variable), s.replacement);
@@ -112,7 +113,9 @@ public class Substitution implements Parcelable {
             if (!occurences.contains(p.variable)) {
                 subCleaned.put(p.variable, p.replacement);
                 occurences.add(p.variable);
-            } else if (p.replacement.toString().compareTo(subCleaned.get(p.variable).toString()) != 0)
+            } else if (subCleaned.containsKey(p.variable) &&
+                    subCleaned.get(p.variable) != null &&
+                    p.replacement.toString().compareTo(Objects.requireNonNull(subCleaned.get(p.variable)).toString()) != 0)
                 throw new NotASubtitutionException();
         return new Substitution(subCleaned);
     }

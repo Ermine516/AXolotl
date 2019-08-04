@@ -14,12 +14,12 @@ import java.util.HashSet;
 public class ProblemState implements Parcelable {
     private static final String SEQUENT = "⊢";
     private static final String LIST = "cons";
-    public static final String[] RESERVEDFUNCTIONS = new String[]{SEQUENT, LIST};
+    private static final String[] RESERVEDFUNCTIONS = new String[]{SEQUENT, LIST};
     private static final String EMPTYLIST = "ε";
     private static final String HOLESELECTEDSYM = Const.HoleSelected.getSym();
     private static final String HOLESYM = Const.Hole.getSym();
     private static final String EMPTYSYM = Const.Empty.getSym();
-    public static final String[] RESERVEDCONSTANTS = new String[]{EMPTYLIST, HOLESELECTEDSYM, HOLESYM, EMPTYSYM};
+    private static final String[] RESERVEDCONSTANTS = new String[]{EMPTYLIST, HOLESELECTEDSYM, HOLESYM, EMPTYSYM};
 
     int subPos;
     HashMap<String, Boolean> MatchorConstruct;
@@ -46,7 +46,7 @@ public class ProblemState implements Parcelable {
         problem = new HashSet<>();
         problem.add(Const.Hole);
         succSelectedPosition = "";
-        currentRule = new Rule("", new ArrayList<Term>(), Const.HoleSelected.Dup(), new HashSet<>());
+        currentRule = new Rule("", new ArrayList<Term>(), Const.HoleSelected.Dup(), new HashSet<String>());
         SubHistory = new HashMap<>();
 		Rules = new ArrayList<>();
         Substitutions = new Substitution(new ArrayList<SingletonSubstitution>());
@@ -140,13 +140,6 @@ public class ProblemState implements Parcelable {
         return false;
     }
 
-
-
-
-
-
-
-    @SuppressWarnings("ConstantConditions")
     boolean containsFunctionSymbol(String func) {
         boolean contained = true;
         for (FunctionDefinition p : Functions)
@@ -178,7 +171,6 @@ public class ProblemState implements Parcelable {
     }
 
     //Checks if every symbol within a term is indexed
-    @SuppressWarnings("ConstantConditions")
     boolean isIndexed(Term ti) {
         boolean result = true;
         if (ti instanceof Func) {
@@ -212,11 +204,6 @@ public class ProblemState implements Parcelable {
         }
     };
 
-    boolean SequentProblem() {
-        for (Term t : this.problem)
-            if (TermHelper.wellformedSequents(t)) return true;
-        return false;
-    }
 
     // write your object's data to the passed-in Parcel
     @Override

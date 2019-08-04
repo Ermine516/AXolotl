@@ -1,7 +1,5 @@
 package com.example.axolotltouch;
 
-import androidx.core.util.Pair;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -17,7 +15,6 @@ class TermHelper {
 		else return result;
 	}
 
-    @SuppressWarnings("ConstantConditions")
     private static ArrayList<ArrayList<Term>> pI(String s, ProblemState PS) {
 //Finds first left peren
         String[] pL = s.split("(\\s*[(]\\s*)+?", 2),
@@ -136,14 +133,6 @@ class TermHelper {
             return ret;
         } else return false;
 
-    }
-
-
-    static Term applySubstitution(ArrayList<Pair<String, Term>> substitution, Term term) {
-        Term tosub = term.Dup();
-        for (Pair<String, Term> s : substitution)
-            tosub = tosub.replace(new Const(s.first), s.second);
-        return tosub;
     }
 
 }

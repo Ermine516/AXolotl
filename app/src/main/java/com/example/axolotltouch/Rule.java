@@ -8,6 +8,11 @@ import java.util.HashSet;
 
 public class Rule implements Parcelable {
     private static final String RULESYMBOL = "<font color=#ff0000>\u2b05</font>";
+    String Label;
+    ArrayList<Term> Conclusions;
+    Term argument;
+    private HashSet<String> variables;
+
     static Parcelable.Creator<Rule> CREATOR = new Parcelable.Creator<Rule>() {
         public Rule createFromParcel(Parcel in) {
             String label = in.readString();
@@ -30,12 +35,9 @@ public class Rule implements Parcelable {
             return new Rule[size];
         }
     };
-    String Label;
-    ArrayList<Term> Conclusions;
-    Term argument;
-    private HashSet<String> variables;
 
-    Rule(String l, ArrayList<Term> con, Term a, HashSet vars) {
+
+    Rule(String l, ArrayList<Term> con, Term a, HashSet<String> vars) {
         Label = l;
         Conclusions = con;
         argument = a;

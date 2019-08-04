@@ -4,6 +4,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class State implements Parcelable {
+    String selection;
+    Substitution substitution;
+    Rule rule;
+
     public static final Creator<State> CREATOR = new Creator<State>() {
         @Override
         public State createFromParcel(Parcel in) {
@@ -15,9 +19,7 @@ public class State implements Parcelable {
             return new State[size];
         }
     };
-    String selection;
-    Substitution substitution;
-    Rule rule;
+
 
     State(String s, Substitution sub, Rule r) {
         selection = s;

@@ -63,7 +63,6 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    @SuppressWarnings("ConstantConditions")
     private void TermDisplayUpdate() {
         LinearLayout RLVV = this.findViewById(R.id.TermSelectionLayout);
         RLVV.removeAllViewsInLayout();

@@ -27,7 +27,6 @@ public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
         ActivityDecorate();
     }
 
-    @SuppressWarnings("ConstantConditions")
     protected void ActivityDecorate() {
         TextView varDisplay = this.findViewById(R.id.VarTextview);
         TextView subDisplay = this.findViewById(R.id.SubTermTextView);
@@ -83,7 +82,6 @@ public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
             return true;
         }
 
-        @SuppressWarnings("ConstantConditions")
         public boolean onSwipeRight() {
             ProblemState PS = MatchDisplayActivity.this.PS;
             Intent intent;

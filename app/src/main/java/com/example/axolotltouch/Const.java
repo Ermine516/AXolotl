@@ -34,7 +34,7 @@ public final class Const implements Term, Parcelable {
         return this.Sym;
     }
 
-    public boolean isEmptyList() {
+    boolean isEmptyList() {
         return this.getSym().compareTo(EmptyList.getSym()) == 0;
     }
 

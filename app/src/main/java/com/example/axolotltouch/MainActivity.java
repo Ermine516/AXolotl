@@ -7,8 +7,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.core.util.Pair;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -39,7 +37,7 @@ public class MainActivity extends AxolotlSupportingFunctionality {
         if (PS.succProblem.size() == 0) PS.succProblem.add(Const.Empty.Dup());
         if (PS.anteProblem.containsAll(PS.succProblem) && PS.succProblem.containsAll(PS.anteProblem)) {
             boolean passobseve = PS.observe;
-            ArrayList<Pair<Pair<ArrayList<String>, String>, Pair<Substitution, Rule>>> ProofHistory = PS.History;
+            ArrayList<State> ProofHistory = PS.History;
             PS = new ProblemState();
             PS.observe = passobseve;
             PS.History = ProofHistory;
@@ -74,35 +72,24 @@ public class MainActivity extends AxolotlSupportingFunctionality {
             super(ctx);
         }
 
-        @SuppressWarnings("ConstantConditions")
         public boolean onSwipeLeft() {
             if (PS.History.size() != 0) {
                 try {
-                    Pair<Pair<ArrayList<String>, String>, Pair<Substitution, Rule>> laststep = PS.History.remove(PS.History.size() - 1);
-                    Rule rule = laststep.second.second;
-                    HashSet<Term> anteSideApply = new HashSet<>();
-                    Term succSideApply = laststep.second.first.apply(rule.argument.Dup());
-                    if (laststep.first.first.size() != 0) {
-                        if (rule.Conclusions.size() > 0)
-                            anteSideApply.addAll(laststep.second.first.apply(rule.Conclusions));
-                        HashSet<Term> newAnteProblem = new HashSet<>(anteSideApply);
-                        for (Term t : PS.anteProblem)
-                            if (t.Print().compareTo(succSideApply.Print()) != 0)
-                                newAnteProblem.add(t);
-                        PS.anteProblem = newAnteProblem;
-                    } else {
-                        HashSet<Term> newSuccProblem = new HashSet<>();
-                        succSideApply = laststep.second.first.apply(succSideApply);
-                        newSuccProblem.add(succSideApply);
-                        anteSideApply = laststep.second.first.apply(rule.Conclusions);
-                        for (Term t : PS.succProblem) {
-                            boolean wasselected = false;
-                            for (Term s : anteSideApply)
-                                if (t.Print().compareTo(s.Print()) == 0) wasselected = true;
-                            if (!wasselected) newSuccProblem.add(t);
-                        }
-                        PS.succProblem = newSuccProblem;
+                    State laststep = PS.History.remove(PS.History.size() - 1);
+                    HashSet<Term> anteSideApply;
+                    Term succSideApply = laststep.substitution.apply(laststep.rule.argument.Dup());
+                    HashSet<Term> newSuccProblem = new HashSet<>();
+                    succSideApply = laststep.substitution.apply(succSideApply);
+                    newSuccProblem.add(succSideApply);
+                    anteSideApply = laststep.substitution.apply(laststep.rule.Conclusions);
+                    for (Term t : PS.succProblem) {
+                        boolean wasselected = false;
+                        for (Term s : anteSideApply)
+                            if (t.Print().compareTo(s.Print()) == 0) wasselected = true;
+                        if (!wasselected) newSuccProblem.add(t);
                     }
+                    PS.succProblem = newSuccProblem;
+
                 } catch (NullPointerException e) {
                     Toast.makeText(MainActivity.this, "Problems accessing History", Toast.LENGTH_SHORT).show();
                     return true;
@@ -150,7 +137,6 @@ public class MainActivity extends AxolotlSupportingFunctionality {
                                     PS.Substitutions.varIsPartial(s);
                                 PS.subPos = 0;
                                 PS.MatchorConstruct = PS.Substitutions.partialOrNot();
-
                                 if (!PS.observe)
                                     while (PS.Substitutions.isPosition(PS.subPos) && !PS.Substitutions.get(PS.subPos).replacement.contains(Const.HoleSelected))
                                         PS.subPos++;

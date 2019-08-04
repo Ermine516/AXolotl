@@ -47,7 +47,7 @@ public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
 
     @SuppressWarnings("ConstantConditions")
     private void drawFlat() {
-        ArrayList<Pair<Pair<ArrayList<String>, String>, Pair<Substitution, Rule>>> history = PS.History;
+        ArrayList<State> history = PS.History;
         ArrayList<Pair<ArrayList<String>, ArrayList<String>>> proof = new ArrayList<>();
 
         HashSet<Term> curAnteProblem = PS.anteProblem;
@@ -63,12 +63,11 @@ public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
         proof.add(Pair.create(anteStrings, succStrings));
 
         for (int ind = history.size() - 1; ind >= 0; ind--) {
-            Pair<Pair<ArrayList<String>, String>, Pair<Substitution, Rule>> laststep = history.get(ind);
-            Rule rule = laststep.second.second;
-            Term succSideApply = laststep.second.first.apply(rule.argument.Dup());
+            State laststep = history.get(ind);
+            Term succSideApply = laststep.substitution.apply(laststep.rule.argument.Dup());
             HashSet<Term> newSuccProblem = new HashSet<>();
             newSuccProblem.add(succSideApply);
-            HashSet<Term> anteSideApply = laststep.second.first.apply(rule.Conclusions);
+            HashSet<Term> anteSideApply = laststep.substitution.apply(laststep.rule.Conclusions);
             for (Term t : curSuccProblem) {
                 boolean wasselected = false;
                 for (Term s : anteSideApply)

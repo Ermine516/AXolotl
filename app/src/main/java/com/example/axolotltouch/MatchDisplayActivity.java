@@ -103,7 +103,7 @@ public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
             ProblemState PS = MatchDisplayActivity.this.PS;
             Intent intent;
             try {
-                if (!PS.Substitutions.get(PS.subPos).replacement.contains(Const.HoleSelected)) {
+                if (PS.subPos != -1 && !PS.Substitutions.get(PS.subPos).replacement.contains(Const.HoleSelected)) {
                     MatchDisplayActivity.this.PS.subPos++;
                     if (!PS.observe)
                         while (PS.Substitutions.isPosition(PS.subPos) && !PS.Substitutions.get(PS.subPos).replacement.contains(Const.HoleSelected))

@@ -38,8 +38,8 @@ class TermHelper {
 //computed terms
         else if(pL.length == 2){
             boolean infixity = false;
-            for (Pair<String, Pair<Integer, Boolean>> p : PS.Functions)
-                if (pL[0].compareTo(p.first) == 0) infixity = p.second.second;
+            for (FunctionDefinition p : PS.Functions)
+                if (pL[0].compareTo(p.name) == 0) infixity = p.fixity;
             Func f = new Func(pL[0], res.remove(0), infixity);
             if(res.size()==0) res.add(0,new ArrayList<Term>());
             res.get(0).add(0,f);

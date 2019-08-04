@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.util.Pair;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import java.io.File;
@@ -120,7 +119,7 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
      */
     protected void swipeRightProblemStateUpdate() {
         if (PS.currentRule.argument.getSym().compareTo(new Rule().argument.getSym()) != 0)
-            PS.History.add(new Pair<>(new Pair<>(PS.anteSelectedPositions, PS.succSelectedPosition), new Pair<>(PS.Substitutions, PS.currentRule)));
+            PS.History.add(new State(PS.succSelectedPosition, PS.Substitutions, PS.currentRule));
         HashSet<Term> newProblemsucc = PS.Substitutions.apply(PS.currentRule.Conclusions);
         for (Term t : newProblemsucc)
             System.out.println(t);

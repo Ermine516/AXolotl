@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.widget.Toast;
 
-import androidx.core.util.Pair;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -85,7 +83,6 @@ class AxolotlMessagingAndIO {
      */
     static ProblemState loadFile(InputStream IS, String file, Activity ctx) {
         ProblemState newPS = new ProblemState();
-        System.out.println(newPS.Functions.size());
         newPS.observe = ((AxolotlSupportingFunctionality) ctx).PS.observe;
         String line;
         int lineCount = 0;
@@ -111,7 +108,6 @@ class AxolotlMessagingAndIO {
             newPS.observe = ((AxolotlSupportingFunctionality) ctx).PS.observe;
         }
         newPS.currentRule = new Rule();
-        System.out.println(newPS.Functions.size());
         return newPS;
     }
 
@@ -241,7 +237,7 @@ class AxolotlMessagingAndIO {
                 && PS.containsFunctionSymbol(name.toString())) {
             if (Integer.parseInt(arity.toString()) == 0) PS.Constants.add(name.toString());
             else
-                PS.Functions.add(new Pair<>(name.toString(), new Pair<>(Integer.parseInt(arity.toString()), infix)));
+                PS.Functions.add(new FunctionDefinition(name.toString(), Integer.parseInt(arity.toString()), infix));
         } else throw new TermHelper().new FormatException();
     }
 

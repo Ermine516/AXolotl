@@ -4,8 +4,6 @@ package com.example.axolotltouch;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import androidx.core.util.Pair;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,7 +16,9 @@ public class ProblemState implements Parcelable {
     private static final String LIST = "cons";
     public static final String[] RESERVEDFUNCTIONS = new String[]{SEQUENT, LIST};
     private static final String EMPTYLIST = "ε";
-    public static final String[] RESERVEDCONSTANTS = new String[]{EMPTYLIST};
+    private static final String HOLESELECTEDSYM = Const.HoleSelected.getSym();
+    private static final String HOLESYM = Const.Hole.getSym();
+    public static final String[] RESERVEDCONSTANTS = new String[]{EMPTYLIST, HOLESELECTEDSYM, HOLESYM};
 
     int subPos;
     HashMap<String, Boolean> MatchorConstruct;
@@ -32,10 +32,10 @@ public class ProblemState implements Parcelable {
     Rule currentRule;
     HashSet<String> Variables;
     ArrayList<String> Constants;
-    ArrayList<Pair<String, Pair<Integer, Boolean>>> Functions;
+    ArrayList<FunctionDefinition> Functions;
     Substitution Substitutions;
     ArrayList<Rule> Rules;
-    ArrayList<Pair<Pair<ArrayList<String>, String>, Pair<Substitution, Rule>>> History;
+    ArrayList<State> History;
     HashMap<String, ArrayList<Term>> SubHistory;
 
     public ProblemState() {
@@ -51,13 +51,12 @@ public class ProblemState implements Parcelable {
         succProblem.add(Const.Hole);
         succSelectedPosition = "";
         currentRule = new Rule("", new ArrayList<Term>(), Const.HoleSelected.Dup(), new HashSet<>());
-
         SubHistory = new HashMap<>();
 		Rules = new ArrayList<>();
         Substitutions = new Substitution(new ArrayList<SingletonSubstitution>());
         Functions = new ArrayList<>();
-        Functions.add(new Pair<>("cons", new Pair<>(2, false)));
-        Functions.add(new Pair<>("⊢", new Pair<>(2, true)));
+        Functions.add(new FunctionDefinition("cons", 2, false));
+        Functions.add(new FunctionDefinition("⊢", 2, true));
 		Variables = new HashSet<>();
         Constants = new ArrayList<>();
         Constants.add("ε");
@@ -106,12 +105,8 @@ public class ProblemState implements Parcelable {
         Constants.addAll(Arrays.asList(tempConst));
         Functions = new ArrayList<>();
         int funcSize = in.readInt();
-        for (int i = 0; i < funcSize; i++) {
-            String key = in.readString();
-            int arity = in.readInt();
-            boolean infix = in.readInt() == 1;
-            Functions.add(new Pair<>(key, new Pair<>(arity, infix)));
-        }
+        for (int i = 0; i < funcSize; i++)
+            Functions.add(in.readTypedObject(FunctionDefinition.CREATOR));
         Substitutions = in.readTypedObject(Substitution.CREATOR);
         int rulesSize= in.readInt();
 		Rules = new ArrayList<>();
@@ -120,27 +115,9 @@ public class ProblemState implements Parcelable {
 
 		int hisSize = in.readInt();
 		History = new ArrayList<>();
-		if(hisSize!= 0){
-			while( hisSize>0){
-                int side = in.readInt(); //either zero or one
-                if (side == 0) {
-                    int antesize = in.readInt();
-                    ArrayList<String> anteselected = new ArrayList<>();
-                    while (antesize > 0) {
-                        anteselected.add(in.readString());
-                        antesize--;
-                    }
-                    Substitution hissubs = in.readTypedObject(Substitution.CREATOR);
-                    History.add(new Pair<>(new Pair<>(anteselected, ""), new Pair<>(hissubs, in.readTypedObject(Rule.CREATOR))));
-                    hisSize--;
-                } else {
-                    String succside = in.readString();
-                    Substitution hissubs = in.readTypedObject(Substitution.CREATOR);
-                    History.add(new Pair<>(new Pair<>(new ArrayList<String>(), succside), new Pair<>(hissubs, in.readTypedObject(Rule.CREATOR))));
-                    hisSize--;
-                }
-			}
-		}
+        for (int i = 0; i < hisSize; i++)
+            History.add(in.readTypedObject(State.CREATOR));
+
         SubHistory = new HashMap<>();
         int subhissize = in.readInt();
         while (subhissize > 0) {
@@ -207,8 +184,8 @@ public class ProblemState implements Parcelable {
     @SuppressWarnings("ConstantConditions")
     boolean containsFunctionSymbol(String func) {
         boolean contained = true;
-        for (Pair<String, Pair<Integer, Boolean>> p : Functions)
-            if (func.compareTo(p.first) == 0) contained = false;
+        for (FunctionDefinition p : Functions)
+            if (func.compareTo(p.name) == 0) contained = false;
         return contained;
     }
 
@@ -247,10 +224,10 @@ public class ProblemState implements Parcelable {
             for (Term t : ti.subTerms()) result &= isIndexed(t);
             boolean contained = false;
             boolean sameArity = false;
-            for (Pair<String, Pair<Integer, Boolean>> p : Functions) {
-                if (ti.getSym().compareTo(p.first) == 0) {
+            for (FunctionDefinition p : Functions) {
+                if (ti.getSym().compareTo(p.name) == 0) {
                     contained = true;
-                    if (p.second.first == ti.subTerms().size()) sameArity = true;
+                    if (p.arity == ti.subTerms().size()) sameArity = true;
                 }
 
             }
@@ -306,31 +283,15 @@ public class ProblemState implements Parcelable {
     	out.writeInt(Constants.size());
 		out.writeStringArray(Constants.toArray(new String[0]));
         out.writeInt(Functions.size());
-        for (int i = 0; i < Functions.size(); i++) {
-            out.writeString(Functions.get(i).first);
-            out.writeInt(Functions.get(i).second.first);
-            out.writeInt((Functions.get(i).second.second) ? 1 : 0);
-        }
+        for (FunctionDefinition f : Functions)
+            out.writeTypedObject(f, flags);
         out.writeTypedObject(Substitutions, flags);
         out.writeInt(Rules.size());
         for (Rule rule : Rules) out.writeTypedObject(rule, flags);
 
 		out.writeInt(History.size());
-        for (Pair<Pair<ArrayList<String>, String>, Pair<Substitution, Rule>> his : History) {
-            Pair<ArrayList<String>, String> selection = his.first;
-            Substitution substitution = his.second.first;
-            Rule rule = his.second.second;
-            if (selection.first.size() != 0) {
-                out.writeInt(0);
-                out.writeInt(selection.first.size());
-                for (String s : selection.first) out.writeString(s);
-            } else {
-                out.writeInt(1);
-                out.writeString(selection.second);
-            }
-            out.writeTypedObject(substitution, flags);
-            out.writeTypedObject(rule, flags);
-        }
+        for (State his : History)
+            out.writeTypedObject(his, flags);
         out.writeInt(SubHistory.size());
         for (String key : SubHistory.keySet()) {
             out.writeString(key);

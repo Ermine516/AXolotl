@@ -13,8 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.util.Pair;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -72,16 +70,16 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
     private void TermDisplayUpdate() {
         LinearLayout RLVV = this.findViewById(R.id.TermSelectionLayout);
         RLVV.removeAllViewsInLayout();
-        for (Pair<String, Pair<Integer, Boolean>> p : PS.Functions) {
-            if (!ProblemState.isReserved(p.first)) {
-                int arity = p.second.first;
-                boolean infix = p.second.second;
+        for (FunctionDefinition p : PS.Functions) {
+            if (!ProblemState.isReserved(p.name)) {
+                int arity = p.arity;
+                boolean infix = p.fixity;
                 ArrayList<Term> args = new ArrayList<>();
                 while (arity > 0) {
                     args.add(new Const(Const.Hole.getSym()));
                     arity--;
                 }
-                String funcText = new Func(p.first, args, infix).Print();
+                String funcText = new Func(p.name, args, infix).Print();
                 TextView functext = new TextView(this);
                 functext.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.NO_GRAVITY));
                 functext.setTextSize(32);
@@ -187,10 +185,10 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
                     position = i += 2;
             Term replacement;
             if (position < PS.Functions.size()) {
-                Pair<String, Pair<Integer, Boolean>> thereplace = PS.Functions.get(position);
+                FunctionDefinition thereplace = PS.Functions.get(position);
                 ArrayList<Term> args = new ArrayList<>();
-                for (int i = 0; i < thereplace.second.first; i++) args.add(Const.Hole.Dup());
-                replacement = new Func(thereplace.first, args, thereplace.second.second);
+                for (int i = 0; i < thereplace.arity; i++) args.add(Const.Hole.Dup());
+                replacement = new Func(thereplace.name, args, thereplace.fixity);
             } else replacement = new Const(PS.Constants.get(position + 1 - PS.Functions.size()));
             replacement = pschange.Substitutions.get(pschange.subPos).replacement.replace(Const.HoleSelected, replacement).replaceLeft(Const.Hole, Const.HoleSelected.Dup());
             pschange.Substitutions.alter(pschange.subPos, pschange.Substitutions.get(pschange.subPos).variable, replacement);

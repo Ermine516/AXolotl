@@ -106,5 +106,7 @@ public class LogicalProblemsListActivity extends AxolotlSupportingFunctionalityP
         addProblemList(this.getAssets(), (LinearLayout) this.findViewById(R.id.NaturalProblemList), directory + NATURALPROBLEMSLOCATION);
     }
 
+    protected void switchDisplay() {
+    }
 
 }

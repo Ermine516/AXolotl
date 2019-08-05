@@ -23,12 +23,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActivity {
+
     /**
      * This is the top most class in the hierarchy and thus contains this essential field which may
      * be found in every activity.
      */
     ProblemState PS;
 
+    abstract protected void switchDisplay();
     /**
      * When a text view is selected, the colors ought to change in a high contrast way.
      *
@@ -245,6 +247,7 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
                 if (theText.getText().toString().compareTo(((TextView) view).getText().toString()) == 0) {
                     AxolotlSupportingListenersAndMethods.this.PS.currentRule.Conclusions = AxolotlSupportingListenersAndMethods.this.PS.Rules.get(i).Conclusions;
                     AxolotlSupportingListenersAndMethods.this.PS.currentRule.argument = AxolotlSupportingListenersAndMethods.this.PS.Rules.get(i).argument;
+                    AxolotlSupportingListenersAndMethods.this.PS.currentRule.Label = AxolotlSupportingListenersAndMethods.this.PS.Rules.get(i).Label;
                     textViewSelected(((TextView) view));
                 } else textViewUnselected(theText);
             }
@@ -386,4 +389,23 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
         }
 
     }
+
+    protected class RuleViewListener implements View.OnLongClickListener {
+
+        @Override
+        public boolean onLongClick(View view) {
+            AxolotlSupportingListenersAndMethods.this.PS.ActivityMode = 1;
+            switchDisplay();
+            return false;
+        }
+    }
+
+    protected class BackButtonListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            AxolotlSupportingListenersAndMethods.this.PS.ActivityMode = 2;
+            switchDisplay();
+        }
+    }
+
 }

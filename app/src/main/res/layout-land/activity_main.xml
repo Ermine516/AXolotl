@@ -39,17 +39,6 @@
                 android:orientation="vertical" />
         </ScrollView>
 
-        <View
-            android:id="@+id/LeftSideProblemTagDivider"
-            android:layout_width="3dp"
-            android:layout_height="0dp"
-            android:background="#EDD7D7"
-            app:layout_constraintBottom_toBottomOf="@+id/ProblemTag"
-            app:layout_constraintEnd_toStartOf="@+id/ProblemTag"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/ProblemTag" />
-
         <TextView
             android:id="@+id/ProblemTag"
             android:layout_width="0dp"
@@ -59,19 +48,10 @@
             android:text="@string/ProblemTag"
             android:textColor="#FDFDFE"
             android:textSize="24sp"
-            app:layout_constraintEnd_toStartOf="@+id/RightSiderProblemTagDivider"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/LeftSideProblemTagDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <View
-            android:id="@+id/BottomProblemTagDivider"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:background="#EDD7D7"
-            app:layout_constraintEnd_toEndOf="@+id/RightSiderProblemTagDivider"
-            app:layout_constraintStart_toStartOf="@+id/LeftSideProblemTagDivider"
-            app:layout_constraintTop_toBottomOf="@+id/ProblemTag" />
 
         <ImageView
             android:id="@+id/imageView"
@@ -81,21 +61,9 @@
             app:layout_constraintEnd_toStartOf="@+id/RightSideTerm"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/BottomProblemTagDivider"
+            app:layout_constraintTop_toBottomOf="@+id/ProblemTag"
             android:contentDescription="@string/axolotl_for_landlayout"
             app:srcCompat="@drawable/axolotlfront" />
-
-        <View
-            android:id="@+id/RightSiderProblemTagDivider"
-            android:layout_width="3dp"
-            android:layout_height="0dp"
-            android:background="#EDD7D7"
-            app:layout_constraintBottom_toBottomOf="@+id/ProblemTag"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/ProblemTag"
-            app:layout_constraintTop_toTopOf="@+id/ProblemTag"
-            app:layout_constraintVertical_bias="0.0" />
 
         <ScrollView
             android:id="@+id/RightSideTerm"

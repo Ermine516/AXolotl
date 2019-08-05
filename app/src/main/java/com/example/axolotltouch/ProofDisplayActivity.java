@@ -20,7 +20,6 @@ import java.util.HashSet;
 
 
 public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
-    private ProblemState PS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +47,7 @@ public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
     @SuppressWarnings("ConstantConditions")
     private void drawFlat() {
         ArrayList<State> history = PS.History;
-        ArrayList<Pair<ArrayList<String>, ArrayList<String>>> proof = new ArrayList<>();
+        ArrayList<Pair<String, Pair<ArrayList<String>, ArrayList<String>>>> proof = new ArrayList<>();
 
         HashSet<Term> curSuccProblem = PS.problem;
         ArrayList<String> anteStrings = new ArrayList<>();
@@ -56,7 +55,7 @@ public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
         for (Term t : curSuccProblem) {
             succStrings.add(t.Print());
         }
-        proof.add(Pair.create(anteStrings, succStrings));
+        proof.add(Pair.create("", Pair.create(anteStrings, succStrings)));
 
         for (int ind = history.size() - 1; ind >= 0; ind--) {
             State laststep = history.get(ind);
@@ -75,28 +74,28 @@ public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
             for (Term t : curSuccProblem) {
                 succStrings.add(t.Print());
             }
-            proof.add(Pair.create(anteStrings, succStrings));
+            proof.add(Pair.create(laststep.rule.Label, Pair.create(anteStrings, succStrings)));
         }
         StringBuilder seq = new StringBuilder();
-        Pair<ArrayList<String>, ArrayList<String>> cur = proof.get(0);
+        Pair<String, Pair<ArrayList<String>, ArrayList<String>>> cur = proof.get(0);
 
-        for (int i = 0; i < cur.second.size(); i++) {
-            seq.append(cur.second.get(i));
-            if (i < cur.second.size() - 1) {
+        for (int i = 0; i < cur.second.second.size(); i++) {
+            seq.append(cur.second.second.get(i));
+            if (i < cur.second.second.size() - 1) {
                 seq.append(",");
             }
         }
-        Pair<Bitmap, Pair<Float, Float>> bm = Proof.drawAxiom(seq.toString(), Proof.FORMULA_SIZE);
+        Pair<Bitmap, Pair<Float, Float>> bm = Proof.drawAxiom(seq.toString(), cur.first, Proof.FORMULA_SIZE);
         for (int j = 1; j < proof.size(); j++) {
             seq = new StringBuilder();
             cur = proof.get(j);
-            for (int i = 0; i < cur.second.size(); i++) {
-                seq.append(cur.second.get(i));
-                if (i < cur.second.size() - 1) {
+            for (int i = 0; i < cur.second.second.size(); i++) {
+                seq.append(cur.second.second.get(i));
+                if (i < cur.second.second.size() - 1) {
                     seq.append(",");
                 }
             }
-            bm = Proof.drawUnaryInference(bm, seq.toString());
+            bm = Proof.drawUnaryInference(bm, cur.first, seq.toString());
         }
         drawBitmap(bm.first);
     }
@@ -118,6 +117,8 @@ public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
         TileBitmapDrawable.attachTileBitmapDrawable(myImage, is, null, null);
     }
 
+    protected void switchDisplay() {
+    }
 
 }
 

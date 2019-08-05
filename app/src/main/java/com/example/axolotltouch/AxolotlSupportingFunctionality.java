@@ -121,11 +121,10 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
      * @author David M. Cerna
      */
     protected void swipeRightProblemStateUpdate() {
-        if (PS.currentRule.argument.getSym().compareTo(new Rule().argument.getSym()) != 0)
+        if (PS.currentRule.argument.getSym().compareTo(new Rule().argument.getSym()) != 0) {
             PS.History.add(new State(PS.succSelectedPosition, PS.Substitutions, PS.currentRule));
+        }
         HashSet<Term> newProblemsucc = PS.Substitutions.apply(PS.currentRule.Conclusions);
-        for (Term t : newProblemsucc)
-            System.out.println(t);
         for (Term t : PS.problem)
             if (t.Print().compareTo(PS.succSelectedPosition) != 0) newProblemsucc.add(t);
         PS.problem = newProblemsucc;
@@ -182,7 +181,7 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
      *                elements.
      * @return The scroll view containing the text view.
      */
-    public HorizontalScrollView scrollTextSelectConstruct(String text, View.OnClickListener lis, Context ctx, boolean gravity) {
+    public HorizontalScrollView scrollTextSelectConstruct(String text, View.OnClickListener lis, View.OnLongClickListener longLis, Context ctx, boolean gravity) {
         TextView TermText = new TextView(ctx);
         TermText.setTextSize(PS.textSize);
         TermText.setText(Html.fromHtml(text));
@@ -192,6 +191,10 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         TermText.setBackgroundColor(Color.WHITE);
         TermText.setLayoutParams(new FrameLayout.LayoutParams(((int) TermText.getPaint().measureText(TermText.getText().toString()) + 20), FrameLayout.LayoutParams.WRAP_CONTENT));
         if (lis != null) TermText.setOnClickListener(lis);
+        if (longLis != null) {
+            TermText.setLongClickable(true);
+            TermText.setOnLongClickListener(longLis);
+        }
         LinearLayout scrollLayout = new LinearLayout(this);
         scrollLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.MATCH_PARENT, Gravity.NO_GRAVITY));//(gravity) ? Gravity.CENTER : Gravity.NO_GRAVITY));
         scrollLayout.setOrientation(LinearLayout.VERTICAL);
@@ -217,7 +220,7 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
     protected void updateProblemSideDisplay(LinearLayout sl, Term[] t) {
         sl.removeAllViewsInLayout();
         for (Term term : t)
-            sl.addView(scrollTextSelectConstruct(term.Print(), new SideSelectionListener(), this, true));
+            sl.addView(scrollTextSelectConstruct(term.Print(), new SideSelectionListener(), null, this, true));
     }
 
     /**
@@ -232,7 +235,7 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         sl.removeAllViewsInLayout();
         for (Term term : t) {
             term.normalize(PS.Variables);
-            sl.addView(scrollTextSelectConstruct(term.Print(), null, this, false));
+            sl.addView(scrollTextSelectConstruct(term.Print(), null, null, this, false));
         }
     }
 
@@ -246,7 +249,11 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         LinearLayout RLVV = this.findViewById(R.id.RuleListVerticalLayout);
         RLVV.removeAllViewsInLayout();
         for (int i = 0; i < PS.Rules.size(); i++)
-            RLVV.addView(scrollTextSelectConstruct(Rule.RuleTermsToString(PS.Rules.get(i)), new AxolotlSupportingFunctionality.RuleSelectionListener(), this, false));
+            RLVV.addView(scrollTextSelectConstruct(Rule.RuleTermsToString(PS.Rules.get(i)),
+                    new AxolotlSupportingFunctionality.RuleSelectionListener(),
+                    new AxolotlSupportingFunctionality.RuleViewListener(),
+                    this, false));
     }
+
 
 }

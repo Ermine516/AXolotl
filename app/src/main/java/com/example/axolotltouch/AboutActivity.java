@@ -13,4 +13,7 @@ public class AboutActivity extends AxolotlSupportingFunctionality {
 
     protected void ActivityDecorate() {}
 
+    protected void switchDisplay() {
+    }
+
 }

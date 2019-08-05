@@ -16,4 +16,7 @@ protected void onCreate(Bundle savedInstanceState) {
         protected void ActivityDecorate() {
         }
 
+    protected void switchDisplay() {
+    }
+
 }

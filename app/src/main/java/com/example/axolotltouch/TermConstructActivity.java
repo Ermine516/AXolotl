@@ -222,4 +222,7 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
         }
     }
 
+    protected void switchDisplay() {
+    }
+
 }

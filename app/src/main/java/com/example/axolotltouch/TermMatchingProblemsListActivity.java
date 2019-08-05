@@ -31,4 +31,7 @@ public class TermMatchingProblemsListActivity extends AxolotlSupportingFunctiona
         addProblemList(this.getAssets(), (LinearLayout) this.findViewById(R.id.TermMatchingProblemList), TERMPROBLEMSLOCATION);
     }
 
+    protected void switchDisplay() {
+    }
+
 }

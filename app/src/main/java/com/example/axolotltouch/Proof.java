@@ -19,17 +19,19 @@ public class Proof {
 
     ArrayList<Proof> antecedents;
     String formula;
+    String label;
     boolean finished;
     boolean drawLine = true;
 
-    public Proof(String formula) {
+    public Proof(String formula, String l) {
         antecedents = new ArrayList<>();
         this.formula = formula;
         finished = false;
+        label = l;
     }
 
     static Proof incomplete() {
-        Proof result = new Proof("?");
+        Proof result = new Proof("?", "");
         result.setFinished(true);
         result.drawLine = false;
         return result;
@@ -51,41 +53,13 @@ public class Proof {
         this.finished = finished;
     }
 
-    public Pair<Bitmap, Pair<Float, Float>> draw() {
-        Pair<Bitmap, Pair<Float, Float>> result;
-        if(!finished) {
-            addAntecedent(incomplete());
-        }
-        if(isAxiom()) {
-            if(drawLine) {
-                result = drawAxiom(formula, FORMULA_SIZE);
-            } else {
-                result = drawText(formula, FORMULA_SIZE);
-            }
-        } else if(antecedents.size() == 1) {
-            result =  drawUnaryInference(antecedents.get(0).draw(), formula);
-        } else if(antecedents.size() == 2) {
-            result =  drawBinaryInference(antecedents.get(0).draw(), antecedents.get(1).draw(), formula);
-        } else {
-            ArrayList<Pair<Bitmap, Pair<Float, Float>>> prev = new ArrayList<>();
-            for(Proof antecedent : antecedents) {
-                prev.add(antecedent.draw());
-            }
-            result = drawNaryInference(prev, formula);
-        }
-        if(!finished) {
-            antecedents.remove(antecedents.size() - 1);
-        }
-        return result;
-    }
-
     static Proof extractProof(ProblemState PS) {
         ArrayList<State> history = PS.History;
         ArrayList<Pair<ArrayList<String>, ArrayList<String>>> proof = new ArrayList<>();
 
         HashSet<Term> curSuccProblem = PS.problem;
         if(history.size() == 0) {
-            return new Proof(curSuccProblem.iterator().next().Print());
+            return new Proof(curSuccProblem.iterator().next().Print(), "");
         }
 
         ArrayList<Proof> cur = new ArrayList<>();
@@ -97,7 +71,7 @@ public class Proof {
             newSuccProblem.add(succSideApply);
 
             //make a new proof with the formula that we just derived
-            Proof der = new Proof(succSideApply.Print());
+            Proof der = new Proof(succSideApply.Print(), laststep.rule.Label);
             der.setFinished(true);
 
             for (Term t : laststep.rule.Conclusions)
@@ -122,7 +96,7 @@ public class Proof {
                     }
                 }
                 if(!availabe) {
-                    Proof underived = new Proof(s.Print());
+                    Proof underived = new Proof(s.Print(), laststep.rule.Label);
                     underived.setFinished(false);
                     der.addAntecedent(underived);
                 } else {
@@ -136,7 +110,7 @@ public class Proof {
     }
 
     static Pair<Bitmap, Pair<Float, Float>> drawText(String ax, int size) {
-        if(ax == null) {
+        if (ax == null || ax.compareTo("") == 0) {
             return Pair.create(null, Pair.create(0f, 0f));
         }
         Paint paint = new Paint();
@@ -158,7 +132,7 @@ public class Proof {
         return Pair.create(bm, Pair.create(0f, (float) (bounds.width() + bounds.left)));
     }
 
-    static Pair<Bitmap, Pair<Float, Float>> drawAxiom(String ax, int size) {
+    static Pair<Bitmap, Pair<Float, Float>> drawAxiom(String ax, String label, int size) {
         Paint paint = new Paint();
         Rect bounds = new Rect();
         paint.setTextSize(size);
@@ -174,19 +148,19 @@ public class Proof {
         canvas.drawPaint(paint);
         canvas.drawText(ax, 0, bounds1.height(), paint);
         Pair<Bitmap, Pair<Float, Float>> empty = Pair.create(bm, Pair.create(0f, (float) (bounds.width() + bounds.left)));
-        return drawUnaryInference(empty, ax);
+        return drawUnaryInference(empty, label, ax);
     }
 
-    static Pair<Bitmap, Pair<Float, Float>> drawUnaryInference(Pair<Bitmap, Pair<Float, Float>> proof, String derived) {
-        return drawUnaryInference(proof, derived, "Testy", false);
+    static Pair<Bitmap, Pair<Float, Float>> drawUnaryInference(Pair<Bitmap, Pair<Float, Float>> proof, String label, String derived) {
+        return drawUnaryInference(proof, derived, label, false);
     }
 
-    static Pair<Bitmap, Pair<Float, Float>> drawBinaryInference(Pair<Bitmap, Pair<Float, Float>> proofLeft, Pair<Bitmap, Pair<Float, Float>> proofRight, String derived) {
-        return drawBinaryInference(proofLeft, proofRight, derived, "Testy2", false);
+    static Pair<Bitmap, Pair<Float, Float>> drawBinaryInference(Pair<Bitmap, Pair<Float, Float>> proofLeft, Pair<Bitmap, Pair<Float, Float>> proofRight, String label, String derived) {
+        return drawBinaryInference(proofLeft, proofRight, derived, label, false);
     }
 
-    static Pair<Bitmap, Pair<Float, Float>> drawNaryInference(ArrayList<Pair<Bitmap, Pair<Float, Float>>> proofs, String derived) {
-        return drawNaryInference(proofs, derived, "TestyN", false);
+    static Pair<Bitmap, Pair<Float, Float>> drawNaryInference(ArrayList<Pair<Bitmap, Pair<Float, Float>>> proofs, String label, String derived) {
+        return drawNaryInference(proofs, derived, label, false);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -200,7 +174,7 @@ public class Proof {
         float middle = proof.second.first + (proof.second.second - proof.second.first) / 2f;
         float offsetLeft;
         float offsetRight;
-        if(label == null) {
+        if (label == null || label.compareTo("") == 0) {
             offsetLeft = Math.abs(Math.min(0, middle - der.getWidth() / 2f));
             offsetRight = Math.abs(Math.min(0, bmOld.getWidth() - (middle + der.getWidth() / 2f)));
         } else if(labelSide) {
@@ -243,7 +217,7 @@ public class Proof {
         canvas.drawLine(startLine, heightCons, endLine, heightCons, paint);
 
         //draw the label
-        if(label != null) {
+        if (label != null && label.compareTo("") != 0) {
             canvas.drawBitmap(lab, (labelSide?startLine-lab.getWidth()-10:endLine+10), heightCons - lab.getHeight()/2f, null);
         }
 
@@ -262,7 +236,7 @@ public class Proof {
         float middle = proofLeft.second.first + (bmLeft.getWidth() + 50 + proofRight.second.second - proofLeft.second.first) / 2f;
         float offsetLeft;
         float offsetRight;
-        if(label == null) {
+        if (label == null || label.compareTo("") == 0) {
             offsetLeft = Math.abs(Math.min(0, middle - der.getWidth() / 2f));
             offsetRight = Math.abs(Math.min(0, bmLeft.getWidth() + 50 + bmRight.getWidth() - (middle + der.getWidth() / 2f)));
         } else if(labelSide) {
@@ -308,11 +282,39 @@ public class Proof {
         canvas.drawLine(startLine, heightCons, endLine, heightCons, paint);
 
         //draw the label
-        if(label != null) {
+        if (label != null && label.compareTo("") != 0) {
             canvas.drawBitmap(lab, (labelSide?startLine-lab.getWidth()-10:endLine+10), heightCons - lab.getHeight()/2f, null);
         }
 
         return Pair.create(bm, Pair.create(startCons, endCons));
+    }
+
+    public Pair<Bitmap, Pair<Float, Float>> draw() {
+        Pair<Bitmap, Pair<Float, Float>> result;
+        if (!finished) {
+            addAntecedent(incomplete());
+        }
+        if (isAxiom()) {
+            if (drawLine) {
+                result = drawAxiom(formula, label, FORMULA_SIZE);
+            } else {
+                result = drawText(formula, FORMULA_SIZE);
+            }
+        } else if (antecedents.size() == 1) {
+            result = drawUnaryInference(antecedents.get(0).draw(), label, formula);
+        } else if (antecedents.size() == 2) {
+            result = drawBinaryInference(antecedents.get(0).draw(), antecedents.get(1).draw(), label, formula);
+        } else {
+            ArrayList<Pair<Bitmap, Pair<Float, Float>>> prev = new ArrayList<>();
+            for (Proof antecedent : antecedents) {
+                prev.add(antecedent.draw());
+            }
+            result = drawNaryInference(prev, label, formula);
+        }
+        if (!finished) {
+            antecedents.remove(antecedents.size() - 1);
+        }
+        return result;
     }
 
     @SuppressWarnings("ConstantConditions")

@@ -6,7 +6,7 @@
     <color name="ActionBarColor">#C97192</color>
     <color name="LabelColor">#E05E8E</color>
     <color name="navigationMenuColor">#C97192</color>
-    <color name="navigationMenuTextColor">#FDFDFE</color>
+    <color name="navigationMenuTextColor">#FAFAFC</color>
     <color name="topBarColor">#FDFDFE</color>
 
 </resources>

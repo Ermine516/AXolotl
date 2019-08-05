@@ -145,7 +145,9 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
                         sub = null;
                     }
                     if (sub != null) {
-                        Rule rule = new Rule(PS.currentRule.Label, new ArrayList<>(sub.apply(PS.currentRule.Conclusions)), sub.apply(PS.currentRule.argument), PS.Variables);
+                        ArrayList<Term> temp = new ArrayList<>();
+                        temp.addAll(sub.losslessApply(PS.currentRule.Conclusions));
+                        Rule rule = new Rule(PS.currentRule.Label, temp, sub.apply(PS.currentRule.argument), PS.Variables);
                         ArrayList<Proof> args = new ArrayList<>();
                         for (Term t : rule.Conclusions) {
                             Proof p = new Proof(t.Print(), "");

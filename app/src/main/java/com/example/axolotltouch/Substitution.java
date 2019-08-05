@@ -82,11 +82,21 @@ public class Substitution implements Parcelable {
     }
 
     HashSet<Term> apply(ArrayList<Term> terms) {
+
         HashSet<Term> newterms = new HashSet<>();
         for (Term t : terms)
             newterms.add(apply(t));
         return newterms;
     }
+
+    ArrayList<Term> losslessApply(ArrayList<Term> terms) {
+
+        ArrayList<Term> newterms = new ArrayList<Term>();
+        for (Term t : terms)
+            newterms.add(apply(t));
+        return newterms;
+    }
+
 
     Term apply(Term t) {
         Term temp = t.Dup();

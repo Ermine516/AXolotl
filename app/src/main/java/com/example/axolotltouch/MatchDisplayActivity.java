@@ -61,7 +61,7 @@ public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
                 Intent intent;
                 if (MatchDisplayActivity.this.PS.subPos == -1 || !PS.observe) {
                     MatchDisplayActivity.this.PS.subPos = -1;
-                    PS.succSelectedPosition = "";
+                    PS.selectedPosition = "";
                     PS.Substitutions = new Substitution();
                     intent = new Intent(MatchDisplayActivity.this, MainActivity.class);
                     Toast.makeText(MatchDisplayActivity.this, "Select Rule and Problem Side", Toast.LENGTH_SHORT).show();

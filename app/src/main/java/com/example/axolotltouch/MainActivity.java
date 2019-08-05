@@ -80,8 +80,8 @@ public class MainActivity extends AxolotlSupportingFunctionality {
             HashSet<Term> forDisplay = new HashSet<>();
             forDisplay.add(Const.Empty);
             forDisplay.addAll(PS.problem);
-
             updateProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), forDisplay.toArray(AxolotlMessagingAndIO.HashSetTermArray));
+            PS.selectedPosition = Const.Empty.getSym();
         }
     }
     private void UpdateProblemDisplay() {
@@ -89,6 +89,38 @@ public class MainActivity extends AxolotlSupportingFunctionality {
             updateProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), PS.problem.toArray(AxolotlMessagingAndIO.HashSetTermArray));
     }
 
+    protected void switchDisplay() {
+        if (PS.ActivityMode == 1) {
+            setContentView(R.layout.app_rule_view_bar_layout);
+            findViewById(R.id.backbutton).setOnClickListener(new BackButtonListener());
+            UpdateProblemForRulesDisplay();
+            drawRule();
+        } else if (PS.ActivityMode == 2) {
+            PS.ActivityMode = 0;
+            setContentView(R.layout.app_main_bar_layout);
+            findViewById(R.id.OuterLayout).setOnTouchListener(new MainSwipeListener(this));
+            findViewById(R.id.OuterLayout).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                }
+            });
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            DrawerLayout drawer = findViewById(R.id.Drawer);
+            addMenulisteners();
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.addDrawerListener(toggle);
+            toggle.syncState();
+            switcher = findViewById(R.id.observeswitchformenu);
+            switcher.setChecked(PS.observe);
+            switcher.setOnCheckedChangeListener(new ObservationListener());
+            seeker = findViewById(R.id.Adjusttextseeker);
+            seeker.setProgress(PS.textSize);
+            ActivityDecorate();
+
+        }
+    }
 
     protected class MainSwipeListener extends OnSwipeTouchListener {
         MainSwipeListener(Context ctx) {
@@ -117,7 +149,7 @@ public class MainActivity extends AxolotlSupportingFunctionality {
                     Toast.makeText(MainActivity.this, "Problems accessing History", Toast.LENGTH_SHORT).show();
                     return true;
                 }
-                PS.succSelectedPosition = "";
+                PS.selectedPosition = "";
                 PS.subPos = -1;
                 PS.currentRule = new Rule();
                 PS.Substitutions = new Substitution();
@@ -137,14 +169,12 @@ public class MainActivity extends AxolotlSupportingFunctionality {
             Intent intent;
             try {
                 if (PS.currentRule.argument.getSym().compareTo(Const.HoleSelected.getSym()) != 0) {
-                    if (PS.succSelectedPosition.compareTo("") != 0) {
-                        Term succTerm = ProblemState.getTermByString(PS.succSelectedPosition, PS.problem);
-
+                    if (PS.selectedPosition.compareTo("") != 0) {
+                        Term succTerm = ProblemState.getTermByString(PS.selectedPosition, PS.problem);
                         if (TermHelper.wellformedSequents(succTerm) && TermHelper.wellformedSequents(PS.currentRule.argument)) {
                             succTerm.normalize(PS.Variables);
                             PS.currentRule.argument.normalize(PS.Variables);
                         }
-
                         if (succTerm != null && TermMatchWithVar(succTerm, PS.currentRule.argument, PS.Variables)) {
                             PS.Substitutions = Substitution.substitutionConstruct(succTerm, PS.currentRule.argument, PS);
                             try {
@@ -190,40 +220,6 @@ public class MainActivity extends AxolotlSupportingFunctionality {
             }
             return true;
         }
-
     }
-
-    protected void switchDisplay() {
-        if (PS.ActivityMode == 1) {
-            setContentView(R.layout.app_rule_view_bar_layout);
-            findViewById(R.id.backbutton).setOnClickListener(new BackButtonListener());
-            UpdateProblemForRulesDisplay();
-        } else if (PS.ActivityMode == 2) {
-            PS.ActivityMode = 0;
-            setContentView(R.layout.app_main_bar_layout);
-            findViewById(R.id.OuterLayout).setOnTouchListener(new MainSwipeListener(this));
-            findViewById(R.id.OuterLayout).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                }
-            });
-            Toolbar toolbar = findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-            DrawerLayout drawer = findViewById(R.id.Drawer);
-            addMenulisteners();
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawer.addDrawerListener(toggle);
-            toggle.syncState();
-            switcher = findViewById(R.id.observeswitchformenu);
-            switcher.setChecked(PS.observe);
-            switcher.setOnCheckedChangeListener(new ObservationListener());
-            seeker = findViewById(R.id.Adjusttextseeker);
-            seeker.setProgress(PS.textSize);
-            ActivityDecorate();
-
-        }
-    }
-
 
 }

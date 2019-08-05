@@ -2,7 +2,10 @@ package com.example.axolotltouch;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Gravity;
@@ -16,11 +19,18 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.util.Pair;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable;
+import com.diegocarloslima.byakugallery.lib.TouchImageView;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
@@ -122,11 +132,11 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
      */
     protected void swipeRightProblemStateUpdate() {
         if (PS.currentRule.argument.getSym().compareTo(new Rule().argument.getSym()) != 0) {
-            PS.History.add(new State(PS.succSelectedPosition, PS.Substitutions, PS.currentRule));
+            PS.History.add(new State(PS.selectedPosition, PS.Substitutions, PS.currentRule));
         }
         HashSet<Term> newProblemsucc = PS.Substitutions.apply(PS.currentRule.Conclusions);
         for (Term t : PS.problem)
-            if (t.Print().compareTo(PS.succSelectedPosition) != 0) newProblemsucc.add(t);
+            if (t.Print().compareTo(PS.selectedPosition) != 0) newProblemsucc.add(t);
         PS.problem = newProblemsucc;
         for (Term t : PS.problem)
             if (TermHelper.wellformedSequents(t))
@@ -134,7 +144,7 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         for (Term t : PS.problem) {
             System.out.println(t.toString());
         }
-        PS.succSelectedPosition = "";
+        PS.selectedPosition = "";
         PS.subPos = -1;
         PS.currentRule = new Rule();
         PS.Substitutions = new Substitution();
@@ -193,8 +203,13 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         TermText.setText(Html.fromHtml(text));
         if (gravity) TermText.setGravity(Gravity.CENTER);
         TermText.setFreezesText(true);
-        TermText.setTextColor(Color.BLACK);
-        TermText.setBackgroundColor(Color.WHITE);
+        if (text.compareTo(Const.Empty.getSym()) == 0) {
+            TermText.setTextColor(Color.WHITE);
+            TermText.setBackgroundColor(Color.BLACK);
+        } else {
+            TermText.setTextColor(Color.BLACK);
+            TermText.setBackgroundColor(Color.WHITE);
+        }
         TermText.setLayoutParams(new FrameLayout.LayoutParams(((int) TermText.getPaint().measureText(TermText.getText().toString()) + 20), FrameLayout.LayoutParams.WRAP_CONTENT));
         if (lis != null) TermText.setOnClickListener(lis);
         if (longLis != null) {
@@ -225,8 +240,10 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
      */
     protected void updateProblemSideDisplay(LinearLayout sl, Term[] t) {
         sl.removeAllViewsInLayout();
-        for (Term term : t)
+        AxolotlSupportingFunctionality.this.PS.selectedPosition = "";
+        for (Term term : t) {
             sl.addView(scrollTextSelectConstruct(term.Print(), new SideSelectionListener(), null, this, true));
+        }
     }
 
     /**
@@ -254,6 +271,7 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
     protected void RuleDisplayUpdate() {
         LinearLayout RLVV = this.findViewById(R.id.RuleListVerticalLayout);
         RLVV.removeAllViewsInLayout();
+        AxolotlSupportingFunctionality.this.PS.currentRule = new Rule();
         for (int i = 0; i < PS.Rules.size(); i++)
             RLVV.addView(scrollTextSelectConstruct(Rule.RuleTermsToString(PS.Rules.get(i)),
                     new AxolotlSupportingFunctionality.RuleSelectionListener(),
@@ -261,5 +279,37 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
                     this, false));
     }
 
+
+    protected void drawBitmap(Bitmap bm) {
+        Bitmap bm1 = Bitmap.createBitmap(bm.getWidth() + 500, bm.getHeight() + 500, Bitmap.Config.ARGB_8888);
+        Paint paint = new Paint();
+        Canvas canvas = new Canvas(bm1);
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawPaint(paint);
+
+        paint.setColor(Color.BLACK);
+        canvas.drawBitmap(bm, 250, 250, null);
+        TouchImageView myImage = findViewById(R.id.proofViz);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm1.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        InputStream is = new ByteArrayInputStream(baos.toByteArray());
+        TileBitmapDrawable.attachTileBitmapDrawable(myImage, is, null, null);
+    }
+
+    protected void drawRule() {
+        ArrayList<Proof> args = new ArrayList<>();
+        for (Term t : PS.currentRule.Conclusions) {
+            Proof p = new Proof(t.Print(), "");
+            p.drawLine = false;
+            p.finished = true;
+            args.add(p);
+        }
+        Proof p = new Proof(PS.currentRule.argument.Print(), PS.currentRule.Label);
+        p.finished = true;
+        p.antecedents = args;
+        Pair<Bitmap, Pair<Float, Float>> bm = p.draw();
+        drawBitmap(bm.first);
+    }
 
 }

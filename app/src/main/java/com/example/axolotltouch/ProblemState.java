@@ -28,7 +28,7 @@ public class ProblemState implements Parcelable {
     int mainActivityState;
     int ActivityMode;
     HashSet<Term> problem;
-    String succSelectedPosition;
+    String selectedPosition;
     Rule currentRule;
     HashSet<String> Variables;
     ArrayList<String> Constants;
@@ -47,7 +47,7 @@ public class ProblemState implements Parcelable {
         MatchorConstruct = new HashMap<>();
         problem = new HashSet<>();
         problem.add(Const.Hole);
-        succSelectedPosition = "";
+        selectedPosition = "";
         currentRule = new Rule("", new ArrayList<Term>(), Const.HoleSelected.Dup(), new HashSet<String>());
         SubHistory = new HashMap<>();
 		Rules = new ArrayList<>();
@@ -78,7 +78,7 @@ public class ProblemState implements Parcelable {
             problem.add(in.readTypedObject(Term.CREATOR));
             problemsize--;
         }
-        succSelectedPosition = in.readString();
+        selectedPosition = in.readString();
         currentRule = in.readTypedObject(Rule.CREATOR);
 
         String[] tempVar = new String[in.readInt()];
@@ -128,7 +128,7 @@ public class ProblemState implements Parcelable {
 
     Term getSelectedSuccTerm() {
         for (Term t : problem) {
-            if (t.Print().compareTo(succSelectedPosition) == 0) return t;
+            if (t.Print().compareTo(selectedPosition) == 0) return t;
         }
         return null;
     }
@@ -152,7 +152,7 @@ public class ProblemState implements Parcelable {
     HashSet<Term> replaceSelectedSuccTerm(HashSet<Term> replacement) {
         HashSet<Term> succupdate = new HashSet<>();
         for (Term t : problem)
-            if (t.Print().compareTo(succSelectedPosition) != 0) succupdate.add(t);
+            if (t.Print().compareTo(selectedPosition) != 0) succupdate.add(t);
             else succupdate.addAll(replacement);
         return succupdate;
     }
@@ -223,7 +223,7 @@ public class ProblemState implements Parcelable {
         }
         out.writeInt(problem.size());
         for (Term t : problem) out.writeTypedObject(t, flags);
-        out.writeString(succSelectedPosition);
+        out.writeString(selectedPosition);
         out.writeTypedObject(currentRule, flags);
 		out.writeInt(Variables.size());
 		out.writeStringArray(Variables.toArray(new String[0]));

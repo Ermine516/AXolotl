@@ -115,7 +115,7 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
             try {
                 if (TermConstructActivity.this.PS.subPos == -1 || !PS.observe) {
                     TermConstructActivity.this.PS.subPos = -1;
-                    PS.succSelectedPosition = "";
+                    PS.selectedPosition = "";
                     PS.Substitutions = new Substitution();
                     intent = new Intent(TermConstructActivity.this, MainActivity.class);
                     Toast.makeText(TermConstructActivity.this, "Select Rule and Problem Side", Toast.LENGTH_SHORT).show();

@@ -2,19 +2,10 @@ package com.example.axolotltouch;
 
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
 
 import androidx.core.util.Pair;
 
-import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable;
-import com.diegocarloslima.byakugallery.lib.TouchImageView;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -100,22 +91,7 @@ public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
         drawBitmap(bm.first);
     }
 
-    private void drawBitmap(Bitmap bm) {
-        Bitmap bm1 = Bitmap.createBitmap(bm.getWidth() + 500, bm.getHeight() + 500, Bitmap.Config.ARGB_8888);
-        Paint paint = new Paint();
-        Canvas canvas = new Canvas(bm1);
-        paint.setColor(Color.WHITE);
-        paint.setStyle(Paint.Style.FILL);
-        canvas.drawPaint(paint);
 
-        paint.setColor(Color.BLACK);
-        canvas.drawBitmap(bm, 250, 250, null);
-        TouchImageView myImage = findViewById(R.id.proofViz);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm1.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        InputStream is = new ByteArrayInputStream(baos.toByteArray());
-        TileBitmapDrawable.attachTileBitmapDrawable(myImage, is, null, null);
-    }
 
     protected void switchDisplay() {
     }

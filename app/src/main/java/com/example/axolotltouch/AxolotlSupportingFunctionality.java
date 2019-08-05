@@ -128,6 +128,12 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         for (Term t : PS.problem)
             if (t.Print().compareTo(PS.succSelectedPosition) != 0) newProblemsucc.add(t);
         PS.problem = newProblemsucc;
+        for (Term t : PS.problem)
+            if (TermHelper.wellformedSequents(t))
+                t.normalize(PS.Variables);
+        for (Term t : PS.problem) {
+            System.out.println(t.toString());
+        }
         PS.succSelectedPosition = "";
         PS.subPos = -1;
         PS.currentRule = new Rule();

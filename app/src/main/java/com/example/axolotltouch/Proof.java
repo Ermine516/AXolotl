@@ -291,25 +291,27 @@ public class Proof {
 
     public Pair<Bitmap, Pair<Float, Float>> draw() {
         Pair<Bitmap, Pair<Float, Float>> result;
+        String internalLabel = label;
         if (!finished) {
             addAntecedent(incomplete());
+            internalLabel = "";
         }
         if (isAxiom()) {
             if (drawLine) {
-                result = drawAxiom(formula, label, FORMULA_SIZE);
+                result = drawAxiom(formula, internalLabel, FORMULA_SIZE);
             } else {
                 result = drawText(formula, FORMULA_SIZE);
             }
         } else if (antecedents.size() == 1) {
-            result = drawUnaryInference(antecedents.get(0).draw(), label, formula);
+            result = drawUnaryInference(antecedents.get(0).draw(), internalLabel, formula);
         } else if (antecedents.size() == 2) {
-            result = drawBinaryInference(antecedents.get(0).draw(), antecedents.get(1).draw(), label, formula);
+            result = drawBinaryInference(antecedents.get(0).draw(), antecedents.get(1).draw(), internalLabel, formula);
         } else {
             ArrayList<Pair<Bitmap, Pair<Float, Float>>> prev = new ArrayList<>();
             for (Proof antecedent : antecedents) {
                 prev.add(antecedent.draw());
             }
-            result = drawNaryInference(prev, label, formula);
+            result = drawNaryInference(prev, internalLabel, formula);
         }
         if (!finished) {
             antecedents.remove(antecedents.size() - 1);

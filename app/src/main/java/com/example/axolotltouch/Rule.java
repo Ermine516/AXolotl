@@ -44,6 +44,13 @@ public class Rule implements Parcelable {
         variables = vars;
     }
 
+    Rule(Rule r) {
+        Label = r.Label;
+        Conclusions = r.Conclusions;
+        argument = r.argument;
+        variables = r.variables;
+    }
+
     Rule() {
         Label = "";
         Conclusions = new ArrayList<>();

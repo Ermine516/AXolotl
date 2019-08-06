@@ -17,13 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.util.Pair;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import static com.example.axolotltouch.TermHelper.TermMatchWithVar;
 
@@ -39,6 +37,7 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
 
     protected abstract void drawRule();
 
+    protected abstract void drawRuleFromSelection();
     /**
      * When a text view is selected, the colors ought to change in a high contrast way.
      *
@@ -59,8 +58,6 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
         v.setBackgroundColor(Color.WHITE);
         v.setTextColor(Color.BLACK);
     }
-
-
 
     /**
      * Inflates the option menu.
@@ -129,39 +126,7 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
                     PS.currentRule.argument.normalize(PS.Variables);
                 }
                 if (succTerm != null && TermMatchWithVar(succTerm, PS.currentRule.argument, PS.Variables)) {
-                    sub = Substitution.substitutionConstruct(succTerm, PS.currentRule.argument, PS);
-                    try {
-                        sub = sub.clean();
-                        HashSet<String> singleSide = new HashSet<>();
-                        for (Term t : PS.currentRule.Conclusions) {
-                            HashSet<String> vars = PS.VarList(t);
-                            for (String s : vars)
-                                if (!PS.VarList(PS.currentRule.argument).contains(s))
-                                    singleSide.add(s);
-                        }
-                        for (String s : singleSide)
-                            sub.varIsPartial(s);
-                    } catch (Substitution.NotASubtitutionException e) {
-                        Toast.makeText(AxolotlSupportingListenersAndMethods.this, "Rule not applicable", Toast.LENGTH_SHORT).show();
-                        sub = null;
-                    }
-                    if (sub != null) {
-                        ArrayList<Term> temp = new ArrayList<>();
-                        temp.addAll(sub.losslessApply(PS.currentRule.Conclusions));
-                        Rule rule = new Rule(PS.currentRule.Label, temp, sub.apply(PS.currentRule.argument), PS.Variables);
-                        ArrayList<Proof> args = new ArrayList<>();
-                        for (Term t : rule.Conclusions) {
-                            Proof p = new Proof(t.Print(), "");
-                            p.drawLine = false;
-                            p.finished = true;
-                            args.add(p);
-                        }
-                        Proof p = new Proof(rule.argument.Print(), rule.Label);
-                        p.finished = true;
-                        p.antecedents = args;
-                        Pair<Bitmap, Pair<Float, Float>> bm = p.draw();
-                        drawBitmap(bm.first);
-                    }
+                    drawRuleFromSelection();
                 } else if (PS.selectedPosition.compareTo(Const.Empty.getSym()) == 0) {
                     drawRule();
                 } else
@@ -303,9 +268,7 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
             for (int i = 0; i < rlvv.getChildCount(); i++) {
                 TextView theText = ((TextView) ((LinearLayout) ((HorizontalScrollView) rlvv.getChildAt(i)).getChildAt(0)).getChildAt(0));
                 if (theText.getText().toString().compareTo(((TextView) view).getText().toString()) == 0) {
-                    AxolotlSupportingListenersAndMethods.this.PS.currentRule.Conclusions = AxolotlSupportingListenersAndMethods.this.PS.Rules.get(i).Conclusions;
-                    AxolotlSupportingListenersAndMethods.this.PS.currentRule.argument = AxolotlSupportingListenersAndMethods.this.PS.Rules.get(i).argument;
-                    AxolotlSupportingListenersAndMethods.this.PS.currentRule.Label = AxolotlSupportingListenersAndMethods.this.PS.Rules.get(i).Label;
+                    AxolotlSupportingListenersAndMethods.this.PS.currentRule = new Rule(AxolotlSupportingListenersAndMethods.this.PS.Rules.get(i));
                     textViewSelected(((TextView) view));
                 } else textViewUnselected(theText);
             }
@@ -456,13 +419,12 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
             for (int i = 0; i < rlvv.getChildCount(); i++) {
                 TextView theText = ((TextView) ((LinearLayout) ((HorizontalScrollView) rlvv.getChildAt(i)).getChildAt(0)).getChildAt(0));
                 if (theText.getText().toString().compareTo(((TextView) view).getText().toString()) == 0) {
-                    AxolotlSupportingListenersAndMethods.this.PS.currentRule.Conclusions = AxolotlSupportingListenersAndMethods.this.PS.Rules.get(i).Conclusions;
-                    AxolotlSupportingListenersAndMethods.this.PS.currentRule.argument = AxolotlSupportingListenersAndMethods.this.PS.Rules.get(i).argument;
-                    AxolotlSupportingListenersAndMethods.this.PS.currentRule.Label = AxolotlSupportingListenersAndMethods.this.PS.Rules.get(i).Label;
+                    AxolotlSupportingListenersAndMethods.this.PS.currentRule = new Rule(AxolotlSupportingListenersAndMethods.this.PS.Rules.get(i));
                     textViewSelected(((TextView) view));
                 } else textViewUnselected(theText);
             }
             AxolotlSupportingListenersAndMethods.this.PS.ActivityMode = 1;
+            PS.selectedPosition = Const.Empty.getSym();
             switchDisplay();
             return false;
         }

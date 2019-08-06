@@ -201,13 +201,13 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         TermText.setText(Html.fromHtml(text.Print()));
         if (gravity) TermText.setGravity(Gravity.CENTER);
         TermText.setFreezesText(true);
-        if (text.Print().compareTo(Const.Empty.getSym()) == 0) {
+        if (text.Print().compareTo(Const.Empty.getSym()) == 0 && PS.selectedPosition.compareTo(Const.Empty.getSym()) == 0) {
             TermText.setTextColor(Color.WHITE);
             TermText.setBackgroundColor(Color.BLACK);
-        } else if (PS.selectedPosition.compareTo("") != 0 && (text.toString().compareTo(PS.selectedPosition) == 0)) {
+        } else if (PS.selectedPosition.compareTo("") != 0 && (text.Print().compareTo(PS.selectedPosition) == 0)) {
             TermText.setTextColor(Color.WHITE);
             TermText.setBackgroundColor(Color.BLACK);
-        } else if (PS.currentRule.argument.getSym().compareTo(Const.HoleSelected.getSym()) != 0 && (text.toString().compareTo(PS.selectedPosition) == 0)) {
+        } else if (PS.currentRule.argument.getSym().compareTo(Const.HoleSelected.getSym()) != 0 && (text.Print().compareTo(PS.selectedPosition) == 0)) {
             TermText.setTextColor(Color.WHITE);
             TermText.setBackgroundColor(Color.BLACK);
         } else {
@@ -221,7 +221,7 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
             TermText.setOnLongClickListener(longLis);
         }
         LinearLayout scrollLayout = new LinearLayout(this);
-        scrollLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.MATCH_PARENT, Gravity.NO_GRAVITY));//(gravity) ? Gravity.CENTER : Gravity.NO_GRAVITY));
+        scrollLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.MATCH_PARENT, Gravity.NO_GRAVITY));
         scrollLayout.setOrientation(LinearLayout.VERTICAL);
         scrollLayout.addView(TermText);
         HorizontalScrollView HScroll = new HorizontalScrollView(this);
@@ -266,7 +266,7 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
             TermText.setOnLongClickListener(longLis);
         }
         LinearLayout scrollLayout = new LinearLayout(this);
-        scrollLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.MATCH_PARENT, Gravity.NO_GRAVITY));//(gravity) ? Gravity.CENTER : Gravity.NO_GRAVITY));
+        scrollLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.MATCH_PARENT, Gravity.NO_GRAVITY));
         scrollLayout.setOrientation(LinearLayout.VERTICAL);
         scrollLayout.addView(TermText);
         HorizontalScrollView HScroll = new HorizontalScrollView(this);
@@ -275,7 +275,6 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         HScroll.setHorizontalScrollBarEnabled(true);
         HScroll.addView(scrollLayout);
         HScroll.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, (gravity) ? Gravity.CENTER : Gravity.NO_GRAVITY));
-
         return HScroll;
     }
 
@@ -289,7 +288,6 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
      */
     protected void updateProblemSideDisplay(LinearLayout sl, Term[] t) {
         sl.removeAllViewsInLayout();
-        AxolotlSupportingFunctionality.this.PS.selectedPosition = "";
         for (Term term : t) {
             sl.addView(scrollTextSelectConstruct(term, new SideSelectionListener(), null, this, true));
         }
@@ -320,7 +318,6 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
     protected void RuleDisplayUpdate() {
         LinearLayout RLVV = this.findViewById(R.id.RuleListVerticalLayout);
         RLVV.removeAllViewsInLayout();
-        AxolotlSupportingFunctionality.this.PS.currentRule = new Rule();
         for (int i = 0; i < PS.Rules.size(); i++)
             RLVV.addView(scrollTextSelectConstructString(Rule.RuleTermsToString(PS.Rules.get(i)),
                     new AxolotlSupportingFunctionality.RuleSelectionListener(),
@@ -347,18 +344,56 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
     }
 
     protected void drawRule() {
-        ArrayList<Proof> args = new ArrayList<>();
-        for (Term t : PS.currentRule.Conclusions) {
-            Proof p = new Proof(t.Print(), "");
-            p.drawLine = false;
+        if (PS.selectedPosition.compareTo(Const.Empty.getSym()) == 0) {
+            ArrayList<Proof> args = new ArrayList<>();
+            for (Term t : PS.currentRule.Conclusions) {
+                Proof p = new Proof(t.Print(), "");
+                p.drawLine = false;
+                p.finished = true;
+                args.add(p);
+            }
+            Proof p = new Proof(PS.currentRule.argument.Print(), PS.currentRule.Label);
             p.finished = true;
-            args.add(p);
+            p.antecedents = args;
+            Pair<Bitmap, Pair<Float, Float>> bm = p.draw();
+            drawBitmap(bm.first);
+        } else drawRuleFromSelection();
+    }
+
+    protected void drawRuleFromSelection() {
+        Term succTerm = ProblemState.getTermByString(PS.selectedPosition, PS.problem);
+        Substitution sub = Substitution.substitutionConstruct(succTerm, PS.currentRule.argument, PS);
+        try {
+            sub = sub.clean();
+            HashSet<String> singleSide = new HashSet<>();
+            for (Term t : PS.currentRule.Conclusions) {
+                HashSet<String> vars = PS.VarList(t);
+                for (String s : vars)
+                    if (!PS.VarList(PS.currentRule.argument).contains(s))
+                        singleSide.add(s);
+            }
+            for (String s : singleSide)
+                sub.varIsPartial(s);
+        } catch (Substitution.NotASubtitutionException e) {
+            Toast.makeText(AxolotlSupportingFunctionality.this, "Rule not applicable", Toast.LENGTH_SHORT).show();
+            sub = null;
         }
-        Proof p = new Proof(PS.currentRule.argument.Print(), PS.currentRule.Label);
-        p.finished = true;
-        p.antecedents = args;
-        Pair<Bitmap, Pair<Float, Float>> bm = p.draw();
-        drawBitmap(bm.first);
+        if (sub != null) {
+            ArrayList<Term> temp = new ArrayList<>(sub.losslessApply(PS.currentRule.Conclusions));
+            Rule rule = new Rule(PS.currentRule.Label, temp, sub.apply(PS.currentRule.argument), PS.Variables);
+            ArrayList<Proof> args = new ArrayList<>();
+            for (Term t : rule.Conclusions) {
+                Proof p = new Proof(t.Print(), "");
+                p.drawLine = false;
+                p.finished = true;
+                args.add(p);
+            }
+            Proof p = new Proof(rule.argument.Print(), rule.Label);
+            p.finished = true;
+            p.antecedents = args;
+            Pair<Bitmap, Pair<Float, Float>> bm = p.draw();
+            drawBitmap(bm.first);
+        }
     }
 
 }

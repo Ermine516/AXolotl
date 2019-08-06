@@ -91,8 +91,6 @@ public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
         drawBitmap(bm.first);
     }
 
-
-
     protected void switchDisplay() {
     }
 

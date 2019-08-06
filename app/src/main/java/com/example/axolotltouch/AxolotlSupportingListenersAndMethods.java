@@ -88,10 +88,17 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
      */
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.Drawer);
-        if (drawer != null) {
-            if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START);
-        } else super.onBackPressed();
+        if (AxolotlSupportingListenersAndMethods.this.findViewById(R.id.RulePrettyDisplay) != null) {
+            AxolotlSupportingListenersAndMethods.this.PS.ActivityMode = 2;
+            switchDisplay();
+        } else {
+            DrawerLayout drawer = findViewById(R.id.Drawer);
+            if (drawer != null) {
+                if (drawer.isDrawerOpen(GravityCompat.START))
+                    drawer.closeDrawer(GravityCompat.START);
+            } else super.onBackPressed();
+        }
+
 
     }
 

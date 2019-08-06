@@ -115,4 +115,6 @@ public class LogicalProblemsListActivity extends AxolotlSupportingFunctionalityP
         return true;
     }
 
+    protected void onInternalChange() {
+    }
 }

@@ -21,4 +21,8 @@ public class AboutActivity extends AxolotlSupportingFunctionality {
         super.onBackPressed();
         return true;
     }
+
+    protected void onInternalChange() {
+    }
+
 }

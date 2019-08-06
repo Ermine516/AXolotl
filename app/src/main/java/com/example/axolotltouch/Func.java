@@ -10,6 +10,7 @@ import java.util.HashSet;
 
 //Class defining function terms
 public final class Func implements Term, Parcelable {
+    protected static final String FONTCOLOR = "<font color=#EF4665>";
     private final String Sym;
     private final ArrayList<Term> Args;
     private final boolean infix;
@@ -134,7 +135,7 @@ public final class Func implements Term, Parcelable {
     }
 
     public String Print(Term t, boolean isvar) {
-        if (TermHelper.TermMatch(this, t)) return "<font color=#ff0000>" + this.Print() + "</font>";
+        if (TermHelper.TermMatch(this, t)) return FONTCOLOR + this.Print() + "</font>";
         else {
             if (this.getSym().compareTo("⊢") == 0)
                 return "(" + this.Args.get(0).Print(t, isvar) + " " + this.getSym() + " " + this.Args.get(1).Print(t, isvar) + ")";
@@ -162,20 +163,20 @@ public final class Func implements Term, Parcelable {
     public String PrintCons(Term t, boolean isvar) {
         if (this.getSym().compareTo("cons") == 0)
             if (TermHelper.TermMatch(this, t))
-                return "<font color=#ff0000>" + this.PrintCons() + "</font>";
+                return FONTCOLOR + this.PrintCons() + "</font>";
             else {
                 String s = this.Args.get(1).PrintCons(t, isvar);
                 return this.Args.get(0).PrintCons(t, isvar) + ((s.compareTo("") != 0) ? " , " : "") + s;
             }
         else if (TermHelper.TermMatch(this, t))
-            return "<font color=#ff0000>" + this.Print() + "</font>";
+            return FONTCOLOR + this.Print() + "</font>";
         else return this.Print(t, isvar);
     }
 
     public String PrintCons(String var, Term compare, Term t) {
         if (this.getSym().compareTo("cons") == 0)
             if (compare.subTerms().size() == 0 && compare.getSym().compareTo(var) == 0 && TermHelper.TermMatch(this, t))
-                return "<font color=#ff0000>" + this.PrintCons() + "</font>";
+                return FONTCOLOR + this.PrintCons() + "</font>";
             else {
                 if (compare.subTerms().size() != 0) {
                     String s = this.Args.get(1).PrintCons(var, compare.subTerms().get(1), t);
@@ -186,12 +187,12 @@ public final class Func implements Term, Parcelable {
                 }
             }
         else if (compare.subTerms().size() == 0 && compare.getSym().compareTo(var) == 0 && TermHelper.TermMatch(this, t))
-            return "<font color=#ff0000>" + this.Print() + "</font>";
+            return FONTCOLOR + this.Print() + "</font>";
         else return this.Print(var, compare, t);
     }
     public String Print(String var, Term compare, Term t) {
         if (compare.subTerms().size() == 0 && compare.getSym().compareTo(var) == 0 && TermHelper.TermMatch(this, t))
-            return "<font color=#ff0000>" + this.Print() + "</font>";
+            return FONTCOLOR + this.Print() + "</font>";
         else {
             if (this.getSym().compareTo("⊢") == 0)
                 return "(" + this.Args.get(0).Print(var, compare.subTerms().get(0), t) + " " + this.getSym() + " " + this.Args.get(1).Print(var, compare.subTerms().get(1), t) + ")";

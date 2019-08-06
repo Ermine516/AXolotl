@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Rule implements Parcelable {
-    private static final String RULESYMBOL = "<font color=#ff0000>\u2b05</font>";
+    private static final String RULESYMBOL = Term.FONTCOLOR + "\u2b05</font>";
     String Label;
     ArrayList<Term> Conclusions;
     Term argument;

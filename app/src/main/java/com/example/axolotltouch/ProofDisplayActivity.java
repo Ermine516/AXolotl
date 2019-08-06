@@ -94,5 +94,10 @@ public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
     protected void switchDisplay() {
     }
 
+    @Override
+    protected boolean implementationOfSwipeLeft() {
+        super.onBackPressed();
+        return true;
+    }
 }
 

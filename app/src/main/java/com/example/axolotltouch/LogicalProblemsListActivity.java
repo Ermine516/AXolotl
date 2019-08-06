@@ -109,4 +109,10 @@ public class LogicalProblemsListActivity extends AxolotlSupportingFunctionalityP
     protected void switchDisplay() {
     }
 
+    @Override
+    protected boolean implementationOfSwipeLeft() {
+        super.onBackPressed();
+        return true;
+    }
+
 }

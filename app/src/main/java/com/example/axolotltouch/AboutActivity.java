@@ -16,4 +16,9 @@ public class AboutActivity extends AxolotlSupportingFunctionality {
     protected void switchDisplay() {
     }
 
+    @Override
+    protected boolean implementationOfSwipeLeft() {
+        super.onBackPressed();
+        return true;
+    }
 }

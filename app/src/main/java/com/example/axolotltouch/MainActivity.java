@@ -151,41 +151,6 @@ public class MainActivity extends AxolotlSupportingFunctionality {
             super(ctx);
         }
 
-        public boolean onSwipeLeft() {
-            if (PS.History.size() != 0) {
-                try {
-                    State laststep = PS.History.remove(PS.History.size() - 1);
-                    HashSet<Term> anteSideApply;
-                    Term succSideApply = laststep.substitution.apply(laststep.rule.argument.Dup());
-                    HashSet<Term> newSuccProblem = new HashSet<>();
-                    succSideApply = laststep.substitution.apply(succSideApply);
-                    newSuccProblem.add(succSideApply);
-                    anteSideApply = laststep.substitution.apply(laststep.rule.Conclusions);
-                    for (Term t : PS.problem) {
-                        boolean wasselected = false;
-                        for (Term s : anteSideApply)
-                            if (t.Print().compareTo(s.Print()) == 0) wasselected = true;
-                        if (!wasselected) newSuccProblem.add(t);
-                    }
-                    PS.problem = newSuccProblem;
-
-                } catch (NullPointerException e) {
-                    Toast.makeText(MainActivity.this, "Problems accessing History", Toast.LENGTH_SHORT).show();
-                    return true;
-                }
-                PS.subPos = -1;
-                PS.Substitutions = new Substitution();
-                Intent intent = new Intent(MainActivity.this, MainActivity.class);
-                intent.putExtra(PASSPROBLEMSTATE, PS);
-                MainActivity.this.startActivity(intent);
-                MainActivity.this.finish();
-                Toast.makeText(MainActivity.this, "Rule Application Undone!", Toast.LENGTH_SHORT).show();
-            } else
-                Toast.makeText(MainActivity.this, "No Rule Application to Undo!", Toast.LENGTH_SHORT).show();
-
-            return true;
-        }
-
         public boolean onSwipeRight() {
             ProblemState PS = MainActivity.this.PS;
             Intent intent;
@@ -242,6 +207,41 @@ public class MainActivity extends AxolotlSupportingFunctionality {
             }
             return true;
         }
+    }
+
+    protected boolean implementationOfSwipeLeft() {
+        if (PS.History.size() != 0) {
+            try {
+                State laststep = PS.History.remove(PS.History.size() - 1);
+                HashSet<Term> anteSideApply;
+                Term succSideApply = laststep.substitution.apply(laststep.rule.argument.Dup());
+                HashSet<Term> newSuccProblem = new HashSet<>();
+                succSideApply = laststep.substitution.apply(succSideApply);
+                newSuccProblem.add(succSideApply);
+                anteSideApply = laststep.substitution.apply(laststep.rule.Conclusions);
+                for (Term t : PS.problem) {
+                    boolean wasselected = false;
+                    for (Term s : anteSideApply)
+                        if (t.Print().compareTo(s.Print()) == 0) wasselected = true;
+                    if (!wasselected) newSuccProblem.add(t);
+                }
+                PS.problem = newSuccProblem;
+
+            } catch (NullPointerException e) {
+                Toast.makeText(MainActivity.this, "Problems accessing History", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+            PS.subPos = -1;
+            PS.Substitutions = new Substitution();
+            Intent intent = new Intent(MainActivity.this, MainActivity.class);
+            intent.putExtra(PASSPROBLEMSTATE, PS);
+            MainActivity.this.startActivity(intent);
+            MainActivity.this.finish();
+            Toast.makeText(MainActivity.this, "Rule Application Undone!", Toast.LENGTH_SHORT).show();
+        } else
+            Toast.makeText(MainActivity.this, "No Rule Application to Undo!", Toast.LENGTH_SHORT).show();
+
+        return true;
     }
 
 }

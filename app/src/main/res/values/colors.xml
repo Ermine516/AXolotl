@@ -3,8 +3,9 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="ActionBarColor">#C97192</color>
-    <color name="LabelColor">#E05E8E</color>
+    <color name="ActionBarColor">#F1749E</color>
+    <color name="gradientcolor">#EF4665</color>
+    <color name="LabelColor">#C97192</color>
     <color name="navigationMenuColor">#C97192</color>
     <color name="navigationMenuTextColor">#FAFAFC</color>
     <color name="topBarColor">#FDFDFE</color>

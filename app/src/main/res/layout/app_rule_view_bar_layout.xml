@@ -15,7 +15,7 @@
             android:id="@+id/toolbarfrag"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/ActionBarColor"
+            android:background="@drawable/actionbargrad"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <LinearLayout
@@ -27,7 +27,7 @@
                     android:id="@+id/backbutton"
                     android:layout_width="41dp"
                     android:layout_height="45dp"
-                    android:background="@color/ActionBarColor"
+                    android:background="@drawable/actionbargrad"
                     android:scaleX="1.5"
                     android:scaleY="1.5"
                     android:src="?attr/homeAsUpIndicator"

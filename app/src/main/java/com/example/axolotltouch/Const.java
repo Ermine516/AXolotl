@@ -106,14 +106,14 @@ public final class Const implements Term, Parcelable {
     public String Print(Term t, boolean isvar) {
         if (this.isEmptyList()) return "";
         else if (t.subTerms().size() == 0 && t.getSym().compareTo(this.getSym()) == 0)
-            return "<font color=#ff0000>" + ((isvar) ? "<b>" : "") + Print() + ((isvar) ? "</b>" : "") + "</font>";
+            return FONTCOLOR + ((isvar) ? "<b>" : "") + Print() + ((isvar) ? "</b>" : "") + "</font>";
         else return Print();
     }
 
     public String Print(String var, Term compare, Term t) {
         if (this.isEmptyList()) return "";
         if (compare.subTerms().size() == 0 && compare.getSym().compareTo(var) == 0 && t.subTerms().size() == 0 && t.getSym().compareTo(this.getSym()) == 0)
-            return "<font color=#ff0000>" + Print() + "</font>";
+            return FONTCOLOR + Print() + "</font>";
         else return Print();
     }
 
@@ -125,14 +125,14 @@ public final class Const implements Term, Parcelable {
     public String PrintCons(Term t, boolean isvar) {
         if (this.isEmptyList()) return "";
         else if (t.subTerms().size() == 0 && t.getSym().compareTo(this.getSym()) == 0)
-            return "<font color=#ff0000>" + ((isvar) ? "<b>" : "") + Print() + ((isvar) ? "</b>" : "") + "</font>";
+            return FONTCOLOR + ((isvar) ? "<b>" : "") + Print() + ((isvar) ? "</b>" : "") + "</font>";
         else return Print();
     }
 
     public String PrintCons(String var, Term compare, Term t) {
         if (this.isEmptyList()) return "";
         else if (compare.subTerms().size() == 0 && compare.getSym().compareTo(var) == 0 && t.subTerms().size() == 0 && t.getSym().compareTo(this.getSym()) == 0)
-            return "<font color=#ff0000>" + Print() + "</font>";
+            return FONTCOLOR + Print() + "</font>";
         else return Print();
     }
 

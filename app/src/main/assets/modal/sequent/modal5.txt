@@ -9,7 +9,8 @@ Variable: y
 Variable: z
 Variable: w
 Problem: 1  ⊢(ε,⇒(∧(□(p),□(q)),□(∧(p,q))))
-Rule: 1 ⊢(cons(y,z),x) ⊢(cons(□(y),□(z)),□(x)) [□:r]
+Rule: 1 ⊢(y,x) ⊢(□(y),□(x)) [□:r1]
+Rule: 1 ⊢(cons(y,z),x) ⊢(cons(□(y),□(z)),□(x)) [□:r2]
 Rule: 1 ⊢(cons(x,z),y) ⊢(z,⇒(x,y)) [⇒:r]
 Rule: 2 ⊢(z,x) ⊢(z,y) ⊢(z,∧(x,y)) [∧:r]
 Rule: 1 ⊢(cons(x,y),z) ⊢(∧(x,y),z) [∧:l]

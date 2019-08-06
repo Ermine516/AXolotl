@@ -38,6 +38,8 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
     protected abstract void drawRule();
 
     protected abstract void drawRuleFromSelection();
+
+    protected abstract boolean implementationOfSwipeLeft();
     /**
      * When a text view is selected, the colors ought to change in a high contrast way.
      *
@@ -88,16 +90,15 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
      */
     @Override
     public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.Drawer);
         if (AxolotlSupportingListenersAndMethods.this.findViewById(R.id.RulePrettyDisplay) != null) {
             AxolotlSupportingListenersAndMethods.this.PS.ActivityMode = 2;
             switchDisplay();
-        } else {
-            DrawerLayout drawer = findViewById(R.id.Drawer);
-            if (drawer != null) {
+        } else if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
                 if (drawer.isDrawerOpen(GravityCompat.START))
                     drawer.closeDrawer(GravityCompat.START);
-            } else super.onBackPressed();
-        }
+        } else implementationOfSwipeLeft();
+
 
 
     }
@@ -193,7 +194,9 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
         }
 
 
-        public abstract boolean onSwipeLeft();
+        public boolean onSwipeLeft() {
+            return implementationOfSwipeLeft();
+        }
 
         public abstract boolean onSwipeRight();
 

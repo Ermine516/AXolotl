@@ -19,4 +19,11 @@ protected void onCreate(Bundle savedInstanceState) {
     protected void switchDisplay() {
     }
 
+    @Override
+    protected boolean implementationOfSwipeLeft() {
+        super.onBackPressed();
+        return true;
+    }
+
+
 }

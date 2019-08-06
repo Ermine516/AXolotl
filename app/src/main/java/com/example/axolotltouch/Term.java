@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 //General term Interface 
 public interface Term extends Parcelable {
+    String FONTCOLOR = "<font color=#EF4665>";
 
     Parcelable.Creator<Term> CREATOR = new Parcelable.Creator<Term>() {
 		public Term createFromParcel(Parcel in) {

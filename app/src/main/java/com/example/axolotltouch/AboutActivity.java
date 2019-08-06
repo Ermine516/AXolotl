@@ -3,6 +3,11 @@ package com.example.axolotltouch;
 import android.os.Bundle;
 
 public class AboutActivity extends AxolotlSupportingFunctionality {
+
+    /**
+     * Implementation of the onCreate method  which reads problem state and supports
+     * activity decoration.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -11,17 +16,33 @@ public class AboutActivity extends AxolotlSupportingFunctionality {
         ActivityDecorate();
     }
 
+    /**
+     * An unnecessary method in the current implementation. Will most likely be used in
+     * future updates.
+     */
     protected void ActivityDecorate() {}
 
+    /**
+     * An unnecessary method in the current implementation. Will most likely be used in
+     * future updates.
+     */
     protected void switchDisplay() {
     }
 
+    /**
+     * Currently implements the standard back press function. Will most likely be used in
+     * future updates.
+     */
     @Override
     protected boolean implementationOfSwipeLeft() {
         super.onBackPressed();
         return true;
     }
 
+    /**
+     * An unnecessary method in the current implementation. Will most likely be used in
+     * future updates.
+     */
     protected void onInternalChange() {
     }
 

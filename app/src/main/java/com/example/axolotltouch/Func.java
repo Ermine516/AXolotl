@@ -8,9 +8,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
-//Class defining function terms
+/**
+ * This is a class which implements function with a particular arity for the construction Logical Terms.
+ *
+ * @author David M. Cerna
+ */
 public final class Func implements Term, Parcelable {
-    protected static final String FONTCOLOR = "<font color=#EF4665>";
+
+    private static final String FONTCOLOR = "<font color=#EF4665>";
     private final String Sym;
     private final ArrayList<Term> Args;
     private final boolean infix;

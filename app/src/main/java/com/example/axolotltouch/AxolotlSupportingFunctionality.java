@@ -48,6 +48,10 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
      * This is the switch located in the navigation menu which turns observation mode on and off
      */
     androidx.appcompat.widget.SwitchCompat switcher;
+
+    /**
+     * This is the seekerbar located in the navigation menu which changes font size
+     */
     androidx.appcompat.widget.AppCompatSeekBar seeker;
 
 
@@ -58,7 +62,14 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
      */
     protected abstract void ActivityDecorate();
 
+    /**
+     * This is an abstract method is used to decorate the layout of the activities when an internal
+     * change has occurred, i.e. a layout change.
+     *
+     * @author David M. Cerna
+     */
     protected abstract void onInternalChange();
+
     /**
      * Each activity implementing AxolotlSupportingFunctionality must construct a particular toolbar and
      * navigation menu as well as read the problem state and state the switch in the appropriate
@@ -328,6 +339,11 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
     }
 
 
+    /**
+     * Draws the bitmap representation of a proof.
+     * @param  bm The Bitmap of a proof
+     * @author Rafael Kiesl
+     */
     protected void drawBitmap(Bitmap bm) {
         Bitmap bm1 = Bitmap.createBitmap(bm.getWidth() + 500, bm.getHeight() + 500, Bitmap.Config.ARGB_8888);
         Paint paint = new Paint();
@@ -345,6 +361,10 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         TileBitmapDrawable.attachTileBitmapDrawable(myImage, is, null, null);
     }
 
+    /**
+     * Constructs a bitmap of a rule (uninstantiated) and draws the corresponding object.
+     * @author David M. Cerna
+     */
     protected void drawRule() {
         if (PS.selectedPosition.compareTo(Const.Empty.getSym()) == 0) {
             ArrayList<Proof> args = new ArrayList<>();
@@ -362,6 +382,10 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         } else drawRuleFromSelection();
     }
 
+    /**
+     * Constructs a bitmap of a rule instance and draws the corresponding object.
+     * @author David M. Cerna
+     */
     protected void drawRuleFromSelection() {
         Term succTerm = ProblemState.getTermByString(PS.selectedPosition, PS.problem);
         Substitution sub = Substitution.substitutionConstruct(succTerm, PS.currentRule.argument, PS);

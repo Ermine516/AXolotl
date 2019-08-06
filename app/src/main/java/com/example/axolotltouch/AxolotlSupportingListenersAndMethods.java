@@ -33,13 +33,39 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
      */
     ProblemState PS;
 
+    /**
+     * This method is meant to aid the switching of layouts which occur at the whim of the user.
+     *
+     * @author David M. Cerna
+     */
     abstract protected void switchDisplay();
 
+    /**
+     * This method is meant to aid the drawing of a rule chosen by the user.
+     * @author David M. Cerna
+     */
     protected abstract void drawRule();
 
+    /**
+     * This method is meant to aid the drawing of a rule post instantiation as chosen by the user.
+     * @author David M. Cerna
+     */
     protected abstract void drawRuleFromSelection();
 
+    /**
+     * This method is meant to implement the resulting changes of a left swipe gesture. The method
+     * is used by the backpress button.
+     * @author David M. Cerna
+     */
     protected abstract boolean implementationOfSwipeLeft();
+
+    /**
+     * This method is meant to draw proofs.
+     *
+     * @author Rafael Kiesl
+     */
+    protected abstract void drawBitmap(Bitmap first);
+
     /**
      * When a text view is selected, the colors ought to change in a high contrast way.
      *
@@ -98,12 +124,7 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
                 if (drawer.isDrawerOpen(GravityCompat.START))
                     drawer.closeDrawer(GravityCompat.START);
         } else implementationOfSwipeLeft();
-
-
-
     }
-
-    protected abstract void drawBitmap(Bitmap first);
 
     /**
      * This class implements View.OnClickListener specifically for the selection of terms
@@ -127,7 +148,6 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
                 AxolotlSupportingListenersAndMethods.this.PS.selectedPosition = ((TextView) view).getText().toString();
             }
             if (AxolotlSupportingListenersAndMethods.this.findViewById(R.id.RulePrettyDisplay) != null) {
-                Substitution sub;
                 Term succTerm = ProblemState.getTermByString(PS.selectedPosition, PS.problem);
                 if (TermHelper.wellformedSequents(succTerm) && TermHelper.wellformedSequents(PS.currentRule.argument)) {
                     succTerm.normalize(PS.Variables);
@@ -194,7 +214,7 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
         }
 
 
-        public boolean onSwipeLeft() {
+        boolean onSwipeLeft() {
             return implementationOfSwipeLeft();
         }
 
@@ -289,7 +309,6 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
      * This class implements View.OnClickListener and is designed to allow selection of problems from the list
      * of problems stored in the assets. Note that each listener is associated with a particular set of problems
      * from the assets and store the problems in string form along with the directory where they may be found.
-     *
      * @author David M. Cerna
      */
     class ProblemSelectionListener implements View.OnClickListener {
@@ -421,8 +440,17 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
 
     }
 
+    /**
+     * Used on a view to activate the pretty print layout of the activity.
+     * @author David M. Cerna
+     */
     protected class RuleViewListener implements View.OnLongClickListener {
 
+        /**
+         * Switches the layout after a long click input from the user
+         * @param view The view which has been long clicked
+         * @author David M. Cerna
+         */
         @Override
         public boolean onLongClick(View view) {
             LinearLayout rlvv = AxolotlSupportingListenersAndMethods.this.findViewById(R.id.RuleListVerticalLayout);
@@ -440,7 +468,16 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
         }
     }
 
+    /**
+     * Returns to activity after activating the pretty print layout.
+     * @author David M. Cerna
+     */
     protected class BackButtonListener implements View.OnClickListener {
+        /**
+         * Changes the mode of the activity after the back button is pressed.
+         * @param view The back button.
+         * @author David M. Cerna
+         */
         @Override
         public void onClick(View view) {
             AxolotlSupportingListenersAndMethods.this.PS.ActivityMode = 2;

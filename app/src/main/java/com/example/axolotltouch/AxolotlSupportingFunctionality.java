@@ -58,6 +58,7 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
      */
     protected abstract void ActivityDecorate();
 
+    protected abstract void onInternalChange();
     /**
      * Each activity implementing AxolotlSupportingFunctionality must construct a particular toolbar and
      * navigation menu as well as read the problem state and state the switch in the appropriate
@@ -172,10 +173,11 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
                 try {
                     inputStream = getContentResolver().openInputStream(data.getData());
                     PS = AxolotlMessagingAndIO.loadFile(inputStream, new File(Objects.requireNonNull(data.getData().getPath())).getName(), this);
+                    PS.mainActivityState = 0;
                 } catch (FileNotFoundException e) {
                     Toast.makeText(this, "Unable to load file", Toast.LENGTH_SHORT).show();                }
             }
-            if (PS != null) ActivityDecorate();
+            if (PS != null) onInternalChange();
             else {
                 PS = new ProblemState();
                 Toast.makeText(this, "Unable to load file", Toast.LENGTH_SHORT).show();

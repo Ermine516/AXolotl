@@ -196,6 +196,9 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
     protected void switchDisplay() {
     }
 
+    protected void onInternalChange() {
+    }
+
     protected boolean implementationOfSwipeLeft() {
         PS.subPos--;
         Intent intent;

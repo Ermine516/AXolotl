@@ -99,5 +99,8 @@ public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
         super.onBackPressed();
         return true;
     }
+
+    protected void onInternalChange() {
+    }
 }
 

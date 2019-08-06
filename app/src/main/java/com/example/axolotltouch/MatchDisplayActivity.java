@@ -115,4 +115,7 @@ public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
 
     protected void switchDisplay() {
     }
+
+    protected void onInternalChange() {
+    }
 }

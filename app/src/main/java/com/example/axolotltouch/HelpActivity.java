@@ -25,5 +25,7 @@ protected void onCreate(Bundle savedInstanceState) {
         return true;
     }
 
+    protected void onInternalChange() {
+    }
 
 }

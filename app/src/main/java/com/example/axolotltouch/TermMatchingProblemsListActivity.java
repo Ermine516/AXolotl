@@ -34,6 +34,8 @@ public class TermMatchingProblemsListActivity extends AxolotlSupportingFunctiona
     protected void switchDisplay() {
     }
 
+    protected void onInternalChange() {
+    }
     @Override
     protected boolean implementationOfSwipeLeft() {
         super.onBackPressed();

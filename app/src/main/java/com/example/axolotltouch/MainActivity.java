@@ -22,33 +22,11 @@ public class MainActivity extends AxolotlSupportingFunctionality {
     @Override
     public void onConfigurationChanged(Configuration newconfig) {
         super.onConfigurationChanged(newconfig);
-        if (PS.ActivityMode == 0) {
-            if (PS.mainActivityState == -1) setContentView(R.layout.app_main_on_load_bar_layout);
-            else if (PS.mainActivityState == 0) {
-                setContentView(R.layout.app_main_bar_layout);
-                findViewById(R.id.OuterLayout).setOnTouchListener(new MainSwipeListener(this));
-                findViewById(R.id.OuterLayout).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                    }
-                });
-            } else setContentView(R.layout.app_main_on_completion_bar_layout);
-            Toolbar toolbar = findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-            DrawerLayout drawer = findViewById(R.id.Drawer);
-            addMenulisteners();
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawer.addDrawerListener(toggle);
-            toggle.syncState();
-            switcher = findViewById(R.id.observeswitchformenu);
-            switcher.setChecked(PS.observe);
-            switcher.setOnCheckedChangeListener(new ObservationListener());
-            seeker = findViewById(R.id.Adjusttextseeker);
-            seeker.setProgress(PS.textSize);
-            if (PS.mainActivityState == 0) ActivityDecorate();
-        } else switchDisplay();
+        onInternalChange();
     }
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -242,6 +220,35 @@ public class MainActivity extends AxolotlSupportingFunctionality {
             Toast.makeText(MainActivity.this, "No Rule Application to Undo!", Toast.LENGTH_SHORT).show();
 
         return true;
+    }
+
+    protected void onInternalChange() {
+        if (PS.ActivityMode == 0) {
+            if (PS.mainActivityState == -1) setContentView(R.layout.app_main_on_load_bar_layout);
+            else if (PS.mainActivityState == 0) {
+                setContentView(R.layout.app_main_bar_layout);
+                findViewById(R.id.OuterLayout).setOnTouchListener(new MainSwipeListener(this));
+                findViewById(R.id.OuterLayout).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                });
+            } else setContentView(R.layout.app_main_on_completion_bar_layout);
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            DrawerLayout drawer = findViewById(R.id.Drawer);
+            addMenulisteners();
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.addDrawerListener(toggle);
+            toggle.syncState();
+            switcher = findViewById(R.id.observeswitchformenu);
+            switcher.setChecked(PS.observe);
+            switcher.setOnCheckedChangeListener(new ObservationListener());
+            seeker = findViewById(R.id.Adjusttextseeker);
+            seeker.setProgress(PS.textSize);
+            if (PS.mainActivityState == 0) ActivityDecorate();
+        } else switchDisplay();
     }
 
 }

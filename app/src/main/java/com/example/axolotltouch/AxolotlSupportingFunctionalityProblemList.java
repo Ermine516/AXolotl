@@ -48,7 +48,7 @@ public abstract class AxolotlSupportingFunctionalityProblemList extends AxolotlS
                     if (j == succProb.length - 1) problemString.append(succProb[j].Print());
                     else problemString.append(succProb[j].Print()).append(" , ");
                 parsedProblems.add(problemString.toString());
-                ll.addView(scrollTextSelectConstruct(problemString.toString(),
+                ll.addView(scrollTextSelectConstructString(problemString.toString(),
                         new AxolotlSupportingListenersAndMethods.ProblemSelectionListener(problems.get(directory),
                                 parsedProblems, directory, PS.textSize, PS.observe), null, this, false));
             }

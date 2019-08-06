@@ -92,8 +92,9 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.Drawer);
-        if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START);
-        else super.onBackPressed();
+        if (drawer != null) {
+            if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START);
+        } else super.onBackPressed();
 
     }
 

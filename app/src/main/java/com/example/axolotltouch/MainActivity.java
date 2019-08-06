@@ -2,7 +2,6 @@ package com.example.axolotltouch;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -20,10 +19,6 @@ import static com.example.axolotltouch.TermHelper.TermMatchWithVar;
 
 public class MainActivity extends AxolotlSupportingFunctionality {
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

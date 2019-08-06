@@ -37,8 +37,8 @@ public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
         String var = PS.Substitutions.get(PS.subPos).variable;
         Term succTerm = PS.getSelectedSuccTerm();
         succTerm.normalize(PS.Variables);
-        leftTerm.addView(scrollTextSelectConstruct(PS.currentRule.argument.Print(new Const(var), PS.Variables.contains(var)), null, null, this, true));
-        rightTerm.addView(scrollTextSelectConstruct(succTerm.Print(var, PS.currentRule.argument, PS.Substitutions.get(PS.subPos).replacement), null, null, this, true));
+        leftTerm.addView(scrollTextSelectConstructString(PS.currentRule.argument.Print(new Const(var), PS.Variables.contains(var)), null, null, this, true));
+        rightTerm.addView(scrollTextSelectConstructString(succTerm.Print(var, PS.currentRule.argument, PS.Substitutions.get(PS.subPos).replacement), null, null, this, true));
         varDisplay.setText(Html.fromHtml("<b>" + var + "</b>"));
         try {
             if (PS.Substitutions.get(PS.subPos).replacement.Print().compareTo("") != 0)

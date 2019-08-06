@@ -134,16 +134,14 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         if (PS.currentRule.argument.getSym().compareTo(new Rule().argument.getSym()) != 0) {
             PS.History.add(new State(PS.selectedPosition, PS.Substitutions, PS.currentRule));
         }
-        HashSet<Term> newProblemsucc = PS.Substitutions.apply(PS.currentRule.Conclusions);
+        HashSet<Term> newProblemsucc = new HashSet<>();
         for (Term t : PS.problem)
             if (t.Print().compareTo(PS.selectedPosition) != 0) newProblemsucc.add(t);
+            else newProblemsucc.addAll(PS.Substitutions.apply(PS.currentRule.Conclusions));
         PS.problem = newProblemsucc;
         for (Term t : PS.problem)
             if (TermHelper.wellformedSequents(t))
                 t.normalize(PS.Variables);
-        for (Term t : PS.problem) {
-            System.out.println(t.toString());
-        }
         PS.selectedPosition = "";
         PS.subPos = -1;
         PS.currentRule = new Rule();
@@ -190,20 +188,71 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
      * This method construct scrollable text views in a uniform way allowing a consistent look across
      * all activities.
      * @author David M. Cerna
-     * @param text The text to be displayed by the text view.
+     * @param text The text to be displayed by the text view. (only when a term)
      * @param lis The listener associated with clicking on the view.
      * @param ctx The activity associated with the text view.
      * @param gravity whether or not gravity should be centered within the text view and its scrolling
      *                elements.
      * @return The scroll view containing the text view.
      */
-    public HorizontalScrollView scrollTextSelectConstruct(String text, View.OnClickListener lis, View.OnLongClickListener longLis, Context ctx, boolean gravity) {
+    public HorizontalScrollView scrollTextSelectConstruct(Term text, View.OnClickListener lis, View.OnLongClickListener longLis, Context ctx, boolean gravity) {
+        TextView TermText = new TextView(ctx);
+        TermText.setTextSize(PS.textSize);
+        TermText.setText(Html.fromHtml(text.Print()));
+        if (gravity) TermText.setGravity(Gravity.CENTER);
+        TermText.setFreezesText(true);
+        if (text.Print().compareTo(Const.Empty.getSym()) == 0) {
+            TermText.setTextColor(Color.WHITE);
+            TermText.setBackgroundColor(Color.BLACK);
+        } else if (PS.selectedPosition.compareTo("") != 0 && (text.toString().compareTo(PS.selectedPosition) == 0)) {
+            TermText.setTextColor(Color.WHITE);
+            TermText.setBackgroundColor(Color.BLACK);
+        } else if (PS.currentRule.argument.getSym().compareTo(Const.HoleSelected.getSym()) != 0 && (text.toString().compareTo(PS.selectedPosition) == 0)) {
+            TermText.setTextColor(Color.WHITE);
+            TermText.setBackgroundColor(Color.BLACK);
+        } else {
+            TermText.setTextColor(Color.BLACK);
+            TermText.setBackgroundColor(Color.WHITE);
+        }
+        TermText.setLayoutParams(new FrameLayout.LayoutParams(((int) TermText.getPaint().measureText(TermText.getText().toString()) + 20), FrameLayout.LayoutParams.WRAP_CONTENT));
+        if (lis != null) TermText.setOnClickListener(lis);
+        if (longLis != null) {
+            TermText.setLongClickable(true);
+            TermText.setOnLongClickListener(longLis);
+        }
+        LinearLayout scrollLayout = new LinearLayout(this);
+        scrollLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.MATCH_PARENT, Gravity.NO_GRAVITY));//(gravity) ? Gravity.CENTER : Gravity.NO_GRAVITY));
+        scrollLayout.setOrientation(LinearLayout.VERTICAL);
+        scrollLayout.addView(TermText);
+        HorizontalScrollView HScroll = new HorizontalScrollView(this);
+        HScroll.setScrollbarFadingEnabled(false);
+        HScroll.setScrollBarDefaultDelayBeforeFade(0);
+        HScroll.setHorizontalScrollBarEnabled(true);
+        HScroll.addView(scrollLayout);
+        HScroll.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, (gravity) ? Gravity.CENTER : Gravity.NO_GRAVITY));
+
+        return HScroll;
+    }
+
+    /**
+     * This method construct scrollable text views in a uniform way allowing a consistent look across
+     * all activities.
+     *
+     * @param text    The text to be displayed by the text view. When no additional checks are needed
+     * @param lis     The listener associated with clicking on the view.
+     * @param ctx     The activity associated with the text view.
+     * @param gravity whether or not gravity should be centered within the text view and its scrolling
+     *                elements.
+     * @return The scroll view containing the text view.
+     * @author David M. Cerna
+     */
+    public HorizontalScrollView scrollTextSelectConstructString(String text, View.OnClickListener lis, View.OnLongClickListener longLis, Context ctx, boolean gravity) {
         TextView TermText = new TextView(ctx);
         TermText.setTextSize(PS.textSize);
         TermText.setText(Html.fromHtml(text));
         if (gravity) TermText.setGravity(Gravity.CENTER);
         TermText.setFreezesText(true);
-        if (text.compareTo(Const.Empty.getSym()) == 0) {
+        if (PS.currentRule.argument.getSym().compareTo(Const.HoleSelected.getSym()) != 0 && (text.compareTo(Rule.RuleTermsToString(PS.currentRule)) == 0)) {
             TermText.setTextColor(Color.WHITE);
             TermText.setBackgroundColor(Color.BLACK);
         } else {
@@ -242,7 +291,7 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         sl.removeAllViewsInLayout();
         AxolotlSupportingFunctionality.this.PS.selectedPosition = "";
         for (Term term : t) {
-            sl.addView(scrollTextSelectConstruct(term.Print(), new SideSelectionListener(), null, this, true));
+            sl.addView(scrollTextSelectConstruct(term, new SideSelectionListener(), null, this, true));
         }
     }
 
@@ -258,7 +307,7 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         sl.removeAllViewsInLayout();
         for (Term term : t) {
             term.normalize(PS.Variables);
-            sl.addView(scrollTextSelectConstruct(term.Print(), null, null, this, false));
+            sl.addView(scrollTextSelectConstruct(term, null, null, this, false));
         }
     }
 
@@ -273,7 +322,7 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         RLVV.removeAllViewsInLayout();
         AxolotlSupportingFunctionality.this.PS.currentRule = new Rule();
         for (int i = 0; i < PS.Rules.size(); i++)
-            RLVV.addView(scrollTextSelectConstruct(Rule.RuleTermsToString(PS.Rules.get(i)),
+            RLVV.addView(scrollTextSelectConstructString(Rule.RuleTermsToString(PS.Rules.get(i)),
                     new AxolotlSupportingFunctionality.RuleSelectionListener(),
                     new AxolotlSupportingFunctionality.RuleViewListener(),
                     this, false));

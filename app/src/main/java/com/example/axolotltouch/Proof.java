@@ -319,6 +319,63 @@ public class Proof {
         return result;
     }
 
+    public String printLatex() {
+        StringBuilder result = new StringBuilder();
+        String internalLabel = label;
+        if (!finished) {
+            addAntecedent(incomplete());
+            internalLabel = "";
+        }
+        if (isAxiom()) {
+            if (drawLine) {
+                result.append("\\AxiomC{ }\n");
+            }
+            result.append("\\RightLabel{" + Text2Latex.translate(internalLabel) + "}\n");
+            result.append("\\UnaryInfC{" + Text2Latex.translate(formula) + "}\n");
+        } else if (antecedents.size() == 1) {
+            result.append(antecedents.get(0).printLatex());
+            result.append("\\RightLabel{" + Text2Latex.translate(internalLabel) + "}\n");
+            result.append("\\UnaryInfC{" + Text2Latex.translate(formula) + "}\n");
+        } else if (antecedents.size() == 2) {
+            result.append(antecedents.get(0).printLatex());
+            result.append(antecedents.get(1).printLatex());
+            result.append("\\RightLabel{" + Text2Latex.translate(internalLabel) + "}\n");
+            result.append("\\BinaryInfC{" + Text2Latex.translate(formula) + "}\n");
+        } else {
+            for (Proof antecedent : antecedents) {
+                result.append(antecedent.printLatex());
+            }
+            if (isAxiom() && drawLine) {
+                result.append("\\AxiomC{ }\n");
+            }
+            result.append("\\RightLabel{" + Text2Latex.translate(internalLabel) + "}\n");
+            switch (antecedents.size()) {
+                case 0:
+                    result.append("\\UnaryInfC{" + Text2Latex.translate(formula) + "}\n");
+                    break;
+                case 1:
+                    result.append("\\UnaryInfC{" + Text2Latex.translate(formula) + "}\n");
+                    break;
+                case 2:
+                    result.append("\\BinaryInfC{" + Text2Latex.translate(formula) + "}\n");
+                    break;
+                case 3:
+                    result.append("\\TrinaryInfC{" + Text2Latex.translate(formula) + "}\n");
+                    break;
+                case 4:
+                    result.append("\\QuaternaryInfC{" + Text2Latex.translate(formula) + "}\n");
+                    break;
+                case 5:
+                    result.append("\\QuinaryInfC{" + Text2Latex.translate(formula) + "}\n");
+                    break;
+            }
+        }
+        if (!finished) {
+            antecedents.remove(antecedents.size() - 1);
+        }
+        return result.toString();
+    }
+
     @SuppressWarnings("ConstantConditions")
     static Pair<Bitmap, Pair<Float, Float>> drawNaryInference(ArrayList<Pair<Bitmap, Pair<Float, Float>>> proofs, String derived, String label, boolean labelSide) {
         assert(proofs.size() > 2);

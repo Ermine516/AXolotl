@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.widget.Toast;
 
+import net.rdrei.android.dirchooser.DirectoryChooserActivity;
+import net.rdrei.android.dirchooser.DirectoryChooserConfig;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +37,10 @@ class AxolotlMessagingAndIO {
      */
     static final int READ_REQUEST_CODE = 42;
     /**
+     * Code required for the save file activity
+     */
+    static final int SAVE_REQUEST_CODE = 43;
+    /**
      * a list of allowed symbols for AXolotl files. May be extended
      */
     private static final String nameParseRegex = "[a-zA-Z&\\u2194\\u25E6\\u2227\\u2228\\u00AC\\u21D2\\u21D4\\u2284\\u2285\\u22A4\\u22A5\\u25A1\\u25C7\\u22A2\\u03B5]+";
@@ -47,6 +54,7 @@ class AxolotlMessagingAndIO {
         if (id == R.id.load) {
             AxolotlMessagingAndIO.performFileSearch(ctx);
         } else if (id == R.id.save) {
+            AxolotlMessagingAndIO.selectLocationAndSave(ctx);
             Toast.makeText(ctx, "Save", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.help) {
             Intent intent = new Intent(ctx, HelpActivity.class);
@@ -71,6 +79,19 @@ class AxolotlMessagingAndIO {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("text/plain");
         ctx.startActivityForResult(intent, READ_REQUEST_CODE);
+    }
+
+    private static void selectLocationAndSave(Activity ctx) {
+        final Intent chooserIntent = new Intent(ctx, DirectoryChooserActivity.class);
+
+        final DirectoryChooserConfig config = DirectoryChooserConfig.builder()
+                .newDirectoryName("DirChooserSample")
+                .allowReadOnlyDirectory(true)
+                .allowNewDirectoryNameModification(true)
+                .build();
+
+        chooserIntent.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);
+        ctx.startActivityForResult(chooserIntent, SAVE_REQUEST_CODE);
     }
 
     /**

@@ -1,11 +1,8 @@
 package com.example.axolotltouch;
 
 import android.app.Activity;
-import android.content.Intent;;
+import android.content.Intent;
 import android.widget.Toast;
-
-import net.rdrei.android.dirchooser.DirectoryChooserActivity;
-import net.rdrei.android.dirchooser.DirectoryChooserConfig;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +10,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
+
+;
 
 /**
  * This class deals with all messaging and IO related functionality of Axolotl
@@ -54,10 +53,16 @@ class AxolotlMessagingAndIO {
         if (id == R.id.load) {
             AxolotlMessagingAndIO.performFileSearch(ctx);
         } else if (id == R.id.save) {
-            ((MainActivity)ctx).saveProof();
+            try {
+                ((AxolotlSupportingListenersAndMethods) ctx).saveProof();
+            } catch (IOException e) {
+                Toast.makeText(ctx, "Unable to Saved Proof to Gallery", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Toast.makeText(ctx, "Saved Proof to Gallery", Toast.LENGTH_SHORT).show();
+
         } else if (id == R.id.latex) {
-            ((MainActivity)ctx).copyLatexToClipboard();
+            ((AxolotlSupportingListenersAndMethods) ctx).copyLatexToClipboard();
             Toast.makeText(ctx, "Copied Latex Proof to Clipboard", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.help) {
             Intent intent = new Intent(ctx, HelpActivity.class);

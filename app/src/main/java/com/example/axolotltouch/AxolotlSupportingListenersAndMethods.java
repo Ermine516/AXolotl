@@ -66,6 +66,22 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
      */
     protected abstract void drawBitmap(Bitmap first);
 
+
+    /**
+     * Allows one to output Latex code.
+     *
+     * @author Rafael Kiesl
+     */
+    protected abstract void copyLatexToClipboard();
+
+
+    /**
+     * Saves proof as image.
+     *
+     * @author Rafael Kiesl
+     */
+    protected abstract void saveProof() throws IOException;
+
     /**
      * When a text view is selected, the colors ought to change in a high contrast way.
      *
@@ -484,5 +500,6 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
             switchDisplay();
         }
     }
+
 
 }

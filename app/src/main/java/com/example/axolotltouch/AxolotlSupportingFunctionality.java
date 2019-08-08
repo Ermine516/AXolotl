@@ -8,7 +8,10 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
@@ -28,8 +31,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.diegocarloslima.byakugallery.lib.TileBitmapDrawable;
 import com.diegocarloslima.byakugallery.lib.TouchImageView;
 
-import net.rdrei.android.dirchooser.DirectoryChooserActivity;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -37,7 +38,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -432,4 +432,63 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         }
     }
 
+    protected void saveProof() throws IOException {
+        Bitmap proofPic = Proof.extractProof(PS).draw().first;
+        Bitmap bm1 = Bitmap.createBitmap(proofPic.getWidth() + 500, proofPic.getHeight() + 500, Bitmap.Config.ARGB_8888);
+        Paint paint = new Paint();
+        Canvas canvas = new Canvas(bm1);
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawPaint(paint);
+
+        paint.setColor(Color.BLACK);
+        canvas.drawBitmap(proofPic, 250, 250, null);
+        String location = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "AXolotl";
+        System.out.println("here  " + location);
+        File myDir = new File(location);
+        if (!myDir.exists()) myDir.mkdirs();
+        if (!myDir.exists()) throw new IOException();
+        long n = System.currentTimeMillis();
+        String fname = "Image-" + n + ".jpg";
+        File file = new File(myDir, fname);
+        boolean gone = true;
+        if (file.exists()) gone = file.delete();
+        if (!gone) throw new IOException();
+        FileOutputStream out = new FileOutputStream(file);
+        bm1.compress(Bitmap.CompressFormat.JPEG, 100, out);
+        out.flush();
+        out.close();
+        // Tell the media scanner about the new file so that it is
+        // immediately available to the user.
+        MediaScannerConnection.scanFile(this, new String[]{file.toString()}, null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(String path, Uri uri) {
+                        Log.i("ExternalStorage", "Scanned " + path + ":");
+                        Log.i("ExternalStorage", "-> uri=" + uri);
+                    }
+                });
+    }
+
+    protected void copyLatexToClipboard() {
+        // Nothing selected
+        // Gets a handle to the clipboard service.
+        ClipboardManager clipboard = (ClipboardManager)
+                getSystemService(Context.CLIPBOARD_SERVICE);
+        StringBuilder sb = new StringBuilder();
+        sb.append("\\documentclass{article}\n" +
+                "\\usepackage[a2paper]{geometry}\n" +
+                "\\geometry{landscape}\n" +
+                "\\usepackage{amsmath,amsthm,amssymb,amsfonts}\n" +
+                "\\usepackage{bussproofs}\n" +
+                "\n" +
+                "\\begin{document}\n" +
+                "\\begin{prooftree}\n");
+        sb.append(Proof.extractProof(PS).printLatex());
+        sb.append("\\end{prooftree}\n" +
+                "\\end{document}");
+        // Creates a new text clip to put on the clipboard
+        ClipData clip = ClipData.newPlainText("simple text", sb.toString());
+        // Set the clipboard's primary clip.
+        clipboard.setPrimaryClip(clip);
+    }
 }

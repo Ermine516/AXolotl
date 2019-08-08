@@ -1,7 +1,7 @@
 package com.example.axolotltouch;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.content.Intent;;
 import android.widget.Toast;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
@@ -54,8 +54,11 @@ class AxolotlMessagingAndIO {
         if (id == R.id.load) {
             AxolotlMessagingAndIO.performFileSearch(ctx);
         } else if (id == R.id.save) {
-            AxolotlMessagingAndIO.selectLocationAndSave(ctx);
-            Toast.makeText(ctx, "Save", Toast.LENGTH_SHORT).show();
+            ((MainActivity)ctx).saveProof();
+            Toast.makeText(ctx, "Saved Proof to Gallery", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.latex) {
+            ((MainActivity)ctx).copyLatexToClipboard();
+            Toast.makeText(ctx, "Copied Latex Proof to Clipboard", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.help) {
             Intent intent = new Intent(ctx, HelpActivity.class);
             ctx.startActivity(intent);
@@ -79,19 +82,6 @@ class AxolotlMessagingAndIO {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("text/plain");
         ctx.startActivityForResult(intent, READ_REQUEST_CODE);
-    }
-
-    private static void selectLocationAndSave(Activity ctx) {
-        final Intent chooserIntent = new Intent(ctx, DirectoryChooserActivity.class);
-
-        final DirectoryChooserConfig config = DirectoryChooserConfig.builder()
-                .newDirectoryName("DirChooserSample")
-                .allowReadOnlyDirectory(true)
-                .allowNewDirectoryNameModification(true)
-                .build();
-
-        chooserIntent.putExtra(DirectoryChooserActivity.EXTRA_CONFIG, config);
-        ctx.startActivityForResult(chooserIntent, SAVE_REQUEST_CODE);
     }
 
     /**

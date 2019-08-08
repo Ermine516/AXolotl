@@ -201,55 +201,6 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
                 PS = new ProblemState();
                 Toast.makeText(this, "Unable to load file", Toast.LENGTH_SHORT).show();
             }
-        } else if(requestCode == AxolotlMessagingAndIO.SAVE_REQUEST_CODE) {
-            if (resultCode == DirectoryChooserActivity.RESULT_CODE_DIR_SELECTED) {
-                String dir = data.getStringExtra(DirectoryChooserActivity.RESULT_SELECTED_DIR);
-                File savedProof = new File (dir, "proof.tex");
-                try {
-                    FileOutputStream f = new FileOutputStream(savedProof);
-
-
-                    PrintWriter pw = new PrintWriter(f);
-                    pw.print("\\documentclass{article}\n" +
-                            "\\usepackage[margin=1in]{geometry} \n" +
-                            "\\usepackage{amsmath,amsthm,amssymb,amsfonts}\n" +
-                            "\\usepackage{bussproofs}\n" +
-                            "\n" +
-                            "\\begin{document}\n" +
-                            "\\begin{prooftree}\n");
-                    pw.print(Proof.extractProof(PS).printLatex());
-                    pw.print("\\end{prooftree}\n" +
-                            "\\end{document}");
-                    pw.flush();
-                    pw.close();
-                    f.close();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                // Nothing selected
-                // Gets a handle to the clipboard service.
-                ClipboardManager clipboard = (ClipboardManager)
-                        getSystemService(Context.CLIPBOARD_SERVICE);
-                StringBuilder sb = new StringBuilder();
-                sb.append("\\documentclass{article}\n" +
-                        "\\usepackage[a2paper]{geometry}\n" +
-                        "\\geometry{landscape}\n"+
-                        "\\usepackage{amsmath,amsthm,amssymb,amsfonts}\n" +
-                        "\\usepackage{bussproofs}\n" +
-                        "\n" +
-                        "\\begin{document}\n" +
-                        "\\begin{prooftree}\n");
-                sb.append(Proof.extractProof(PS).printLatex());
-                sb.append("\\end{prooftree}\n" +
-                        "\\end{document}");
-                // Creates a new text clip to put on the clipboard
-                ClipData clip = ClipData.newPlainText("simple text", sb.toString());
-                // Set the clipboard's primary clip.
-                clipboard.setPrimaryClip(clip);
-            }
         } else {
             super.onActivityResult(requestCode,resultCode,data);
         }

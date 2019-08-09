@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 
 public class HelpActivity extends AxolotlSupportingFunctionality {
@@ -28,8 +29,11 @@ protected void onCreate(Bundle savedInstanceState) {
         protected void ActivityDecorate() {
             int imageResource = (helpPage.toString().length() == 2) ? getResources().getIdentifier("drawable/screen0" + helpPage, null, getPackageName()) :
                     getResources().getIdentifier("drawable/screen00" + helpPage, null, getPackageName());
+            int StringResource = (helpPage.toString().length() == 2) ? getResources().getIdentifier("string/help0" + helpPage, null, getPackageName()) :
+                    getResources().getIdentifier("string/help00" + helpPage, null, getPackageName());
             Drawable image = getResources().getDrawable(imageResource, this.getTheme());
             ((ImageView) findViewById(R.id.HelpImage)).setImageDrawable(image);
+            ((TextView) findViewById(R.id.HelpText)).setText(StringResource);
         }
 
     protected void switchDisplay() {

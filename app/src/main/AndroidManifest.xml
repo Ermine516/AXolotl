@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.axolotltouch">
+    package="com.example.axolotl">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -19,28 +19,28 @@
         <activity
             android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
         <activity
-            android:name=".AboutActivity"
+            android:name="com.example.axolotl.AboutActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".HelpActivity"
+            android:name="com.example.axolotl.HelpActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".TermConstructActivity"
+            android:name="com.example.axolotl.TermConstructActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MatchDisplayActivity"
+            android:name="com.example.axolotl.MatchDisplayActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ProofDisplayActivity"
+            android:name="com.example.axolotl.ProofDisplayActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".LogicalProblemsListActivity"
+            android:name="com.example.axolotl.LogicalProblemsListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".TermMatchingProblemsListActivity"
+            android:name="com.example.axolotl.TermMatchingProblemsListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.axolotl.MainActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

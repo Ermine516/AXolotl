@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AXolotlTouch</string>
+    <string name="app_name">AXolotl</string>
     <string name="Proof">Proof</string>
     <string name="UnificationSign">\??</string>
     <string name="LeftTerm">This is a really long sentence to illustrate the scroll</string>

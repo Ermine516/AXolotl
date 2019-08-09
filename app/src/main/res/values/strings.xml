@@ -56,18 +56,30 @@
     <string name="axolotl_for_landlayout">AXolotl for LandLayout</string>
     <string name="equal_sign">equal sign</string>
     <string name="help">HELP</string>
-    <string name="about">The development of this Application was partially funded by the Linz Institute of
-    Technology (<a href="https://www.jku.at/linz-institute-of-technology/">LIT</a>) LOGTECHEDU Hosted by the
-        Institute for Formal Methods and Verification (<a href="http://fmv.jku.at/">FMV</a>) and the
-        Research Institute of Symbolic Computation (<a href="https://risc.jku.at/">RISC</a>)  of the
+    <string name="acknowledgements"> <b>Acknowledgements</b></string>
+    http://fmv.jku.at/logtechedu/
+    <string name="about1">The development of this Application was partially funded by the Linz Institute of
+    Technology (<a href="https://www.jku.at/linz-institute-of-technology/">LIT</a>) SEED Project <a href="http://fmv.jku.at/logtechedu/">LOGTECHEDU</a>
+     hosted by the Institute for Formal Methods and Verification (<a href="http://fmv.jku.at/">FMV</a>)
+     and the Research Institute of Symbolic Computation (<a href="https://risc.jku.at/">RISC</a>)  of the
     Johannes Kepler University (<a href="https://www.jku.at/">JKU</a>).
+    </string>
+    <string name="goal"> <b>Goal</b></string>
 
-    The goal of this application is to provide students of computer science and possibly other subjects
+    <string name="about2"> To provide students of computer science and possibly other subjects
     with a game-like self-study environment which they can use to familiarize themselves with the basic
-    concepts of formal reasoning, formal logic, and term re-writing systems.
-    <a href="https://risc.jku.at/m/david-cerna/">David M. Cerna</a>, a member of the LOGTECHEDU project, provided the conceptual design and
-    architecture. <a href="http://www.kr.tuwien.ac.at/staff/rkiesel/">Rafael Kiesl</a>, a PhD student of the computational logic program at the Technical University
-    of Vienna, was the main software developer. <a href="http://alexandradzh.com/about">Alexandra Dzhyganska</a>  provided, the look and feel
+    concepts of formal reasoning, formal logic, and term re-writing systems.    </string>
+
+    <string name="members"><b>Members</b></string>
+    <string name="about3">
+    <a href="https://risc.jku.at/m/david-cerna/">David M. Cerna</a>, is a member of the LOGTECHEDU project.
+    He provided the conceptual design and Application architecture.
+    \n
+    <a href="http://www.kr.tuwien.ac.at/staff/rkiesel/">Rafael Kiesl</a>, is a PhD student of the computational
+    logic program at the Technical University
+    of Vienna, was the main software developer.
+    \n
+    <a href="http://alexandradzh.com/about">Alexandra Dzhyganska</a>, provided the look and feel
     of the application and various design elements.</string>
     <string name="on_load_screen">On load screen</string>
     <string name="natural_deduction">Natural Deduction</string>

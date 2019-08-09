@@ -72,11 +72,13 @@ class AxolotlMessagingAndIO {
             Toast.makeText(ctx, "Copied Latex Proof to Clipboard", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.help) {
             Intent intent = new Intent(ctx, HelpActivity.class);
+            intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, ((AxolotlSupportingListenersAndMethods) ctx).PS);
             ctx.startActivity(intent);
             Toast.makeText(ctx, "Help", Toast.LENGTH_SHORT).show();
             ctx.finish();
         } else if (id == R.id.about) {
             Intent intent = new Intent(ctx, AboutActivity.class);
+            intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, ((AxolotlSupportingListenersAndMethods) ctx).PS);
             ctx.startActivity(intent);
             Toast.makeText(ctx, "About", Toast.LENGTH_SHORT).show();
             ctx.finish();

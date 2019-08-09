@@ -1,6 +1,8 @@
 package com.example.axolotltouch;
 
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
+import android.widget.TextView;
 
 public class AboutActivity extends AxolotlSupportingFunctionality {
 
@@ -20,7 +22,12 @@ public class AboutActivity extends AxolotlSupportingFunctionality {
      * An unnecessary method in the current implementation. Will most likely be used in
      * future updates.
      */
-    protected void ActivityDecorate() {}
+    protected void ActivityDecorate() {
+        ((TextView) findViewById(R.id.about1text)).setMovementMethod(LinkMovementMethod.getInstance());
+        ((TextView) findViewById(R.id.about2text)).setMovementMethod(LinkMovementMethod.getInstance());
+        ((TextView) findViewById(R.id.about3text)).setMovementMethod(LinkMovementMethod.getInstance());
+
+    }
 
     /**
      * An unnecessary method in the current implementation. Will most likely be used in

@@ -58,7 +58,7 @@
     <string name="help">HELP</string>
     <string name="acknowledgements"> <b>Acknowledgements</b></string>
     http://fmv.jku.at/logtechedu/
-    <string name="about1">The development of this Application was partially funded by the Linz Institute of
+    <string name="about1">The development of this application was partially funded by the Linz Institute of
     Technology (<a href="https://www.jku.at/linz-institute-of-technology/">LIT</a>) SEED Project <a href="http://fmv.jku.at/logtechedu/">LOGTECHEDU</a>
      hosted by the Institute for Formal Methods and Verification (<a href="http://fmv.jku.at/">FMV</a>)
      and the Research Institute of Symbolic Computation (<a href="https://risc.jku.at/">RISC</a>)  of the
@@ -73,7 +73,7 @@
     <string name="members"><b>Members</b></string>
     <string name="about3">
     <a href="https://risc.jku.at/m/david-cerna/">David M. Cerna</a>, is a member of the LOGTECHEDU project.
-    He provided the conceptual design and Application architecture.
+    He provided the conceptual design and software architecture.
     \n
     <a href="http://www.kr.tuwien.ac.at/staff/rkiesel/">Rafael Kiesl</a>, is a PhD student of the computational
     logic program at the Technical University

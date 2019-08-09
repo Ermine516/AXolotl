@@ -51,9 +51,11 @@ public class MainActivity extends AxolotlSupportingFunctionality {
             if (PS.problem.size() == 0 || PS.problem.iterator().next().getSym().compareTo(Const.Empty.getSym()) == 0) {
                 boolean passobseve = PS.observe;
                 ArrayList<State> ProofHistory = PS.History;
+                ArrayList<Rule> rules = PS.Rules;
                 PS = new ProblemState();
                 PS.observe = passobseve;
                 PS.History = ProofHistory;
+                PS.Rules = rules;
             }
         } else switchDisplay();
     }

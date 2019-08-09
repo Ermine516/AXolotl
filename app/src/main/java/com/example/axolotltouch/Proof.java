@@ -99,7 +99,7 @@ public class Proof {
         for(int i = 0; i < sideLength; i++) {
             startingPosVert[i] = curVert;
             startingPosHor[i] = curHor;
-            curVert += rules[i*sideLength].getWidth() + 50;
+            if ((i * sideLength) < rules.length) curVert += rules[i * sideLength].getWidth() + 50;
             int next = 0;
             for(int j = 0; j < sideLength && sideLength*j + i < rules.length; j++) {
                 next = Math.max(next, rules[j*sideLength +i].getHeight());

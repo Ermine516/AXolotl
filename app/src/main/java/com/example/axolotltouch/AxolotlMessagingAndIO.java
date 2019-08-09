@@ -16,7 +16,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-;
 
 /**
  * This class deals with all messaging and IO related functionality of Axolotl
@@ -58,16 +57,16 @@ class AxolotlMessagingAndIO {
         if (id == R.id.load) {
             AxolotlMessagingAndIO.performFileSearch(ctx);
         } else if (id == R.id.save) {
-            if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
                     ActivityCompat.requestPermissions(ctx, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
-            } else {
+            else
                 try {
                     ((AxolotlSupportingListenersAndMethods) ctx).saveProof();
                 } catch (IOException e) {
                     Toast.makeText(ctx, "Unable to Saved Proof to Gallery", Toast.LENGTH_SHORT).show();
                     return;
                 }
-            }
+
         } else if (id == R.id.latex) {
             ((AxolotlSupportingListenersAndMethods) ctx).copyLatexToClipboard();
             Toast.makeText(ctx, "Copied Latex Proof to Clipboard", Toast.LENGTH_SHORT).show();

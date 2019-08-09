@@ -30,9 +30,9 @@ public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
     }
 
     private void draw2D() {
-        Proof proof = Proof.extractProof(PS);
-        Pair<Bitmap, Pair<Float, Float>> bm = proof.draw();
-        drawBitmap(bm.first);
+//        Proof proof = Proof.extractProof(PS);
+//        Pair<Bitmap, Pair<Float, Float>> bm = proof.draw();
+        drawBitmap(Proof.drawProblemSolution(PS));
     }
 
     @SuppressWarnings("ConstantConditions")

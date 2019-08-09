@@ -11,6 +11,7 @@ import androidx.core.util.Pair;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class Proof {
@@ -37,6 +38,14 @@ public class Proof {
         result.setFinished(true);
         result.drawLine = false;
         return result;
+    }
+
+    void setTo(Proof proof) {
+        this.antecedents = proof.antecedents;
+        this.formula = proof.formula;
+        this.finished = proof.finished;
+        this.label = proof.label;
+        this.drawLine = proof.drawLine;
     }
 
     public boolean isAxiom() {
@@ -99,7 +108,9 @@ public class Proof {
         for(int i = 0; i < sideLength; i++) {
             startingPosVert[i] = curVert;
             startingPosHor[i] = curHor;
-            if ((i * sideLength) < rules.length) curVert += rules[i * sideLength].getWidth() + 50;
+            if ((i * sideLength) < rules.length) {
+                curVert += rules[i * sideLength].getWidth() + 50;
+            }
             int next = 0;
             for(int j = 0; j < sideLength && sideLength*j + i < rules.length; j++) {
                 next = Math.max(next, rules[j*sideLength +i].getHeight());
@@ -142,6 +153,8 @@ public class Proof {
         }
 
         ArrayList<Proof> cur = new ArrayList<>();
+        ArrayList<Proof> underivedProofs = new ArrayList<>();
+        HashMap<String, Proof> map = new HashMap<>();
         for(int ind = history.size() - 1; ind >= 0; ind--) {
             State laststep = history.get(ind);
             ArrayList<Term> anteSideApply = new ArrayList<>();
@@ -164,6 +177,7 @@ public class Proof {
             }
 
             //find all the antecedents that were used in our derivation
+            ArrayList<Proof> toRemove = new ArrayList<>();
             for (Term s : anteSideApply){
                 boolean availabe = false;
                 Proof instance = null;
@@ -172,18 +186,26 @@ public class Proof {
                         availabe = true;
                         der.addAntecedent(t);
                         instance = t;
+                        map.put(s.Print(), t);
                     }
                 }
                 if(!availabe) {
                     Proof underived = new Proof(s.Print(), laststep.rule.Label);
                     underived.setFinished(false);
+                    underivedProofs.add(underived);
                     der.addAntecedent(underived);
                 } else {
-                    cur.remove(instance);
+                    toRemove.add(instance);
                 }
             }
+            cur.removeAll(toRemove);
             cur.add(der);
             curSuccProblem = newSuccProblem;
+        }
+        for(Proof und: underivedProofs) {
+            if(map.containsKey(und.formula)) {
+                und.setTo(map.get(und.formula));
+            }
         }
         return cur.get(0);
     }

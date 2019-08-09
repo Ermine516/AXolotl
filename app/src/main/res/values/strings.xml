@@ -74,106 +74,106 @@
 
     <string name="members"><b>Members</b></string>
     <string name="about3">
-    <a href="https://risc.jku.at/m/david-cerna/">David M. Cerna</a>, is a member of the LOGTECHEDU project.
-    He provided the conceptual design and software architecture.
+    <a href="https://risc.jku.at/m/david-cerna/">David M. Cerna</a> is a member of the LOGTECHEDU project.
+    He provided the conceptual design, architecture, and managed the development.
     \n
-    <a href="http://www.kr.tuwien.ac.at/staff/rkiesel/">Rafael Kiesl</a>, is a PhD student of the computational
+    <a href="http://www.kr.tuwien.ac.at/staff/rkiesel/">Rafael Kiesl</a> is a PhD student of the computational
     logic program at the Technical University
-    of Vienna, was the main software developer.
+    of Vienna. He contributed to the project as a software developer.
     \n
-    <a href="http://alexandradzh.com/about">Alexandra Dzhyganska</a>, provided the look and feel
+    <a href="http://alexandradzh.com/about">Alexandra Dzhyganska</a> is a graphic designer and illustrator. She provided the look and feel
     of the application and various design elements.</string>
-    <string name="help001">Welcome to <b>AXolotl</b> a self-study tool for formal reasoning and Logic.
-    The above image displays the start screen when the App is first opened. In order to start using
-    AXolotl you can click on the "hamburger" menu <b>☰</b> or the "kebap" menu <b>⋮</b> to choose a
-        problem or open a proble. \n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    <string name="help001">Welcome to <b>AXolotl</b> a self-study tool for formal reasoning.
+    When AXolotl is first opened the above screenshot is displayed. To start solving problems
+     click on the "hamburger" menu <b>☰</b> or the "kebap" menu <b>⋮</b> to choose a
+        problem from the library or open a problem file. \n\n
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="help002">If you choose to click on <b>⋮</b> the above image illustrates
-        what you will see on the screen. If you have not started a problem you may click on <b>Load Problem</b>
+    <string name="help002">Click on <b>⋮</b> results in the above screenshot.
+        If you have not started a problem you may click on <b>Load Problem</b>
         to open an AXolotl compatible file. If you have finished your problem you have an option to save the
         proof as a jpeg image by clicking on <b>Save Proof Picture</b> or as a latex file by clicking on
         <b>Save Latex Proof to Clipboard</b>. The other options are probably familiar to you already, namely,
         <b>Help</b> and <b>About</b>. \n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="help003">If you choose to click on <b>☰</b> the above image illustrates
-        what you will see on the screen. If you have not started a problem, clicking on <b>Problem</b> will
-        return you to the initial screen. Normally, clicking on <b>Problem</b> returns you to the problem
-        screen which we will see shortly. If you instead click on <b>View Proof</b> you will instead be
-        brought to the proof view which is currently empty (unless you have started a problem). The next two
-        options in the hamburger menu concern the process of solving a chosen problem. \n\n
+    <string name="help003">Clicking on <b>☰</b> results in the above screenshot. If you have not
+        started a problem, clicking on <b>Problem</b> will
+        return you to the initial screen. Otherwise, clicking on <b>Problem</b> returns you to the problem
+        screen which we will visit shortly. Click on <b>View Proof</b> will bring you to proof viewer
+        which is currently empty (unless you have started a problem). The next two
+        options concern the process of solving a chosen problem. \n\n
           When the AXolotl loads <b>observation mode</b> is activated. This means that AXolotl will provide
         you with all the details of your progress when solving a problem. Once you get use to the interface,
         problem solving, and understand how a given formal system works you may choose to deactivate
         observation mode. In this case AXolotl will only inform you when it requires action from you.
         Concerning <b>Text size</b>, when the AXolotl loads the text size is set to 30sp. You can adjust the
-        text size to any size between 10sp and 50sp. The remaining options in the hamburger menu are problem
-        list. In particular we will click on <b>Classical logic</b>.\n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+        text size to any size between 10sp and 50sp. The remaining options concern the standard problem library.
+        In particular we will click on <b>Classical Logic</b>.\n\n
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
     <string name="help004">\n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
     <string name="help005">\n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
     <string name="help006">\n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
     <string name="help007">\n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
     <string name="help008">\n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
     <string name="help009">\n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
     <string name="help010">\n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
     <string name="help011">\n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
     <string name="help012">\n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
     <string name="help013">\n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
     <string name="help014">\n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
     <string name="help015">\n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
     <string name="help016">\n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
     <string name="help017">\n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
     <string name="help018">\n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
     <string name="help019">\n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
     <string name="help020">\n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
     <string name="help021">\n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    To move onto the next section of this tutorial <b>swipe right</b>.  To go back to
     an earlier section <b>swipe left</b>. </string>
     <string name="help022">\n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
     <string name="help023">\n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
     <string name="help024">\n\n
-    To move onto the section of this tutorial <b>swipe right</b>. If you feel the need to go back to
+    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
 
 

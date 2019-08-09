@@ -9,6 +9,8 @@ import android.graphics.Rect;
 import androidx.core.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 
 public class Proof {
@@ -51,6 +53,83 @@ public class Proof {
 
     public void setFinished(boolean finished) {
         this.finished = finished;
+    }
+
+    static Bitmap drawProblemSolution(ProblemState PS) {
+        //proof
+        Bitmap proofPic = Proof.extractProof(PS).draw().first;
+        Bitmap bm1 = Bitmap.createBitmap(proofPic.getWidth() + 500, proofPic.getHeight() + 500, Bitmap.Config.ARGB_8888);
+        Paint paint = new Paint();
+        Canvas canvas = new Canvas(bm1);
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawPaint(paint);
+
+        paint.setColor(Color.BLACK);
+        canvas.drawBitmap(proofPic, 250, 250, null);
+
+        //rules
+        Bitmap[] rules = new Bitmap[PS.Rules.size()];
+        for(int i = 0; i < PS.Rules.size(); i++) {
+            Rule rule = PS.Rules.get(i);
+            ArrayList<Proof> args = new ArrayList<>();
+            for (Term t : rule.Conclusions) {
+                Proof p = new Proof(t.Print(), "");
+                p.drawLine = false;
+                p.finished = true;
+                args.add(p);
+            }
+            Proof p = new Proof(rule.argument.Print(), rule.Label);
+            p.finished = true;
+            p.antecedents = args;
+            Pair<Bitmap, Pair<Float, Float>> bm = p.draw();
+            rules[i]= bm.first;
+        }
+        Arrays.sort(rules, new Comparator<Bitmap>() {
+            @Override
+            public int compare(Bitmap o1, Bitmap o2) {
+                return o2.getWidth() - o1.getWidth();
+            }
+        });
+        int sideLength = (int)(Math.ceil(Math.sqrt(rules.length)));
+        int[] startingPosVert = new int[sideLength];
+        int[] startingPosHor = new int[sideLength];
+        int curVert = 250;
+        int curHor = 250;
+        for(int i = 0; i < sideLength; i++) {
+            startingPosVert[i] = curVert;
+            startingPosHor[i] = curHor;
+            curVert += rules[i*sideLength].getWidth() + 50;
+            int next = 0;
+            for(int j = 0; j < sideLength && sideLength*j + i < rules.length; j++) {
+                next = Math.max(next, rules[j*sideLength +i].getHeight());
+            }
+            curHor += next + 50;
+        }
+        Bitmap result = Bitmap.createBitmap(Math.max(curVert + 250, bm1.getWidth()), curHor + bm1.getHeight(), Bitmap.Config.ARGB_8888);
+        canvas = new Canvas(result);
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawPaint(paint);
+
+        paint.setColor(Color.BLACK);
+        int startProof = Math.max(curVert + 250, bm1.getWidth())/2 - bm1.getWidth()/2;
+        canvas.drawBitmap(bm1, startProof, curHor, null);
+        int startRules = Math.max(curVert + 250, bm1.getWidth())/2 - (curVert + 250)/2;
+        for(int i = 0; i < sideLength; i++) {
+            for(int j = 0; j < sideLength && i*sideLength + j < rules.length; j++) {
+                canvas.drawBitmap(rules[i*sideLength + j], startingPosVert[i] + startRules, startingPosHor[j], null);
+            }
+        }
+        Bitmap ruleHeader = drawText("Rules", FORMULA_SIZE*2).first;
+        canvas.drawBitmap(ruleHeader, 50, 50, null);
+        paint.setColor(Color.BLACK);
+        paint.setStrokeWidth(FORMULA_SIZE/10);
+        canvas.drawLine(0, 50 + ruleHeader.getHeight(), result.getWidth(), 50 + ruleHeader.getHeight(), paint);
+        Bitmap proofHeader = drawText("Proof", FORMULA_SIZE*2).first;
+        canvas.drawBitmap(proofHeader, 50, 50 + curHor, null);
+        canvas.drawLine(0, 50 + curHor + proofHeader.getHeight(), result.getWidth(), 50 + curHor + proofHeader.getHeight(), paint);
+        return result;
     }
 
     static Proof extractProof(ProblemState PS) {

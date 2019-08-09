@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -432,6 +433,26 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 0: {
+                // request was granted
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    try {
+                        saveProof();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(this, "Storage permissions are needed to save.", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
+    }
+
+
     protected void saveProof() throws IOException {
         Bitmap proofPic = Proof.extractProof(PS).draw().first;
         Bitmap bm1 = Bitmap.createBitmap(proofPic.getWidth() + 500, proofPic.getHeight() + 500, Bitmap.Config.ARGB_8888);
@@ -455,6 +476,7 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         if (file.exists()) gone = file.delete();
         if (!gone) throw new IOException();
         FileOutputStream out = new FileOutputStream(file);
+        bm1 = Proof.drawProblemSolution(PS);
         bm1.compress(Bitmap.CompressFormat.JPEG, 100, out);
         out.flush();
         out.close();
@@ -467,6 +489,7 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
                         Log.i("ExternalStorage", "-> uri=" + uri);
                     }
                 });
+        Toast.makeText(this, "Saved Proof to Gallery", Toast.LENGTH_SHORT).show();
     }
 
     protected void copyLatexToClipboard() {

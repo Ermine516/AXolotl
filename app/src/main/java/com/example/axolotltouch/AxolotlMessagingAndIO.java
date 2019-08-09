@@ -1,8 +1,13 @@
 package com.example.axolotltouch;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -53,14 +58,16 @@ class AxolotlMessagingAndIO {
         if (id == R.id.load) {
             AxolotlMessagingAndIO.performFileSearch(ctx);
         } else if (id == R.id.save) {
-            try {
-                ((AxolotlSupportingListenersAndMethods) ctx).saveProof();
-            } catch (IOException e) {
-                Toast.makeText(ctx, "Unable to Saved Proof to Gallery", Toast.LENGTH_SHORT).show();
-                return;
+            if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(ctx, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
+            } else {
+                try {
+                    ((AxolotlSupportingListenersAndMethods) ctx).saveProof();
+                } catch (IOException e) {
+                    Toast.makeText(ctx, "Unable to Saved Proof to Gallery", Toast.LENGTH_SHORT).show();
+                    return;
+                }
             }
-            Toast.makeText(ctx, "Saved Proof to Gallery", Toast.LENGTH_SHORT).show();
-
         } else if (id == R.id.latex) {
             ((AxolotlSupportingListenersAndMethods) ctx).copyLatexToClipboard();
             Toast.makeText(ctx, "Copied Latex Proof to Clipboard", Toast.LENGTH_SHORT).show();

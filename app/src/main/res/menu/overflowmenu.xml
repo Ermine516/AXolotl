@@ -3,19 +3,18 @@
     <item
         android:id="@+id/load"
         android:icon="@drawable/openfilexxxhdpi"
-        android:title="Load Problem" />
+        android:title="@string/load_problem" />
     <item
         android:id="@+id/save"
-        android:icon="@drawable/savefilexxxhdpi"
 
-        android:title="Save Proof Picture" />
+        android:title="@string/save_proof" />
     <item
         android:id="@+id/latex"
-        android:title="Latex Proof to Clipboard" />
+        android:title="@string/latex_proof" />
     <item
         android:id="@+id/help"
-        android:title="Help" />
+        android:title="@string/tutorial" />
     <item
         android:id="@+id/about"
-        android:title="About" />
+        android:title="@string/about" />
 </menu>

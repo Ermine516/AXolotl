@@ -23,6 +23,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.example.axolotl.HelpActivity"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.example.axolotl.TermConstructActivity"

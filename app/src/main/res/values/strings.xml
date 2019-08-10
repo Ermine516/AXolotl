@@ -2,10 +2,6 @@
     <string name="app_name">AXolotl</string>
     <string name="Proof">Proof</string>
     <string name="UnificationSign">\??</string>
-    <string name="LeftTerm">This is a really long sentence to illustrate the scroll</string>
-    <string name="RightTerm">This is a really long sentence to illustrate the scroll</string>
-    <string name="InstanceDisplay">This is a really long sentence in order to illustrate the scrolling</string>
-    <string name="TermSubDisplay">This is a really long sentence used for illustrating the scroll</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="InstanceTagText">Instance</string>
@@ -32,7 +28,6 @@
     <string name="SubstitutionTerm">Substitution Term</string>
     <string name="FunctionSymbols">Function Symbols</string>
     <string name="ApplyRule">Apply</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Open">open</string>
     <string name="Close">close</string>
     <string name="SelectedHole">⚫</string>
@@ -59,6 +54,8 @@
     <string name="acknowledgements"> <b>Acknowledgements</b></string>
     <string name="on_load_screen">On load screen</string>
     <string name="natural_deduction">Natural Deduction</string>
+    <string name="helpcounterstring">%1s/24</string>
+
     http://fmv.jku.at/logtechedu/
     <string name="about1">The development of this application was partially funded by the Linz Institute of
     Technology (<a href="https://www.jku.at/linz-institute-of-technology/">LIT</a>) SEED Project <a href="http://fmv.jku.at/logtechedu/">LOGTECHEDU</a>
@@ -112,69 +109,153 @@
         In particular we will click on <b>Classical Logic</b>.\n\n
     To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="help004">\n\n
+    <string name="help004">
+        Clicking on  <b>Classical Logic</b> opens the problem library displayed in the above screenshot.
+        Notice that the problem library is separated into three sections,  <b>Hilbert Style</b>,  <b>Sequent Style</b>,
+        and  <b>Natural Deduction</b>. These are the three major proof systems handled by Axolotl. In order to illustrate
+        the entire process of solving a problem using AXolotl we will click on the first problem of the <b>Natural Deduction</b>
+        problem library.\n\n
     To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="help005">\n\n
+    <string name="help005">
+        Clicking on a problem opens the problem display. Above the AXolotl mascot is a list of <b>open goals</b> and below the
+        mascot is a list of available <b>rules</b> which may be applied to the goals. Note that a rule may only be applied to
+        a single goal from the goal list. By Δ, we abbreviate any goals which are not to be considered for the current
+        rule application. The statement on the left side of <font color="#EF4665">➡</font> is to be <b>matched</b>
+        (will be explained shortly) with the selected goal while the statements on the right side of <font color="#EF4665">➡</font>
+        will replace the current goal. Note that the right side may be empty in which case the goal set\'s size decreases.\n\n
     To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="help006">\n\n
+    <string name="help006">
+        A  <b>goal</b> is selected by clicking on it. Only one goal may be selected at a time. \n\n
     To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="help007">\n\n
+    <string name="help007">
+        Similarly, a <b>rule</b> is selected by clicking on it. Only one rule may be selected at a time. Now that both a rule
+        and a goal are selected we may apply the rule to the given goal by swiping right. If the rule is not applicable, AXolotl
+        will warn you that the rule application is invalid. Otherwise, AXolotl will switch to the match display or instantiation
+        display depending on the problem.\n\n
     To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="help008">\n\n
+    <string name="help008">
+        The match display is split into two parts. The top section displays how the left side of the chosen rule matches the
+        chosen goal. Notice that the variable <font color="#EF4665">x</font> is highlighted within the left side of the chosen
+        rule. This highlighting matches the sub-term of the chosen goal which matches the variable. The lower section displays
+        the substitution isolated from the left side of the chosen rule and the chosen goal. Swiping left on the matching display
+        goes back to the previous matching display, instantiation display, or problem display, depending on the current state.
+        Swiping right moves on to the next  matching display or instantiation display, or if a substitution has been constructed
+        for every variable, AXolotl returns to the problem display with the chosen goal replaced by the instantiated right side of
+        the chosen rule.
+        \n\n
     To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="help009">\n\n
+    <string name="help009">
+        Swiping right on the matching display loads the next matching display until all variable instantiations have been exhausted.
+        \n\n
     To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="help010">\n\n
+    <string name="help010">
+        A special character which will show up time and time again is ε denoting the empty list. Whenever the chosen does not
+        contain an appropriate term to instantiate the variable by and one is required the empty list is chosen. Note that this
+        differs from the case can a rule is not applicable. AXolotl will take care of differentiating the two cases.
+        \n\n
     To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="help011">\n\n
+    <string name="help011">
+        When the problem display is visible, instead of clicking on a rule you may instead perform a long click which will
+        open the rule display window. The rule display window provides a pretty printed version of the rule together with a
+        list of the open goals. Notice that appended to the open goals is the symbol ∅ which is selected upon loading the
+        rule display. This symbol denotes that no goals have been selected yet. When ∅ is selected the rule displays with
+        the variables in the conclusion and premises.
+        \n\n
     To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="help012">\n\n
+    <string name="help012">
+        When one of the open goals is selected the rule display show how the variables will be replaced if the rule is applied.
+        Note that if the rule is not applicable AXolotl will warn you and will not update the rule with the instantiations of the
+        selected goal. Pressing the back button or clicking the arrow in the upper-left corner will return you to the problem display
+        with the selected goal highlighted.
+        \n\n
     To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="help013">\n\n
+    <string name="help013">
+        So far we have only considered rules which transform one goal into a another goal. However, it is possible to transform
+        a single goal into multiple goals. Furthermore, every rule discussed so far had the same number of variables on each side of the rule.
+        It is possible for variables to show up on the right side but not on the left and vice versa. Consider the above rule and goal selection.
+        Let us long click on the rule to go to the rule display.
+        \n\n
     To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="help014">\n\n
+    <string name="help014">
+        Notice that the rule displayed above has two premises instead of one. Furthermore, if we select the only goal a new symbol is introduced.
+        \n\n
     To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="help015">\n\n
+    <string name="help015">
+        The ⚫ symbol denotes a hole which needs to be filled that AXolotl cannot fill without your help. In order to apply this rule we need
+        to discuss how to use the instantiation display.
+        \n\n
     To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="help016">\n\n
+    <string name="help016">
+        Notice that unlike the matching display the instantiation display have three sections. The upper-most section displays the goals
+        as they would look if the current substitution would be applied. The middle section display the term that will replace the current
+        variable. The lower section contains a list of symbols which may be used to replace the active hole ⚫. You select a symbol by clicking on
+        it.
+        \n\n
     To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="help017">\n\n
+    <string name="help017">
+        Notice that some symbol contain ⚪. These denote inactive holes which at some point need to be filled. If we click on ∨ the middle section
+        change and one of the inactive holes becomes active. This active hole is the next one which needs to be filled.
+        \n\n
     To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="help018">\n\n
+    <string name="help018">
+        When there is only a single hole left to be filled the hole will always be active. If you feel that you have made a mistake and need to
+        undo the term construction you may click on the undo button, the red button in the middle section.
+        \n\n
     To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="help019">\n\n
+    <string name="help019">
+        Once the term is free of holes AXolotl will allow you to swipe right.
+        \n\n
     To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="help020">\n\n
+    <string name="help020">
+        At this point we have made enough progress to view the current state of our proof. Click on <b>☰</b> and then click on
+        view proof. The above Screenshot will be displayed. Notice that it contains both the current state of the proof and the
+        list or rules which where used to construct the proof. The view proof display is zoomable by using a two finger gesture.
+        \n\n
     To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
     <string name="help021">\n\n
+        If we zoom in we will notice that the proof leaves end in ? implying that the proof is incomplete. We can complete the proof
+        by clicking on <b>☰</b> and clicking on the problem button.
     To move onto the next section of this tutorial <b>swipe right</b>.  To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="help022">\n\n
+    <string name="help022">
+        Once the proof is complete, i.e. no more goals, The AXolotl will congratulate you on a job well done. At this point it is
+        worth going back and viewing the proof once more.
+        \n\n
     To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="help023">\n\n
+    <string name="help023">
+        The proof looks similar to the previous state, but if you zoom in you will notice that the question marks are missing.
+        \n\n
     To move onto the next section of this tutorial <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="help024">\n\n
-    To move onto the next section of this tutorial <b>swipe right</b>. To go back to
+    <string name="help024">
+        At this point you can click on <b>⋮</b> and choose to either save the image to your gallery or to
+        copy the proof as latex code and paste it into a file. Now it is time to use AXolotl. <b>Enjoy!</b>
+        \n\n
+    To move onto the About section <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
+    <string name="tutorial">Tutorial</string>
+    <string name="load_problem">Load Problem</string>
+    <string name="save_proof">Save Proof Picture</string>
+    <string name="latex_proof">Latex Proof to Clipboard</string>
+    <string name="about">About</string>
 
 
 </resources>

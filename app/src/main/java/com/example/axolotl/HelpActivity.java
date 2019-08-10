@@ -3,15 +3,26 @@ package com.example.axolotl;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+
 
 public class HelpActivity extends AxolotlSupportingFunctionality {
     private Integer helpPage = 1;
+
+    @Override
+    public void onConfigurationChanged(Configuration newconfig) {
+        super.onConfigurationChanged(newconfig);
+        onInternalChange();
+    }
         @Override
 protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +45,8 @@ protected void onCreate(Bundle savedInstanceState) {
             Drawable image = getResources().getDrawable(imageResource, this.getTheme());
             ((ImageView) findViewById(R.id.HelpImage)).setImageDrawable(image);
             ((TextView) findViewById(R.id.HelpText)).setText(StringResource);
+            String message = getApplicationContext().getString(R.string.helpcounterstring, helpPage.toString());
+            ((TextView) findViewById(R.id.countertext)).setText(message);
         }
 
     protected void switchDisplay() {
@@ -66,6 +79,39 @@ protected void onCreate(Bundle savedInstanceState) {
     }
 
     protected void onInternalChange() {
+        setContentView(R.layout.app_help_bar_layout);
+        findViewById(R.id.OuterLayout).setOnTouchListener(new HelpActivity.HelpSwipeListener(this));
+        findViewById(R.id.OuterLayout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        DrawerLayout drawer = findViewById(R.id.Drawer);
+        addMenulisteners();
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        switcher = findViewById(R.id.observeswitchformenu);
+        switcher.setChecked(PS.observe);
+        switcher.setOnCheckedChangeListener(new ObservationListener());
+        seeker = findViewById(R.id.Adjusttextseeker);
+        seeker.setProgress(PS.textSize);
+        ActivityDecorate();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle out) {
+        super.onSaveInstanceState(out);
+        out.putParcelable("ProblemState", PS);
+    }
+
+    @SuppressWarnings("NullableProblems")
+    @Override
+    protected void onRestoreInstanceState(Bundle in) {
+        super.onRestoreInstanceState(in);
+        PS = in.getParcelable("ProblemState");
+    }
 }

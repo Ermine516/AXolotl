@@ -199,7 +199,9 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
     protected void onInternalChange() {
     }
 
+    @SuppressWarnings("ConstantConditions")
     protected boolean implementationOfSwipeLeft() {
+        PS.Substitutions.alter(PS.subPos, PS.Substitutions.get(PS.subPos).variable, Const.HoleSelected.Dup());
         PS.subPos--;
         Intent intent;
         try {

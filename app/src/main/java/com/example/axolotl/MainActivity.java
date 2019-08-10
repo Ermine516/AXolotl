@@ -24,9 +24,6 @@ public class MainActivity extends AxolotlSupportingFunctionality {
         super.onConfigurationChanged(newconfig);
         onInternalChange();
     }
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +38,6 @@ public class MainActivity extends AxolotlSupportingFunctionality {
                     public void onClick(View v) {
                     }
                 });
-
             } else setContentView(R.layout.app_main_on_completion_bar_layout);
             ConstructActivity(savedInstanceState);
             if (PS.mainActivityState == 0) ActivityDecorate();

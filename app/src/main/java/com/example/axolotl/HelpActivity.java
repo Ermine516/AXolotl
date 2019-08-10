@@ -33,6 +33,12 @@ protected void onCreate(Bundle savedInstanceState) {
                 public void onClick(View v) {
                 }
             });
+            findViewById(R.id.ScrollHelpText).setOnTouchListener(new HelpActivity.HelpSwipeListener(this));
+            findViewById(R.id.ScrollHelpText).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                }
+            });
             PS = ConstructActivity(savedInstanceState);
             ActivityDecorate();
         }
@@ -47,6 +53,8 @@ protected void onCreate(Bundle savedInstanceState) {
             ((TextView) findViewById(R.id.HelpText)).setText(StringResource);
             String message = getApplicationContext().getString(R.string.helpcounterstring, helpPage.toString());
             ((TextView) findViewById(R.id.countertext)).setText(message);
+            findViewById(R.id.ScrollHelpText).setScrollY(0);
+
         }
 
     protected void switchDisplay() {
@@ -82,6 +90,12 @@ protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.app_help_bar_layout);
         findViewById(R.id.OuterLayout).setOnTouchListener(new HelpActivity.HelpSwipeListener(this));
         findViewById(R.id.OuterLayout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+        findViewById(R.id.ScrollHelpText).setOnTouchListener(new HelpActivity.HelpSwipeListener(this));
+        findViewById(R.id.ScrollHelpText).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             }

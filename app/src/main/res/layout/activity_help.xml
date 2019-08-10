@@ -25,8 +25,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:foregroundGravity="left"
-            android:gravity="left"
-            android:text="24/24"
+            android:gravity="start"
             android:textColor="#000000"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/HelpImage"
@@ -64,15 +63,15 @@
             app:layout_constraintVertical_chainStyle="spread_inside">
 
             <LinearLayout
+                android:id="@+id/ScrollHelpLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/HelpText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="TextView"
                     android:textColor="#000000"
                     android:textSize="16sp" />
             </LinearLayout>

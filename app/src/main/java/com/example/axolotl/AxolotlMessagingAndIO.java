@@ -40,10 +40,6 @@ class AxolotlMessagingAndIO {
      */
     static final int READ_REQUEST_CODE = 42;
     /**
-     * Code required for the save file activity
-     */
-    static final int SAVE_REQUEST_CODE = 43;
-    /**
      * a list of allowed symbols for AXolotl files. May be extended
      */
     private static final String nameParseRegex = "[a-zA-Z&\\u2194\\u25E6\\u2227\\u2228\\u00AC\\u21D2\\u21D4\\u2284\\u2285\\u22A4\\u22A5\\u25A1\\u25C7\\u22A2\\u03B5]+";
@@ -74,13 +70,11 @@ class AxolotlMessagingAndIO {
             Intent intent = new Intent(ctx, HelpActivity.class);
             intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, ((AxolotlSupportingListenersAndMethods) ctx).PS);
             ctx.startActivity(intent);
-            Toast.makeText(ctx, "Help", Toast.LENGTH_SHORT).show();
             ctx.finish();
         } else if (id == R.id.about) {
             Intent intent = new Intent(ctx, AboutActivity.class);
             intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, ((AxolotlSupportingListenersAndMethods) ctx).PS);
             ctx.startActivity(intent);
-            Toast.makeText(ctx, "About", Toast.LENGTH_SHORT).show();
             ctx.finish();
         }
     }

@@ -65,7 +65,7 @@
             android:layout_height="30dp"
             android:background="@color/LabelColor"
             android:gravity="center"
-            android:text="@string/changeinstate"
+            android:text="@string/changeInState"
             android:textColor="#FDFDFE"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"

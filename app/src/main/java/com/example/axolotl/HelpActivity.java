@@ -51,7 +51,7 @@ protected void onCreate(Bundle savedInstanceState) {
             Drawable image = getResources().getDrawable(imageResource, this.getTheme());
             ((ImageView) findViewById(R.id.HelpImage)).setImageDrawable(image);
             ((TextView) findViewById(R.id.HelpText)).setText(StringResource);
-            String message = getApplicationContext().getString(R.string.helpcounterstring, helpPage.toString());
+            String message = getApplicationContext().getString(R.string.helpCounterString, helpPage.toString());
             ((TextView) findViewById(R.id.countertext)).setText(message);
             findViewById(R.id.ScrollHelpText).setScrollY(0);
 

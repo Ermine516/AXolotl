@@ -1,42 +1,18 @@
 <resources>
     <string name="app_name">AXolotl</string>
-    <string name="Proof">Proof</string>
     <string name="UnificationSign">\??</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="InstanceTagText">Instance</string>
-    <string name="TermTag">Term</string>
-    <string name="VariableTagString">Variable</string>
-    <string name="VariableX">x</string>
-    <string name="VariableY">y</string>
-    <string name="variableZ">z</string>
     <string name="ProblemTag">Problem and Rules</string>
-    <string name="FutureState">Resulting Problem State</string>
     <string name="ObserveMode">Observation Mode</string>
-    <string name="problemmenu">Problems</string>
-    <string name="PropLogic">Propositional Logic</string>
-    <string name="Prop01">Prop 01</string>
     <string name="ModalLogic">Modal Logic</string>
     <string name="RuleAppliedTag">Matching Substitution</string>
     <string name="CurrentTermConstructionTag">Term State</string>
     <string name="AllowedFunctionSymbolsTag">Function Symbols</string>
     <string name="UnifyTag">Terms To Match</string>
-    <string name="SubstitutionTag">Current Substitution</string>
-    <string name="RightBacket">}</string>
-    <string name="LeftBrack">{</string>
-    <string name="RuleList">Rule List</string>
-    <string name="SubstitutionTerm">Substitution Term</string>
-    <string name="FunctionSymbols">Function Symbols</string>
-    <string name="ApplyRule">Apply</string>
-    <string name="Open">open</string>
-    <string name="Close">close</string>
     <string name="SelectedHole">⚫</string>
-    <string name="ConstructedTermTag">Constructed Term</string>
-    <string name="VariableListTag">Variable List</string>
-    <string name="SubstitutionList">Substitution List</string>
-    <string name="termmatchingmenu">Term Matching</string>
-    <string name="nonclassical">Non-Classical</string>
-    <string name="changeinstate">Change in Problem State</string>
+    <string name="termMatchingMenu">Term Matching</string>
+    <string name="changeInState">Change in Problem State</string>
     <string name="axolotl_character_image">Axolotl Character Image</string>
     <string name="axolotl_character_head">AXolotl Character Head</string>
     <string name="problem">Problem</string>
@@ -48,28 +24,29 @@
     <string name="non_classical_logic">Non-Classical Logic</string>
     <string name="hilbert_style">Hilbert Style</string>
     <string name="sequent_style">Sequent Style</string>
-    <string name="axolotl_for_landlayout">AXolotl for LandLayout</string>
+    <string name="axolotl_for_landLayout">AXolotl for LandLayout</string>
     <string name="equal_sign">equal sign</string>
-    <string name="help">HELP</string>
     <string name="acknowledgements"> <b>Acknowledgements</b></string>
     <string name="on_load_screen">On load screen</string>
     <string name="natural_deduction">Natural Deduction</string>
-    <string name="helpcounterstring">%1s/24</string>
-
-    http://fmv.jku.at/logtechedu/
+    <string name="helpCounterString">%1s/24</string>
+    <string name="goal"> <b>Goal</b></string>
+    <string name="tutorial">Tutorial</string>
+    <string name="load_problem">Load Problem</string>
+    <string name="save_proof">Save Proof Picture</string>
+    <string name="latex_proof">Latex Proof to Clipboard</string>
+    <string name="about">About</string>
+    <string name="members"><b>Members</b></string>
     <string name="about1">The development of this application was partially funded by the Linz Institute of
     Technology (<a href="https://www.jku.at/linz-institute-of-technology/">LIT</a>) SEED Project <a href="http://fmv.jku.at/logtechedu/">LOGTECHEDU</a>
      hosted by the Institute for Formal Methods and Verification (<a href="http://fmv.jku.at/">FMV</a>)
      and the Research Institute of Symbolic Computation (<a href="https://risc.jku.at/">RISC</a>)  of the
     Johannes Kepler University (<a href="https://www.jku.at/">JKU</a>).
     </string>
-    <string name="goal"> <b>Goal</b></string>
-
     <string name="about2"> To provide students of computer science and possibly other subjects
     with a game-like self-study environment which they can use to familiarize themselves with the basic
     concepts of formal reasoning, formal logic, and term re-writing systems.    </string>
 
-    <string name="members"><b>Members</b></string>
     <string name="about3">
     <a href="https://risc.jku.at/m/david-cerna/">David M. Cerna</a> is a member of the LOGTECHEDU project.
     He provided the conceptual design, architecture, and managed the development.
@@ -251,12 +228,5 @@
         \n\n
     To move onto the About section <b>swipe right</b>. To go back to
     an earlier section <b>swipe left</b>. </string>
-    <string name="tutorial">Tutorial</string>
-    <string name="load_problem">Load Problem</string>
-    <string name="save_proof">Save Proof Picture</string>
-    <string name="latex_proof">Latex Proof to Clipboard</string>
-    <string name="about">About</string>
-
-
 </resources>
 

@@ -178,10 +178,10 @@
                     android:layout_marginTop="6dp"
                     android:layout_weight="1"
                     android:fontFamily="sans-serif-medium"
-                    android:text="@string/termmatchingmenu"
+                    android:text="@string/termMatchingMenu"
                     android:textColor="#FDFDFE"
                     android:textSize="14sp"
-                    android:title="@string/termmatchingmenu" />
+                    android:title="@string/termMatchingMenu" />
             </LinearLayout>
 
             <LinearLayout

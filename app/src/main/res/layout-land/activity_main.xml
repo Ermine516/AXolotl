@@ -59,7 +59,7 @@
             android:layout_height="147dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:contentDescription="@string/axolotl_for_landlayout"
+            android:contentDescription="@string/axolotl_for_landLayout"
             app:layout_constraintBottom_toTopOf="@+id/RuleListScroll"
             app:layout_constraintEnd_toStartOf="@+id/RightSideTerm"
             app:layout_constraintHorizontal_bias="0.5"

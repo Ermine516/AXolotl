@@ -78,7 +78,7 @@
                     android:layout_height="30dp"
                     android:layout_marginStart="10dp"
                     android:contentDescription="@string/proof_button_menu_symbol"
-                    app:srcCompat="@drawable/proofxxxhdpi" />
+                    app:srcCompat="@drawable/proof" />
 
                 <TextView
                     android:id="@+id/ViewProof"
@@ -229,7 +229,7 @@
                     android:layout_height="30dp"
                     android:layout_marginStart="10dp"
                     android:contentDescription="@string/proof_button_menu_symbol"
-                    app:srcCompat="@drawable/nonclassic" />
+                    app:srcCompat="@drawable/modal" />
 
                 <TextView
                     android:id="@+id/nonclassical"

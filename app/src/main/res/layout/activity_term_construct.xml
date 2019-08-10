@@ -171,7 +171,7 @@
             app:layout_constraintStart_toEndOf="@+id/TermInstanceDisplay"
             app:layout_constraintTop_toTopOf="@+id/TermInstanceDisplay"
             android:focusable="true"
-            app:srcCompat="@drawable/undoxhdpi" />
+            app:srcCompat="@drawable/undo" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     <com.google.android.material.navigation.NavigationView

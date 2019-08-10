@@ -2,7 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/load"
-        android:icon="@drawable/openfilexxxhdpi"
         android:title="@string/load_problem" />
     <item
         android:id="@+id/save"

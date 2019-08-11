@@ -173,8 +173,13 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
                     drawRuleFromSelection();
                 } else if (PS.selectedPosition.compareTo(Const.Empty.getSym()) == 0) {
                     drawRule();
-                } else
+                } else {
+                    String temp = PS.selectedPosition;
+                    PS.selectedPosition = Const.Empty.getSym();
+                    drawRule();
+                    PS.selectedPosition = temp;
                     Toast.makeText(AxolotlSupportingListenersAndMethods.this, "Rule not applicable", Toast.LENGTH_SHORT).show();
+                }
 
             }
         }

@@ -414,6 +414,10 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         } catch (Substitution.NotASubtitutionException e) {
             Toast.makeText(AxolotlSupportingFunctionality.this, "Rule not applicable", Toast.LENGTH_SHORT).show();
             sub = null;
+            String temp = PS.selectedPosition;
+            PS.selectedPosition = Const.Empty.getSym();
+            drawRule();
+            PS.selectedPosition = temp;
         }
         if (sub != null) {
             ArrayList<Term> temp = new ArrayList<>(sub.losslessApply(PS.currentRule.Conclusions));

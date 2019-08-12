@@ -44,18 +44,19 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="35dp"
                     android:contentDescription="@string/problem_button_menu_symbol"
                     app:srcCompat="@drawable/unieqhdpi" />
 
                 <TextView
                     android:id="@+id/Problembutton"
                     android:layout_width="0dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="54dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="35dp"
+                    android:layout_marginTop="0dp"
                     android:layout_weight="1"
                     android:fontFamily="sans-serif-medium"
+                    android:gravity="center_vertical"
                     android:text="@string/problem"
                     android:textColor="#FDFDFE"
                     android:textSize="14sp"
@@ -67,7 +68,7 @@
             <LinearLayout
                 android:id="@+id/Proofbuttonlayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_gravity="start"
                 android:layout_marginTop="8dp"
                 android:orientation="horizontal"
@@ -76,18 +77,18 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="35dp"
                     android:contentDescription="@string/proof_button_menu_symbol"
                     app:srcCompat="@drawable/proof" />
 
                 <TextView
                     android:id="@+id/ViewProof"
                     android:layout_width="0dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="46dp"
-                    android:layout_marginTop="6dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="35dp"
                     android:layout_weight="1"
                     android:fontFamily="sans-serif-medium"
+                    android:gravity="center_vertical"
                     android:text="@string/view_proof"
                     android:textColor="#FDFDFE"
                     android:textSize="14sp"
@@ -106,21 +107,24 @@
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/observeswitchformenu"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="26dp"
                     android:checked="true"
+                    android:gravity="center_vertical"
                     android:theme="@style/MyCustomSwitchTheme" />
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/observation"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="27dp"
                     android:layout_weight="1"
                     android:fontFamily="sans-serif-medium"
-                    android:paddingStart="18dp"
-                    android:paddingEnd="0dp"
+                    android:gravity="center_vertical"
                     android:text="@string/ObserveMode"
                     android:textColor="#FDFDFE"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:title="@string/ObserveMode" />
             </LinearLayout>
 
             <LinearLayout
@@ -134,8 +138,7 @@
                 <androidx.appcompat.widget.AppCompatSeekBar
                     android:id="@+id/Adjusttextseeker"
                     android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
+                    android:layout_height="30dp"
                     android:max="50"
                     android:progress="25"
                     android:theme="@style/MyCustomSwitchTheme" />
@@ -143,10 +146,11 @@
                 <TextView
                     android:id="@+id/textsize"
                     android:layout_width="0dp"
-                    android:layout_height="15dp"
+                    android:layout_height="30dp"
                     android:layout_marginStart="0dp"
                     android:layout_weight="1"
                     android:fontFamily="sans-serif-medium"
+                    android:gravity="center_vertical"
                     android:text="@string/text_size"
                     android:textColor="#FDFDFE"
                     android:textSize="14sp"
@@ -166,18 +170,18 @@
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="30dp"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="25dp"
                     android:contentDescription="@string/proof_button_menu_symbol"
                     app:srcCompat="@drawable/termequalmenu" />
 
                 <TextView
                     android:id="@+id/TermMatchingProblems"
                     android:layout_width="0dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginTop="6dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="25dp"
                     android:layout_weight="1"
                     android:fontFamily="sans-serif-medium"
+                    android:gravity="center_vertical"
                     android:text="@string/termMatchingMenu"
                     android:textColor="#FDFDFE"
                     android:textSize="14sp"
@@ -195,19 +199,19 @@
 
                 <ImageView
                     android:layout_width="60dp"
-                    android:layout_height="35dp"
-                    android:layout_marginStart="10dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="20dp"
                     android:contentDescription="@string/proof_button_menu_symbol"
                     app:srcCompat="@drawable/classical" />
 
                 <TextView
                     android:id="@+id/PropositionalProblems"
                     android:layout_width="0dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="6dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="20dp"
                     android:layout_weight="1"
                     android:fontFamily="sans-serif-medium"
+                    android:gravity="center_vertical"
                     android:text="@string/classical_logic"
                     android:textColor="#FDFDFE"
                     android:textSize="14sp"
@@ -227,18 +231,18 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="30dp"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="32dp"
                     android:contentDescription="@string/proof_button_menu_symbol"
                     app:srcCompat="@drawable/modal" />
 
                 <TextView
                     android:id="@+id/nonclassical"
                     android:layout_width="0dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="35dp"
-                    android:layout_marginTop="6dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="28dp"
                     android:layout_weight="1"
                     android:fontFamily="sans-serif-medium"
+                    android:gravity="center_vertical"
                     android:text="@string/ModalLogic"
                     android:textColor="#FDFDFE"
                     android:textSize="14sp"

@@ -4,7 +4,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="ProblemTag">Problem and Rules</string>
-    <string name="ObserveMode">Observation Mode</string>
+    <string name="ObserveMode">Observation</string>
     <string name="ModalLogic">Modal Logic</string>
     <string name="RuleAppliedTag">Matching Substitution</string>
     <string name="CurrentTermConstructionTag">Term State</string>

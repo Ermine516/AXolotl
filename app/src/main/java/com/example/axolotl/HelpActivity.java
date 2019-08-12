@@ -62,8 +62,15 @@ protected void onCreate(Bundle savedInstanceState) {
 
     @Override
     protected boolean implementationOfSwipeLeft() {
-        if (helpPage > 1) helpPage--;
-        ActivityDecorate();
+        if (helpPage > 1) {
+            helpPage--;
+            ActivityDecorate();
+        } else {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, PS);
+            startActivity(intent);
+            finish();
+        }
         return true;
     }
 

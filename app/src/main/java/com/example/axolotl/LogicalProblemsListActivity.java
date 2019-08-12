@@ -111,7 +111,10 @@ public class LogicalProblemsListActivity extends AxolotlSupportingFunctionalityP
 
     @Override
     protected boolean implementationOfSwipeLeft() {
-        super.onBackPressed();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, PS);
+        startActivity(intent);
+        finish();
         return true;
     }
 

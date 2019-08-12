@@ -1,6 +1,7 @@
 package com.example.axolotl;
 
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
@@ -96,7 +97,10 @@ public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
 
     @Override
     protected boolean implementationOfSwipeLeft() {
-        super.onBackPressed();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, PS);
+        startActivity(intent);
+        finish();
         return true;
     }
 

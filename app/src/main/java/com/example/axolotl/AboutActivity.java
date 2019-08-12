@@ -1,5 +1,6 @@
 package com.example.axolotl;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
@@ -42,7 +43,10 @@ public class AboutActivity extends AxolotlSupportingFunctionality {
      */
     @Override
     protected boolean implementationOfSwipeLeft() {
-        super.onBackPressed();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, PS);
+        startActivity(intent);
+        finish();
         return true;
     }
 

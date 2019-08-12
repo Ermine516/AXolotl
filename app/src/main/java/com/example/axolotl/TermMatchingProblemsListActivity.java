@@ -1,5 +1,6 @@
 package com.example.axolotl;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -38,7 +39,10 @@ public class TermMatchingProblemsListActivity extends AxolotlSupportingFunctiona
     }
     @Override
     protected boolean implementationOfSwipeLeft() {
-        super.onBackPressed();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, PS);
+        startActivity(intent);
+        finish();
         return true;
     }
 }

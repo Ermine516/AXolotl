@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -54,8 +53,6 @@ import static com.example.axolotl.AxolotlMessagingAndIO.PASSPROBLEMSTATE;
  * @author David M. Cerna
  */
 public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingListenersAndMethods {
-
-    AnimationDrawable animation;
 
     /**
      * This is the switch located in the navigation menu which turns observation mode on and off
@@ -416,7 +413,6 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
             for (String s : singleSide)
                 sub.varIsPartial(s);
         } catch (Substitution.NotASubtitutionException e) {
-            Toast.makeText(AxolotlSupportingFunctionality.this, "Rule not applicable", Toast.LENGTH_SHORT).show();
             sub = null;
             String temp = PS.selectedPosition;
             PS.selectedPosition = Const.Empty.getSym();

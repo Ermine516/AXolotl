@@ -23,18 +23,23 @@ import static com.example.axolotl.AxolotlMessagingAndIO.PASSPROBLEMSTATE;
 import static com.example.axolotl.TermHelper.TermMatchWithVar;
 
 public class MainActivity extends AxolotlSupportingFunctionality {
+    AnimationDrawable animation;
+    private int currentlayout;
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
     @Override
     public void onConfigurationChanged(Configuration newconfig) {
         super.onConfigurationChanged(newconfig);
+        currentlayout = this.getResources().getConfiguration().orientation;
         onInternalChange();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        currentlayout = this.getResources().getConfiguration().orientation;
+
         PS = constructProblemState(savedInstanceState, getIntent());
         int animate = -1;
         if (PS.mainActivityState == 3) {
@@ -49,15 +54,24 @@ public class MainActivity extends AxolotlSupportingFunctionality {
             else if (PS.mainActivityState == 0) {
                 setContentView(R.layout.app_main_bar_layout);
                 if (animate == 0) {
-                    ImageView image = findViewById(R.id.AxolotlHorizontal);
-                    animation = (AnimationDrawable) AppCompatResources.getDrawable(this, R.drawable.applied_rule_animation);
-                    image.setImageDrawable(animation);
-                    animation.start();
+                    if (currentlayout == Configuration.ORIENTATION_PORTRAIT) {
+                        ImageView image = findViewById(R.id.AxolotlHorizontal);
+                        animation = (AnimationDrawable) AppCompatResources.getDrawable(this, R.drawable.applied_rule_animation);
+                        image.setImageDrawable(animation);
+                        animation.start();
+                    } else {
+                        ImageView image = findViewById(R.id.AxolotlHorizontal);
+                        animation = (AnimationDrawable) AppCompatResources.getDrawable(this, R.drawable.landscape_applied_rule_animation);
+                        image.setImageDrawable(animation);
+                        animation.start();
+                    }
                 } else if (animate == 1) {
-                    ImageView image = findViewById(R.id.AxolotlHorizontal);
-                    animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.undo_animation);
-                    image.setImageDrawable(animation);
-                    animation.start();
+                    if (currentlayout == Configuration.ORIENTATION_PORTRAIT) {
+                        ImageView image = findViewById(R.id.AxolotlHorizontal);
+                        animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.landscape_undo_animation);
+                        image.setImageDrawable(animation);
+                        animation.start();
+                    }
                 }
                 findViewById(R.id.OuterLayout).setOnTouchListener(new MainSwipeListener(this));
                 findViewById(R.id.OuterLayout).setOnClickListener(new View.OnClickListener() {
@@ -186,10 +200,18 @@ public class MainActivity extends AxolotlSupportingFunctionality {
             MainActivity.this.finish();
 
         } else {
-            ImageView image = findViewById(R.id.AxolotlHorizontal);
-            animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.no_undo_animation);
-            image.setImageDrawable(animation);
-            animation.start();
+            if (currentlayout == Configuration.ORIENTATION_PORTRAIT) {
+                ImageView image = findViewById(R.id.AxolotlHorizontal);
+                animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.no_undo_animation);
+                image.setImageDrawable(animation);
+                animation.start();
+            } else {
+                ImageView image = findViewById(R.id.AxolotlHorizontal);
+                animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.landscape_no_undo_animation);
+                image.setImageDrawable(animation);
+                animation.start();
+            }
+
         }
 
         return true;
@@ -241,28 +263,56 @@ public class MainActivity extends AxolotlSupportingFunctionality {
                                 MainActivity.this.startActivity(intent);
                                 MainActivity.this.finish();
                             } catch (Substitution.NotASubtitutionException e) {
+                                if (currentlayout == Configuration.ORIENTATION_PORTRAIT) {
+                                    ImageView image = findViewById(R.id.AxolotlHorizontal);
+                                    animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.select_not_app_animation);
+                                    image.setImageDrawable(animation);
+                                    animation.start();
+                                } else {
+                                    ImageView image = findViewById(R.id.AxolotlHorizontal);
+                                    animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.landscape_select_not_app_animation);
+                                    image.setImageDrawable(animation);
+                                    animation.start();
+                                }
+                            }
+                        } else {
+                            if (currentlayout == Configuration.ORIENTATION_PORTRAIT) {
                                 ImageView image = findViewById(R.id.AxolotlHorizontal);
-                                animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.axolotlhorizontal_select_not_app);
+                                animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.select_not_app_animation);
+                                image.setImageDrawable(animation);
+                                animation.start();
+                            } else {
+                                ImageView image = findViewById(R.id.AxolotlHorizontal);
+                                animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.landscape_select_not_app_animation);
                                 image.setImageDrawable(animation);
                                 animation.start();
                             }
+                        }
+                    } else {
+                        if (currentlayout == Configuration.ORIENTATION_PORTRAIT) {
+                            ImageView image = findViewById(R.id.AxolotlHorizontal);
+                            animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.select_goal_animation);
+                            image.setImageDrawable(animation);
+                            animation.start();
                         } else {
                             ImageView image = findViewById(R.id.AxolotlHorizontal);
-                            animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.select_not_app_animation);
+                            animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.landscape_select_goal_animation);
                             image.setImageDrawable(animation);
                             animation.start();
                         }
+                    }
+                } else {
+                    if (currentlayout == Configuration.ORIENTATION_PORTRAIT) {
+                        ImageView image = findViewById(R.id.AxolotlHorizontal);
+                        animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.select_rule_animation);
+                        image.setImageDrawable(animation);
+                        animation.start();
                     } else {
                         ImageView image = findViewById(R.id.AxolotlHorizontal);
-                        animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.select_goal_animation);
+                        animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.landscape_select_rule_animation);
                         image.setImageDrawable(animation);
                         animation.start();
                     }
-                } else {
-                    ImageView image = findViewById(R.id.AxolotlHorizontal);
-                    animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.select_rule_animation);
-                    image.setImageDrawable(animation);
-                    animation.start();
                 }
             } catch (NullPointerException e) {
                 Toast.makeText(MainActivity.this, "Problems Substituting", Toast.LENGTH_SHORT).show();

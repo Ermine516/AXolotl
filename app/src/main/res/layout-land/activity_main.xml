@@ -30,7 +30,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView">
+            app:layout_constraintTop_toBottomOf="@+id/AxolotlHorizontal">
 
             <LinearLayout
                 android:id="@+id/RuleListVerticalLayout"
@@ -54,7 +54,7 @@
 
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/AxolotlHorizontal"
             android:layout_width="165dp"
             android:layout_height="147dp"
             android:layout_marginStart="8dp"
@@ -72,11 +72,11 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:fillViewport="true"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView"
+            app:layout_constraintBottom_toBottomOf="@+id/AxolotlHorizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toTopOf="@+id/imageView">
+            app:layout_constraintStart_toEndOf="@+id/AxolotlHorizontal"
+            app:layout_constraintTop_toTopOf="@+id/AxolotlHorizontal">
 
             <LinearLayout
                 android:id="@+id/RightSideTermLayout"

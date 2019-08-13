@@ -68,7 +68,6 @@ public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
                             intent = new Intent(MatchDisplayActivity.this, TermConstructActivity.class);
                         else
                             intent = new Intent(MatchDisplayActivity.this, MatchDisplayActivity.class);
-                        Toast.makeText(MatchDisplayActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).variable, Toast.LENGTH_SHORT).show();
                     } else {
                         MatchDisplayActivity.this.swipeRightProblemStateUpdate();
                         intent = new Intent(MatchDisplayActivity.this, MainActivity.class);
@@ -95,14 +94,11 @@ public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
                 MatchDisplayActivity.this.PS.subPos = -1;
                 PS.Substitutions = new Substitution();
                 intent = new Intent(MatchDisplayActivity.this, MainActivity.class);
-                Toast.makeText(MatchDisplayActivity.this, "Select Rule and Problem Side", Toast.LENGTH_SHORT).show();
             } else if (PS.MatchorConstruct.get(PS.Substitutions.get(PS.subPos).variable)) {
                 PS.Substitutions.alter(PS.subPos, PS.Substitutions.get(PS.subPos).variable, Const.HoleSelected.Dup());
                 intent = new Intent(MatchDisplayActivity.this, TermConstructActivity.class);
-                Toast.makeText(MatchDisplayActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).variable, Toast.LENGTH_SHORT).show();
             } else {
                 intent = new Intent(MatchDisplayActivity.this, MatchDisplayActivity.class);
-                Toast.makeText(MatchDisplayActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).variable, Toast.LENGTH_SHORT).show();
             }
             intent.putExtra(PASSPROBLEMSTATE, PS);
             MatchDisplayActivity.this.startActivity(intent);

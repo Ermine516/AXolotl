@@ -122,7 +122,6 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
                             intent = new Intent(TermConstructActivity.this, TermConstructActivity.class);
                         else
                             intent = new Intent(TermConstructActivity.this, MatchDisplayActivity.class);
-                        Toast.makeText(TermConstructActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).variable, Toast.LENGTH_SHORT).show();
                     } else {
                         TermConstructActivity.this.swipeRightProblemStateUpdate();
                         intent = new Intent(TermConstructActivity.this, MainActivity.class);
@@ -209,14 +208,12 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
                 TermConstructActivity.this.PS.subPos = -1;
                 PS.Substitutions = new Substitution();
                 intent = new Intent(TermConstructActivity.this, MainActivity.class);
-                Toast.makeText(TermConstructActivity.this, "Select Rule and Problem Side", Toast.LENGTH_SHORT).show();
             } else {
                 if (PS.MatchorConstruct.get(PS.Substitutions.get(PS.subPos).variable)) {
                     PS.Substitutions.alter(PS.subPos, PS.Substitutions.get(PS.subPos).variable, Const.HoleSelected.Dup());
                     intent = new Intent(TermConstructActivity.this, TermConstructActivity.class);
                 } else
                     intent = new Intent(TermConstructActivity.this, MatchDisplayActivity.class);
-                Toast.makeText(TermConstructActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).variable, Toast.LENGTH_SHORT).show();
             }
             intent.putExtra(PASSPROBLEMSTATE, PS);
             TermConstructActivity.this.startActivity(intent);

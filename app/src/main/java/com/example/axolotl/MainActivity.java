@@ -26,9 +26,6 @@ public class MainActivity extends AxolotlSupportingFunctionality {
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
-
-    AnimationDrawable axolotlanimation;
-
     @Override
     public void onConfigurationChanged(Configuration newconfig) {
         super.onConfigurationChanged(newconfig);
@@ -39,10 +36,29 @@ public class MainActivity extends AxolotlSupportingFunctionality {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         PS = constructProblemState(savedInstanceState, getIntent());
+        int animate = -1;
+        if (PS.mainActivityState == 3) {
+            PS.mainActivityState = 0;
+            animate = 0;
+        } else if (PS.mainActivityState == 4) {
+            PS.mainActivityState = 0;
+            animate = 1;
+        }
         if (PS.ActivityMode == 0) {
             if (PS.mainActivityState == -1) setContentView(R.layout.app_main_on_load_bar_layout);
             else if (PS.mainActivityState == 0) {
                 setContentView(R.layout.app_main_bar_layout);
+                if (animate == 0) {
+                    ImageView image = findViewById(R.id.AxolotlHorizontal);
+                    animation = (AnimationDrawable) AppCompatResources.getDrawable(this, R.drawable.applied_rule_animation);
+                    image.setImageDrawable(animation);
+                    animation.start();
+                } else if (animate == 1) {
+                    ImageView image = findViewById(R.id.AxolotlHorizontal);
+                    animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.undo_animation);
+                    image.setImageDrawable(animation);
+                    animation.start();
+                }
                 findViewById(R.id.OuterLayout).setOnTouchListener(new MainSwipeListener(this));
                 findViewById(R.id.OuterLayout).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -52,9 +68,9 @@ public class MainActivity extends AxolotlSupportingFunctionality {
             } else {
                 setContentView(R.layout.app_main_on_completion_bar_layout);
                 ImageView image = findViewById(R.id.Axolotlcompletion);
-                axolotlanimation = (AnimationDrawable) AppCompatResources.getDrawable(this, R.drawable.on_completion_animation);
-                image.setImageDrawable(axolotlanimation);
-                axolotlanimation.start();
+                animation = (AnimationDrawable) AppCompatResources.getDrawable(this, R.drawable.on_completion_animation);
+                image.setImageDrawable(animation);
+                animation.start();
             }
             ConstructActivity(savedInstanceState);
             if (PS.mainActivityState == 0) ActivityDecorate();
@@ -139,6 +155,46 @@ public class MainActivity extends AxolotlSupportingFunctionality {
         }
     }
 
+    protected boolean implementationOfSwipeLeft() {
+        if (PS.History.size() != 0) {
+            try {
+                State laststep = PS.History.remove(PS.History.size() - 1);
+                HashSet<Term> anteSideApply;
+                Term succSideApply = laststep.substitution.apply(laststep.rule.argument.Dup());
+                HashSet<Term> newSuccProblem = new HashSet<>();
+                succSideApply = laststep.substitution.apply(succSideApply);
+                newSuccProblem.add(succSideApply);
+                anteSideApply = laststep.substitution.apply(laststep.rule.Conclusions);
+                for (Term t : PS.problem) {
+                    boolean wasselected = false;
+                    for (Term s : anteSideApply)
+                        if (t.Print().compareTo(s.Print()) == 0) wasselected = true;
+                    if (!wasselected) newSuccProblem.add(t);
+                }
+                PS.problem = newSuccProblem;
+
+            } catch (NullPointerException e) {
+                Toast.makeText(MainActivity.this, "Problems accessing History", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+            PS.subPos = -1;
+            PS.Substitutions = new Substitution();
+            PS.mainActivityState = 4;
+            Intent intent = new Intent(MainActivity.this, MainActivity.class);
+            intent.putExtra(PASSPROBLEMSTATE, PS);
+            MainActivity.this.startActivity(intent);
+            MainActivity.this.finish();
+
+        } else {
+            ImageView image = findViewById(R.id.AxolotlHorizontal);
+            animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.no_undo_animation);
+            image.setImageDrawable(animation);
+            animation.start();
+        }
+
+        return true;
+    }
+
     protected class MainSwipeListener extends OnSwipeTouchListener {
         MainSwipeListener(Context ctx) {
             super(ctx);
@@ -181,60 +237,38 @@ public class MainActivity extends AxolotlSupportingFunctionality {
                                     MainActivity.this.swipeRightProblemStateUpdate();
                                     intent = new Intent(MainActivity.this, MainActivity.class);
                                 }
-                                if (PS.subPos != -1)
-                                    Toast.makeText(MainActivity.this, "Substitution for " + PS.Substitutions.get(PS.subPos).variable, Toast.LENGTH_SHORT).show();
                                 intent.putExtra(PASSPROBLEMSTATE, PS);
                                 MainActivity.this.startActivity(intent);
                                 MainActivity.this.finish();
                             } catch (Substitution.NotASubtitutionException e) {
-                                Toast.makeText(MainActivity.this, "Rule not applicable", Toast.LENGTH_SHORT).show();
+                                ImageView image = findViewById(R.id.AxolotlHorizontal);
+                                animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.axolotlhorizontal_select_not_app);
+                                image.setImageDrawable(animation);
+                                animation.start();
                             }
-                        } else
-                            Toast.makeText(MainActivity.this, "Rule not applicable", Toast.LENGTH_SHORT).show();
-                    } else
-                        Toast.makeText(MainActivity.this, "Select a Side of the Problem ", Toast.LENGTH_SHORT).show();
-                } else
-                    Toast.makeText(MainActivity.this, "Select a Rule", Toast.LENGTH_SHORT).show();
+                        } else {
+                            ImageView image = findViewById(R.id.AxolotlHorizontal);
+                            animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.select_not_app_animation);
+                            image.setImageDrawable(animation);
+                            animation.start();
+                        }
+                    } else {
+                        ImageView image = findViewById(R.id.AxolotlHorizontal);
+                        animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.select_goal_animation);
+                        image.setImageDrawable(animation);
+                        animation.start();
+                    }
+                } else {
+                    ImageView image = findViewById(R.id.AxolotlHorizontal);
+                    animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.select_rule_animation);
+                    image.setImageDrawable(animation);
+                    animation.start();
+                }
             } catch (NullPointerException e) {
                 Toast.makeText(MainActivity.this, "Problems Substituting", Toast.LENGTH_SHORT).show();
             }
             return true;
         }
-    }
-
-    protected boolean implementationOfSwipeLeft() {
-        if (PS.History.size() != 0) {
-            try {
-                State laststep = PS.History.remove(PS.History.size() - 1);
-                HashSet<Term> anteSideApply;
-                Term succSideApply = laststep.substitution.apply(laststep.rule.argument.Dup());
-                HashSet<Term> newSuccProblem = new HashSet<>();
-                succSideApply = laststep.substitution.apply(succSideApply);
-                newSuccProblem.add(succSideApply);
-                anteSideApply = laststep.substitution.apply(laststep.rule.Conclusions);
-                for (Term t : PS.problem) {
-                    boolean wasselected = false;
-                    for (Term s : anteSideApply)
-                        if (t.Print().compareTo(s.Print()) == 0) wasselected = true;
-                    if (!wasselected) newSuccProblem.add(t);
-                }
-                PS.problem = newSuccProblem;
-
-            } catch (NullPointerException e) {
-                Toast.makeText(MainActivity.this, "Problems accessing History", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-            PS.subPos = -1;
-            PS.Substitutions = new Substitution();
-            Intent intent = new Intent(MainActivity.this, MainActivity.class);
-            intent.putExtra(PASSPROBLEMSTATE, PS);
-            MainActivity.this.startActivity(intent);
-            MainActivity.this.finish();
-            Toast.makeText(MainActivity.this, "Rule Application Undone!", Toast.LENGTH_SHORT).show();
-        } else
-            Toast.makeText(MainActivity.this, "No Rule Application to Undo!", Toast.LENGTH_SHORT).show();
-
-        return true;
     }
 
     protected void onInternalChange() {

@@ -1,0 +1,49 @@
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="true">
+    <item
+        android:drawable="@drawable/on_completion01"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/on_completion02"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/on_completion03"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/on_completion04"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/on_completion05"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/on_completion06"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/on_completion07"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/on_completion08"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/on_completion09"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/on_completion10"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/on_completion11"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/on_completion12"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/on_completion13"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/on_completion14"
+        android:duration="150" />
+    <item
+        android:drawable="@drawable/axolotloncompletion"
+        android:duration="150" />
+
+</animation-list>

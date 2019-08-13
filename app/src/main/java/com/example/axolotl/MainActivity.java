@@ -3,12 +3,16 @@ package com.example.axolotl;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -19,11 +23,18 @@ import static com.example.axolotl.AxolotlMessagingAndIO.PASSPROBLEMSTATE;
 import static com.example.axolotl.TermHelper.TermMatchWithVar;
 
 public class MainActivity extends AxolotlSupportingFunctionality {
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
+
+    AnimationDrawable axolotlanimation;
+
     @Override
     public void onConfigurationChanged(Configuration newconfig) {
         super.onConfigurationChanged(newconfig);
         onInternalChange();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +49,13 @@ public class MainActivity extends AxolotlSupportingFunctionality {
                     public void onClick(View v) {
                     }
                 });
-            } else setContentView(R.layout.app_main_on_completion_bar_layout);
+            } else {
+                setContentView(R.layout.app_main_on_completion_bar_layout);
+                ImageView image = findViewById(R.id.Axolotlcompletion);
+                axolotlanimation = (AnimationDrawable) AppCompatResources.getDrawable(this, R.drawable.on_completion_animation);
+                image.setImageDrawable(axolotlanimation);
+                axolotlanimation.start();
+            }
             ConstructActivity(savedInstanceState);
             if (PS.mainActivityState == 0) ActivityDecorate();
             if (ProblemState.sideContainsEmptySet(PS.problem) && PS.problem.size() > 1)

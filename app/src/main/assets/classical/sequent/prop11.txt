@@ -1,0 +1,6 @@
+Function: A 0
+Variable: x
+Variable: y
+Variable: z
+Problem: 1 ⊢(A,A)
+Rule: 0  ⊢(cons(x,y),cons(x,z)) [AX]

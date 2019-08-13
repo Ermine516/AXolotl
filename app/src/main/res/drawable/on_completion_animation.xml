@@ -43,7 +43,7 @@
         android:drawable="@drawable/on_completion14"
         android:duration="150" />
     <item
-        android:drawable="@drawable/axolotloncompletion"
+        android:drawable="@drawable/on_completion15"
         android:duration="150" />
 
 </animation-list>

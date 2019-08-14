@@ -68,6 +68,11 @@ public class MainActivity extends AxolotlSupportingFunctionality {
                 } else if (animate == 1) {
                     if (currentlayout == Configuration.ORIENTATION_PORTRAIT) {
                         ImageView image = findViewById(R.id.AxolotlHorizontal);
+                        animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.undo_animation);
+                        image.setImageDrawable(animation);
+                        animation.start();
+                    } else {
+                        ImageView image = findViewById(R.id.AxolotlHorizontal);
                         animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.landscape_undo_animation);
                         image.setImageDrawable(animation);
                         animation.start();

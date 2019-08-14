@@ -239,7 +239,9 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
             TermText.setTextColor(Color.BLACK);
             TermText.setBackgroundColor(Color.WHITE);
         }
-        TermText.setLayoutParams(new FrameLayout.LayoutParams(((int) TermText.getPaint().measureText(TermText.getText().toString()) + 20), FrameLayout.LayoutParams.WRAP_CONTENT));
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(((int) TermText.getPaint().measureText(TermText.getText().toString()) + 20), FrameLayout.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(0, 0, 0, 48);
+        TermText.setLayoutParams(lp);
         if (lis != null) TermText.setOnClickListener(lis);
         if (longLis != null) {
             TermText.setLongClickable(true);
@@ -284,7 +286,9 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
             TermText.setTextColor(Color.BLACK);
             TermText.setBackgroundColor(Color.WHITE);
         }
-        TermText.setLayoutParams(new FrameLayout.LayoutParams(((int) TermText.getPaint().measureText(TermText.getText().toString()) + 20), FrameLayout.LayoutParams.WRAP_CONTENT));
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(((int) TermText.getPaint().measureText(TermText.getText().toString()) + 20), FrameLayout.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(0, 0, 0, 48);
+        TermText.setLayoutParams(lp);
         if (lis != null) TermText.setOnClickListener(lis);
         if (longLis != null) {
             TermText.setLongClickable(true);

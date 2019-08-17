@@ -14,7 +14,6 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
@@ -178,7 +177,6 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
                     PS.selectedPosition = Const.Empty.getSym();
                     drawRule();
                     PS.selectedPosition = temp;
-                    Toast.makeText(AxolotlSupportingListenersAndMethods.this, "Rule not applicable", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -401,10 +399,9 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
         public void onClick(View view) {
             int id = view.getId();
             Intent intent = null;
-            if (id == R.id.problembuttonlayout) {
-                Toast.makeText(AxolotlSupportingListenersAndMethods.this, "Problem", Toast.LENGTH_SHORT).show();
+            if (id == R.id.problembuttonlayout)
                 intent = new Intent(AxolotlSupportingListenersAndMethods.this, MainActivity.class);
-            } else if (id == R.id.classicbuttonlayout) {
+            else if (id == R.id.classicbuttonlayout) {
                 intent = new Intent(AxolotlSupportingListenersAndMethods.this, LogicalProblemsListActivity.class);
                 intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMLIST, 0);
             } else if (id == R.id.TermMatchingbuttonlayout) {
@@ -413,10 +410,9 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
             } else if (id == R.id.nonclassicbuttonlayout) {
                 intent = new Intent(AxolotlSupportingListenersAndMethods.this, LogicalProblemsListActivity.class);
                 intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMLIST, 1);
-            } else if (id == R.id.Proofbuttonlayout) {
+            } else if (id == R.id.Proofbuttonlayout)
                 intent = new Intent(AxolotlSupportingListenersAndMethods.this, ProofDisplayActivity.class);
-                Toast.makeText(AxolotlSupportingListenersAndMethods.this, "View Proof", Toast.LENGTH_SHORT).show();
-            }
+
             if (intent != null) {
                 intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, PS);
                 AxolotlSupportingListenersAndMethods.this.startActivity(intent);

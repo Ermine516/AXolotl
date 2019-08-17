@@ -65,7 +65,6 @@ class AxolotlMessagingAndIO {
 
         } else if (id == R.id.latex) {
             ((AxolotlSupportingListenersAndMethods) ctx).copyLatexToClipboard();
-            Toast.makeText(ctx, "Copied Latex Proof to Clipboard", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.help) {
             Intent intent = new Intent(ctx, HelpActivity.class);
             intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, ((AxolotlSupportingListenersAndMethods) ctx).PS);

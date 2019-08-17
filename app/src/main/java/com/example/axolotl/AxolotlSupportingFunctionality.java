@@ -497,7 +497,6 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
                         Log.i("ExternalStorage", "-> uri=" + uri);
                     }
                 });
-        Toast.makeText(this, "Saved Proof to Gallery", Toast.LENGTH_SHORT).show();
     }
 
     protected void copyLatexToClipboard() {

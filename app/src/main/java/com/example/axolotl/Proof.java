@@ -83,7 +83,8 @@ public class Proof {
             Rule rule = PS.Rules.get(i);
             ArrayList<Proof> args = new ArrayList<>();
             for (Term t : rule.Conclusions) {
-                if (TermHelper.wellformedSequents(t)) t.normalize(PS.Variables);
+                if (TermHelper.wellformedSequents(t))
+                    t.normalize(PS.Variables); // Don't forget that sequents are brittle terms
                 Proof p = new Proof(t.Print(), "");
                 p.drawLine = false;
                 p.finished = true;
@@ -151,7 +152,8 @@ public class Proof {
         HashSet<Term> curSuccProblem = PS.problem;
         if(history.size() == 0) {
             Term onlyOne = curSuccProblem.iterator().next();
-            if (TermHelper.wellformedSequents(onlyOne)) onlyOne.normalize(PS.Variables);
+            if (TermHelper.wellformedSequents(onlyOne))
+                onlyOne.normalize(PS.Variables); // Don't forget that sequents are brittle terms
             return new Proof(onlyOne.Print(), "");
         }
 
@@ -166,7 +168,8 @@ public class Proof {
             newSuccProblem.add(succSideApply);
 
             //make a new proof with the formula that we just derived
-            if (TermHelper.wellformedSequents(succSideApply)) succSideApply.normalize(PS.Variables);
+            if (TermHelper.wellformedSequents(succSideApply))
+                succSideApply.normalize(PS.Variables);// Don't forget that sequents are brittle terms
             Proof der = new Proof(succSideApply.Print(), laststep.rule.Label);
             der.setFinished(true);
 
@@ -174,10 +177,12 @@ public class Proof {
                 anteSideApply.add(laststep.substitution.apply(t));
 
             for (Term t : curSuccProblem) {
-                if (TermHelper.wellformedSequents(t)) t.normalize(PS.Variables);
+                if (TermHelper.wellformedSequents(t))
+                    t.normalize(PS.Variables); // Don't forget that sequents are brittle terms
                 boolean wasselected = false;
                 for (Term s : anteSideApply) {
-                    if (TermHelper.wellformedSequents(s)) s.normalize(PS.Variables);
+                    if (TermHelper.wellformedSequents(s))
+                        s.normalize(PS.Variables); // Don't forget that sequents are brittle terms
                     if (t.Print().compareTo(s.Print()) == 0) wasselected = true;
                 }
                 if (!wasselected) newSuccProblem.add(t);
@@ -186,7 +191,8 @@ public class Proof {
             //find all the antecedents that were used in our derivation
             ArrayList<Proof> toRemove = new ArrayList<>();
             for (Term s : anteSideApply){
-                if (TermHelper.wellformedSequents(s)) s.normalize(PS.Variables);
+                if (TermHelper.wellformedSequents(s))
+                    s.normalize(PS.Variables); // Don't forget that sequents are brittle terms
                 boolean availabe = false;
                 Proof instance = null;
                 for (Proof t : cur) {

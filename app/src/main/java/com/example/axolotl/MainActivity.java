@@ -238,8 +238,8 @@ public class MainActivity extends AxolotlSupportingFunctionality {
                     if (PS.selectedPosition.compareTo("") != 0) {
                         Term succTerm = ProblemState.getTermByString(PS.selectedPosition, PS.problem);
                         if (TermHelper.wellformedSequents(succTerm) && TermHelper.wellformedSequents(PS.currentRule.argument)) {
-                            succTerm.normalize(PS.Variables);
-                            PS.currentRule.argument.normalize(PS.Variables);
+                            succTerm.normalize(PS.Variables); // Don't forget that sequents are brittle terms
+                            PS.currentRule.argument.normalize(PS.Variables); // Don't forget that sequents are brittle terms
                         }
                         if (succTerm != null && TermMatchWithVar(succTerm, PS.currentRule.argument, PS.Variables)) {
                             PS.Substitutions = Substitution.substitutionConstruct(succTerm, PS.currentRule.argument, PS);

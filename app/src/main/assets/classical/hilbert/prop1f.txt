@@ -8,8 +8,11 @@ Variable: x
 Variable: y
 Variable: z
 Variable: w
-Problem: 1 ⇒(⇒(¬(p),¬(q)),⇒(⇒(¬(p),q),p))
+Problem: 1  ⇒(∧(p,q),∧(q,p))
 Rule: 2 x ⇒(x,y)  y [MP]
 Rule: 0  ⇒(x,⇒(y,x)) [Weak]
-Rule: 0  ⇒(⇒(x,y),⇒(¬(y),¬(x))) [Contra-Pos]
 Rule: 0  ⇒(⇒(x,⇒(y,z)),⇒(⇒(x,y),⇒(x,z))) [⇒-Dist]
+Rule: 0  ⇒(⇒(x,y),⇒(¬(y),¬(x))) [Contra-Pos]
+Rule: 0  ⇒(x,⇒(y,∧(x,y))) [∧-Def]
+Rule: 0  ⇒(∧(x,y),x) [∧-Elim1]
+Rule: 0  ⇒(∧(x,y),y) [∧-Elim2]

@@ -8,7 +8,7 @@ Variable: x
 Variable: y
 Variable: z
 Variable: w
-Problem: 1  ⇒(⇒(B,C),⇒(⇒(A,B),⇒(A,C)))
+Problem: 1  ⇒(⇒(A,B),⇒(⇒(B,C),⇒(A,C)))
 Rule: 2 x ⇒(x,y)  y [MP]
 Rule: 0  ⇒(x,⇒(y,x)) [Weak]
-Rule: 0  ⇒(⇒(x,⇒(y,z)),⇒(⇒(x,y),⇒(x,z))) [⇒-Trans]
+Rule: 0  ⇒(⇒(x,⇒(y,z)),⇒(⇒(x,y),⇒(x,z))) [⇒-Dist]

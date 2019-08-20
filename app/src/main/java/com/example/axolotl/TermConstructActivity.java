@@ -103,39 +103,33 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
         }
     }
 
-    protected class SwipeListener extends OnSwipeTouchListener {
-        SwipeListener(Context ctx) {
-            super(ctx);
-        }
-
-        public boolean onSwipeRight() {
-            ProblemState PS = TermConstructActivity.this.PS;
-            Intent intent;
-            try {
-                if (!PS.Substitutions.get(PS.subPos).replacement.contains(Const.HoleSelected)) {
-                    TermConstructActivity.this.PS.subPos++;
-                    if (!PS.observe)
-                        while (PS.Substitutions.isPosition(PS.subPos) && !PS.Substitutions.get(PS.subPos).replacement.contains(Const.HoleSelected))
-                            PS.subPos++;
-                    if (PS.Substitutions.isPosition(PS.subPos)) {
-                        if (PS.Substitutions.get(PS.subPos).replacement.contains(Const.HoleSelected))
-                            intent = new Intent(TermConstructActivity.this, TermConstructActivity.class);
-                        else
-                            intent = new Intent(TermConstructActivity.this, MatchDisplayActivity.class);
-                    } else {
-                        TermConstructActivity.this.swipeRightProblemStateUpdate();
-                        intent = new Intent(TermConstructActivity.this, MainActivity.class);
-                    }
-                    intent.putExtra(PASSPROBLEMSTATE, PS);
-                    TermConstructActivity.this.startActivity(intent);
-                    TermConstructActivity.this.finish();
+    @SuppressWarnings("ConstantConditions")
+    protected boolean implementationOfSwipeLeft() {
+        PS.Substitutions.alter(PS.subPos, PS.Substitutions.get(PS.subPos).variable, Const.HoleSelected.Dup());
+        PS.subPos--;
+        Intent intent;
+        try {
+            if (TermConstructActivity.this.PS.subPos == -1 || !PS.observe) {
+                TermConstructActivity.this.PS.subPos = -1;
+                PS.Substitutions = new Substitution();
+                intent = new Intent(TermConstructActivity.this, MainActivity.class);
+            } else {
+                if (PS.MatchorConstruct.get(PS.Substitutions.get(PS.subPos).variable)) {
+                    PS.Substitutions.alter(PS.subPos, PS.Substitutions.get(PS.subPos).variable, Const.HoleSelected.Dup());
+                    intent = new Intent(TermConstructActivity.this, TermConstructActivity.class);
                 } else
-                    Toast.makeText(TermConstructActivity.this, "Incomplete Substitution", Toast.LENGTH_SHORT).show();
-            } catch (NullPointerException e) {
-                Toast.makeText(TermConstructActivity.this, "Problems Substituting", Toast.LENGTH_SHORT).show();
+                    intent = new Intent(TermConstructActivity.this, MatchDisplayActivity.class);
             }
-            return true;
+            intent.putExtra(PASSPROBLEMSTATE, PS);
+            TermConstructActivity.this.startActivity(intent);
+            TermConstructActivity.this.finish();
+            overridePendingTransition(0, 0);
+            //overridePendingTransition(R.anim.animation_leave, R.anim.animation_enter);
+        } catch (NullPointerException e) {
+            Toast.makeText(TermConstructActivity.this, "Problems accessing Previous State", Toast.LENGTH_SHORT).show();
+
         }
+        return true;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -198,31 +192,41 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
     protected void onInternalChange() {
     }
 
-    @SuppressWarnings("ConstantConditions")
-    protected boolean implementationOfSwipeLeft() {
-        PS.Substitutions.alter(PS.subPos, PS.Substitutions.get(PS.subPos).variable, Const.HoleSelected.Dup());
-        PS.subPos--;
-        Intent intent;
-        try {
-            if (TermConstructActivity.this.PS.subPos == -1 || !PS.observe) {
-                TermConstructActivity.this.PS.subPos = -1;
-                PS.Substitutions = new Substitution();
-                intent = new Intent(TermConstructActivity.this, MainActivity.class);
-            } else {
-                if (PS.MatchorConstruct.get(PS.Substitutions.get(PS.subPos).variable)) {
-                    PS.Substitutions.alter(PS.subPos, PS.Substitutions.get(PS.subPos).variable, Const.HoleSelected.Dup());
-                    intent = new Intent(TermConstructActivity.this, TermConstructActivity.class);
-                } else
-                    intent = new Intent(TermConstructActivity.this, MatchDisplayActivity.class);
-            }
-            intent.putExtra(PASSPROBLEMSTATE, PS);
-            TermConstructActivity.this.startActivity(intent);
-            TermConstructActivity.this.finish();
-        } catch (NullPointerException e) {
-            Toast.makeText(TermConstructActivity.this, "Problems accessing Previous State", Toast.LENGTH_SHORT).show();
-
+    protected class SwipeListener extends OnSwipeTouchListener {
+        SwipeListener(Context ctx) {
+            super(ctx);
         }
-        return true;
+
+        public boolean onSwipeRight() {
+            ProblemState PS = TermConstructActivity.this.PS;
+            Intent intent;
+            try {
+                if (!PS.Substitutions.get(PS.subPos).replacement.contains(Const.HoleSelected)) {
+                    TermConstructActivity.this.PS.subPos++;
+                    if (!PS.observe)
+                        while (PS.Substitutions.isPosition(PS.subPos) && !PS.Substitutions.get(PS.subPos).replacement.contains(Const.HoleSelected))
+                            PS.subPos++;
+                    if (PS.Substitutions.isPosition(PS.subPos)) {
+                        if (PS.Substitutions.get(PS.subPos).replacement.contains(Const.HoleSelected))
+                            intent = new Intent(TermConstructActivity.this, TermConstructActivity.class);
+                        else
+                            intent = new Intent(TermConstructActivity.this, MatchDisplayActivity.class);
+                    } else {
+                        TermConstructActivity.this.swipeRightProblemStateUpdate();
+                        intent = new Intent(TermConstructActivity.this, MainActivity.class);
+                    }
+                    intent.putExtra(PASSPROBLEMSTATE, PS);
+                    TermConstructActivity.this.startActivity(intent);
+                    overridePendingTransition(0, 0);
+                    // overridePendingTransition(R.anim.animation_enter, R.anim.animation_leave);
+                    TermConstructActivity.this.finish();
+                } else
+                    Toast.makeText(TermConstructActivity.this, "Incomplete Substitution", Toast.LENGTH_SHORT).show();
+            } catch (NullPointerException e) {
+                Toast.makeText(TermConstructActivity.this, "Problems Substituting", Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        }
     }
 
 }

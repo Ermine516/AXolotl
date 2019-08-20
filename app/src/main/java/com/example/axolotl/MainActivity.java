@@ -203,6 +203,9 @@ public class MainActivity extends AxolotlSupportingFunctionality {
             intent.putExtra(PASSPROBLEMSTATE, PS);
             MainActivity.this.startActivity(intent);
             MainActivity.this.finish();
+            overridePendingTransition(0, 0);
+            //  overridePendingTransition(0,R.anim.animation_enter);
+
 
         } else {
             if (currentlayout == Configuration.ORIENTATION_PORTRAIT) {
@@ -266,6 +269,8 @@ public class MainActivity extends AxolotlSupportingFunctionality {
                                 }
                                 intent.putExtra(PASSPROBLEMSTATE, PS);
                                 MainActivity.this.startActivity(intent);
+                                overridePendingTransition(0, 0);
+                                //overridePendingTransition(R.anim.animation_enter, R.anim.animation_leave);
                                 MainActivity.this.finish();
                             } catch (Substitution.NotASubtitutionException e) {
                                 if (currentlayout == Configuration.ORIENTATION_PORTRAIT) {

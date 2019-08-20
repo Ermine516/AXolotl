@@ -69,6 +69,7 @@ protected void onCreate(Bundle savedInstanceState) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, PS);
             startActivity(intent);
+            overridePendingTransition(0, 0);
             finish();
         }
         return true;
@@ -87,6 +88,7 @@ protected void onCreate(Bundle savedInstanceState) {
                 Intent intent = new Intent(HelpActivity.this, AboutActivity.class);
                 intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, HelpActivity.this.PS);
                 HelpActivity.this.startActivity(intent);
+                overridePendingTransition(R.anim.animation_enter, R.anim.animation_leave);
                 HelpActivity.this.finish();
             }
             return true;

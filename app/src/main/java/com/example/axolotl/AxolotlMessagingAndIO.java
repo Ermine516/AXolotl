@@ -69,11 +69,13 @@ class AxolotlMessagingAndIO {
             Intent intent = new Intent(ctx, HelpActivity.class);
             intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, ((AxolotlSupportingListenersAndMethods) ctx).PS);
             ctx.startActivity(intent);
+            ctx.overridePendingTransition(0, 0);
             ctx.finish();
         } else if (id == R.id.about) {
             Intent intent = new Intent(ctx, AboutActivity.class);
             intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, ((AxolotlSupportingListenersAndMethods) ctx).PS);
             ctx.startActivity(intent);
+            ctx.overridePendingTransition(0, 0);
             ctx.finish();
         }
     }

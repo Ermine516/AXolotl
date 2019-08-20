@@ -27,7 +27,6 @@ public class AboutActivity extends AxolotlSupportingFunctionality {
         ((TextView) findViewById(R.id.about1text)).setMovementMethod(LinkMovementMethod.getInstance());
         ((TextView) findViewById(R.id.about2text)).setMovementMethod(LinkMovementMethod.getInstance());
         ((TextView) findViewById(R.id.about3text)).setMovementMethod(LinkMovementMethod.getInstance());
-
     }
 
     /**
@@ -46,6 +45,7 @@ public class AboutActivity extends AxolotlSupportingFunctionality {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, PS);
         startActivity(intent);
+        overridePendingTransition(0, 0);
         finish();
         return true;
     }

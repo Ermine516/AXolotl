@@ -49,6 +49,32 @@ public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
         }
     }
 
+    protected boolean implementationOfSwipeLeft() {
+        try {
+            PS.subPos--;
+            Intent intent;
+            if (MatchDisplayActivity.this.PS.subPos == -1 || !PS.observe) {
+                MatchDisplayActivity.this.PS.subPos = -1;
+                PS.Substitutions = new Substitution();
+                intent = new Intent(MatchDisplayActivity.this, MainActivity.class);
+            } else if (PS.MatchorConstruct.get(PS.Substitutions.get(PS.subPos).variable)) {
+                PS.Substitutions.alter(PS.subPos, PS.Substitutions.get(PS.subPos).variable, Const.HoleSelected.Dup());
+                intent = new Intent(MatchDisplayActivity.this, TermConstructActivity.class);
+            } else {
+                intent = new Intent(MatchDisplayActivity.this, MatchDisplayActivity.class);
+            }
+            intent.putExtra(PASSPROBLEMSTATE, PS);
+            MatchDisplayActivity.this.startActivity(intent);
+            MatchDisplayActivity.this.finish();
+            overridePendingTransition(0, 0);
+            //overridePendingTransition(R.anim.animation_leave, R.anim.animation_enter);
+
+        } catch (NullPointerException e) {
+            Toast.makeText(MatchDisplayActivity.this, "Problems accessing Previous State", Toast.LENGTH_SHORT).show();
+        }
+        return true;
+    }
+
     protected class SwipeListener extends OnSwipeTouchListener {
         SwipeListener(Context ctx) {
             super(ctx);
@@ -74,6 +100,8 @@ public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
                     }
                     intent.putExtra(PASSPROBLEMSTATE, PS);
                     MatchDisplayActivity.this.startActivity(intent);
+                    overridePendingTransition(0, 0);
+                    //overridePendingTransition(R.anim.animation_enter, R.anim.animation_leave);
                     MatchDisplayActivity.this.finish();
                 } else {
                     MatchDisplayActivity.this.PS.subPos--;
@@ -84,29 +112,6 @@ public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
             }
             return true;
         }
-    }
-
-    protected boolean implementationOfSwipeLeft() {
-        try {
-            PS.subPos--;
-            Intent intent;
-            if (MatchDisplayActivity.this.PS.subPos == -1 || !PS.observe) {
-                MatchDisplayActivity.this.PS.subPos = -1;
-                PS.Substitutions = new Substitution();
-                intent = new Intent(MatchDisplayActivity.this, MainActivity.class);
-            } else if (PS.MatchorConstruct.get(PS.Substitutions.get(PS.subPos).variable)) {
-                PS.Substitutions.alter(PS.subPos, PS.Substitutions.get(PS.subPos).variable, Const.HoleSelected.Dup());
-                intent = new Intent(MatchDisplayActivity.this, TermConstructActivity.class);
-            } else {
-                intent = new Intent(MatchDisplayActivity.this, MatchDisplayActivity.class);
-            }
-            intent.putExtra(PASSPROBLEMSTATE, PS);
-            MatchDisplayActivity.this.startActivity(intent);
-            MatchDisplayActivity.this.finish();
-        } catch (NullPointerException e) {
-            Toast.makeText(MatchDisplayActivity.this, "Problems accessing Previous State", Toast.LENGTH_SHORT).show();
-        }
-        return true;
     }
 
     protected void switchDisplay() {

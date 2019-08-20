@@ -71,6 +71,7 @@ public class LogicalProblemsListActivity extends AxolotlSupportingFunctionalityP
             if (getIntent().hasExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE))
                 intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, getIntent().getParcelableExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE));
             LogicalProblemsListActivity.this.startActivity(intent);
+            overridePendingTransition(0, 0);
             LogicalProblemsListActivity.this.finish();
         }
         PS = ConstructActivity(savedInstanceState);
@@ -114,6 +115,7 @@ public class LogicalProblemsListActivity extends AxolotlSupportingFunctionalityP
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, PS);
         startActivity(intent);
+        overridePendingTransition(0, 0);
         finish();
         return true;
     }

@@ -377,6 +377,7 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
                     newPS.observe = observe;
                     intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, newPS);
                     AxolotlSupportingListenersAndMethods.this.startActivity(intent);
+                    overridePendingTransition(0, 0);
                     AxolotlSupportingListenersAndMethods.this.finish();
                     break;
                 }
@@ -416,6 +417,7 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
             if (intent != null) {
                 intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, PS);
                 AxolotlSupportingListenersAndMethods.this.startActivity(intent);
+                overridePendingTransition(0, 0);
                 AxolotlSupportingListenersAndMethods.this.finish();
             }
         }

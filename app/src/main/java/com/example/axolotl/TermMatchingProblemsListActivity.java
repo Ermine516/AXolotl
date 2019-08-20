@@ -42,6 +42,7 @@ public class TermMatchingProblemsListActivity extends AxolotlSupportingFunctiona
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, PS);
         startActivity(intent);
+        overridePendingTransition(0, 0);
         finish();
         return true;
     }

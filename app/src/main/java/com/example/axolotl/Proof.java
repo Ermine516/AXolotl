@@ -83,6 +83,7 @@ public class Proof {
             Rule rule = PS.Rules.get(i);
             ArrayList<Proof> args = new ArrayList<>();
             for (Term t : rule.Conclusions) {
+                if (TermHelper.wellformedSequents(t)) t.normalize(PS.Variables);
                 Proof p = new Proof(t.Print(), "");
                 p.drawLine = false;
                 p.finished = true;
@@ -149,7 +150,9 @@ public class Proof {
 
         HashSet<Term> curSuccProblem = PS.problem;
         if(history.size() == 0) {
-            return new Proof(curSuccProblem.iterator().next().Print(), "");
+            Term onlyOne = curSuccProblem.iterator().next();
+            if (TermHelper.wellformedSequents(onlyOne)) onlyOne.normalize(PS.Variables);
+            return new Proof(onlyOne.Print(), "");
         }
 
         ArrayList<Proof> cur = new ArrayList<>();
@@ -163,6 +166,7 @@ public class Proof {
             newSuccProblem.add(succSideApply);
 
             //make a new proof with the formula that we just derived
+            if (TermHelper.wellformedSequents(succSideApply)) succSideApply.normalize(PS.Variables);
             Proof der = new Proof(succSideApply.Print(), laststep.rule.Label);
             der.setFinished(true);
 
@@ -170,15 +174,19 @@ public class Proof {
                 anteSideApply.add(laststep.substitution.apply(t));
 
             for (Term t : curSuccProblem) {
+                if (TermHelper.wellformedSequents(t)) t.normalize(PS.Variables);
                 boolean wasselected = false;
-                for (Term s : anteSideApply)
+                for (Term s : anteSideApply) {
+                    if (TermHelper.wellformedSequents(s)) s.normalize(PS.Variables);
                     if (t.Print().compareTo(s.Print()) == 0) wasselected = true;
+                }
                 if (!wasselected) newSuccProblem.add(t);
             }
 
             //find all the antecedents that were used in our derivation
             ArrayList<Proof> toRemove = new ArrayList<>();
             for (Term s : anteSideApply){
+                if (TermHelper.wellformedSequents(s)) s.normalize(PS.Variables);
                 boolean availabe = false;
                 Proof instance = null;
                 for (Proof t : cur) {

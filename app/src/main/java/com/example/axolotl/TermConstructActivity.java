@@ -55,6 +55,7 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
 
     private void UpdateTermDisplay() {
         TextView td = this.findViewById(R.id.TermDisplay);
+        td.setTextSize(PS.textSize);
         LinearLayout ltd = this.findViewById(R.id.TermInstancceLayout);
         td.setText(PS.Substitutions.get(PS.subPos).replacement.Print());
         int width = ((int) td.getPaint().measureText(td.getText().toString())) + 20;

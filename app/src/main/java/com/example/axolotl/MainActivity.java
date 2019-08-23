@@ -175,52 +175,53 @@ public class MainActivity extends AxolotlSupportingFunctionality {
     }
 
     protected boolean implementationOfSwipeLeft() {
-        if (PS.History.size() != 0) {
-            try {
-                State laststep = PS.History.remove(PS.History.size() - 1);
-                HashSet<Term> anteSideApply;
-                Term succSideApply = laststep.substitution.apply(laststep.rule.argument.Dup());
-                HashSet<Term> newSuccProblem = new HashSet<>();
-                succSideApply = laststep.substitution.apply(succSideApply);
-                newSuccProblem.add(succSideApply);
-                anteSideApply = laststep.substitution.apply(laststep.rule.Conclusions);
-                for (Term t : PS.problem) {
-                    boolean wasselected = false;
-                    for (Term s : anteSideApply)
-                        if (t.Print().compareTo(s.Print()) == 0) wasselected = true;
-                    if (!wasselected) newSuccProblem.add(t);
+        if (PS.mainActivityState == 0)
+            if (PS.History.size() != 0) {
+                try {
+                    State laststep = PS.History.remove(PS.History.size() - 1);
+                    HashSet<Term> anteSideApply;
+                    Term succSideApply = laststep.substitution.apply(laststep.rule.argument.Dup());
+                    HashSet<Term> newSuccProblem = new HashSet<>();
+                    succSideApply = laststep.substitution.apply(succSideApply);
+                    newSuccProblem.add(succSideApply);
+                    anteSideApply = laststep.substitution.apply(laststep.rule.Conclusions);
+                    for (Term t : PS.problem) {
+                        boolean wasselected = false;
+                        for (Term s : anteSideApply)
+                            if (t.Print().compareTo(s.Print()) == 0) wasselected = true;
+                        if (!wasselected) newSuccProblem.add(t);
+                    }
+                    PS.problem = newSuccProblem;
+
+                } catch (NullPointerException e) {
+                    Toast.makeText(MainActivity.this, "Problems accessing History", Toast.LENGTH_SHORT).show();
+                    return true;
                 }
-                PS.problem = newSuccProblem;
-
-            } catch (NullPointerException e) {
-                Toast.makeText(MainActivity.this, "Problems accessing History", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-            PS.subPos = -1;
-            PS.Substitutions = new Substitution();
-            PS.mainActivityState = 4;
-            Intent intent = new Intent(MainActivity.this, MainActivity.class);
-            intent.putExtra(PASSPROBLEMSTATE, PS);
-            MainActivity.this.startActivity(intent);
-            MainActivity.this.finish();
-            overridePendingTransition(0, 0);
-            //  overridePendingTransition(0,R.anim.animation_enter);
+                PS.subPos = -1;
+                PS.Substitutions = new Substitution();
+                PS.mainActivityState = 4;
+                Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                intent.putExtra(PASSPROBLEMSTATE, PS);
+                MainActivity.this.startActivity(intent);
+                MainActivity.this.finish();
+                overridePendingTransition(0, 0);
+                //  overridePendingTransition(0,R.anim.animation_enter);
 
 
-        } else {
-            if (currentlayout == Configuration.ORIENTATION_PORTRAIT) {
-                ImageView image = findViewById(R.id.AxolotlHorizontal);
-                animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.no_undo_animation);
-                image.setImageDrawable(animation);
-                animation.start();
             } else {
-                ImageView image = findViewById(R.id.AxolotlHorizontal);
-                animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.landscape_no_undo_animation);
-                image.setImageDrawable(animation);
-                animation.start();
-            }
+                if (currentlayout == Configuration.ORIENTATION_PORTRAIT) {
+                    ImageView image = findViewById(R.id.AxolotlHorizontal);
+                    animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.no_undo_animation);
+                    image.setImageDrawable(animation);
+                    animation.start();
+                } else {
+                    ImageView image = findViewById(R.id.AxolotlHorizontal);
+                    animation = (AnimationDrawable) AppCompatResources.getDrawable(MainActivity.this, R.drawable.landscape_no_undo_animation);
+                    image.setImageDrawable(animation);
+                    animation.start();
+                }
 
-        }
+            }
 
         return true;
     }

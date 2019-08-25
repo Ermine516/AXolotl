@@ -1,0 +1,26 @@
+Function: ⇒ 2 infix
+Function: ∧ 2 infix
+Function: ∨ 2 infix
+Function: ¬ 1
+Function: p 0
+Function: q 0
+Function: ⊥ 0
+Variable: x
+Variable: y
+Variable: z
+Variable: w
+Problem: 1 ⊢(¬(∨(p,q)),∧(¬(p),¬(q)))
+Rule: 1 ⊢(cons(x,z),y) ⊢(z,⇒(x,y)) [⇒:I]
+Rule: 2 ⊢(w,y) ⊢(w,⇒(y,x)) ⊢(w,x) [⇒:E]
+Rule: 1  ⊢(z,∧(x,y))  ⊢(z,x) [∧:E1]
+Rule: 1  ⊢(z,∧(x,y))  ⊢(z,y) [∧:E2]
+Rule: 2  ⊢(z,y) ⊢(z,x) ⊢(z,∧(x,y)) [∧:I]
+Rule: 1 ⊢(z,x) ⊢(z,∨(x,y)) [∨:I1]
+Rule: 1 ⊢(z,y) ⊢(z,∨(x,y)) [∨:I2]
+Rule: 3 ⊢(cons(x,z),w) ⊢(cons(y,z),w) ⊢(z,∨(x,y)) ⊢(z,w) [∨:E]
+Rule: 1 ⊢(z,⊥) ⊢(z,x) [⊥:E]
+Rule: 1 ⊢(cons(¬(x),z),⊥) ⊢(z,x) [Contra]
+Rule: 0  ⊢(cons(x,y),cons(x,z)) [AX]
+Rule: 1 ⊢(z,⇒(x,⊥)) ⊢(z,¬(x)) [¬:def1]
+Rule: 1 ⊢(z,¬(x)) ⊢(z,⇒(x,⊥)) [¬:def2]
+Rule: 1 ⊢(cons(cons(y,z),x),w)  ⊢(cons(x,cons(y,z)),w) [shift:l]

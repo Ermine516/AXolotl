@@ -1,0 +1,21 @@
+Function: ⇒ 2 infix
+Function: ⇔ 2 infix
+Function: ∨ 2 infix
+Function: p 0
+Function: q 0
+Function: r 0
+Variable: x
+Variable: y
+Variable: z
+Variable: w
+Problem: 1 ⊢(ε,⇔(∨(p,∨(q,r)),∨(∨(p,q),r)))
+Rule: 1 ⊢(cons(x,z),y) ⊢(z,⇒(x,y)) [⇒:I]
+Rule: 2 ⊢(w,y) ⊢(w,⇒(y,x)) ⊢(w,x) [⇒:E]
+Rule: 2  ⊢(z,⇒(x,y)) ⊢(z,⇒(y,x)) ⊢(z,⇔(x,y)) [⇔:I]
+Rule: 1  ⊢(z,⇔(x,y))  ⊢(z,⇒(x,y))  [⇔:E1]
+Rule: 1  ⊢(z,⇔(x,y))  ⊢(z,⇒(y,x))  [⇔:E2]
+Rule: 1 ⊢(z,x) ⊢(z,∨(x,y)) [∨:I1]
+Rule: 1 ⊢(z,y) ⊢(z,∨(x,y)) [∨:I2]
+Rule: 3 ⊢(cons(x,z),w) ⊢(cons(y,z),w) ⊢(z,∨(x,y)) ⊢(z,w) [∨:E]
+Rule: 0  ⊢(cons(x,y),cons(x,z)) [AX]
+Rule: 1 ⊢(cons(cons(y,z),x),w)  ⊢(cons(x,cons(y,z)),w) [shift:l]

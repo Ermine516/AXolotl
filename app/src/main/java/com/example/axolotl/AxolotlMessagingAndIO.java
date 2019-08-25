@@ -103,6 +103,7 @@ class AxolotlMessagingAndIO {
     static ProblemState loadFile(InputStream IS, String file, Activity ctx) {
         ProblemState newPS = new ProblemState();
         newPS.observe = ((AxolotlSupportingFunctionality) ctx).PS.observe;
+        newPS.textSize = ((AxolotlSupportingFunctionality) ctx).PS.textSize;
         String line;
         int lineCount = 0;
         boolean foundProblemOrRule = false;
@@ -125,6 +126,8 @@ class AxolotlMessagingAndIO {
             Toast.makeText(ctx, "Syntax error on line " + lineCount + " of " + file + ".", Toast.LENGTH_SHORT).show();
             newPS = new ProblemState();
             newPS.observe = ((AxolotlSupportingFunctionality) ctx).PS.observe;
+            newPS.textSize = ((AxolotlSupportingFunctionality) ctx).PS.textSize;
+
         }
         newPS.currentRule = new Rule();
         return newPS;

@@ -39,7 +39,6 @@ public class MainActivity extends AxolotlSupportingFunctionality {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         currentlayout = this.getResources().getConfiguration().orientation;
-
         PS = constructProblemState(savedInstanceState, getIntent());
         int animate = -1;
         if (PS.mainActivityState == 3) {
@@ -98,11 +97,13 @@ public class MainActivity extends AxolotlSupportingFunctionality {
             if (PS.problem.size() == 0) PS.problem.add(Const.Empty.Dup());
             if (PS.problem.size() == 0 || PS.problem.iterator().next().getSym().compareTo(Const.Empty.getSym()) == 0) {
                 boolean passobseve = PS.observe;
+                int passtextsize = PS.textSize;
                 ArrayList<State> ProofHistory = PS.History;
                 ArrayList<Rule> rules = PS.Rules;
                 PS = new ProblemState();
                 PS.observe = passobseve;
                 PS.History = ProofHistory;
+                PS.textSize = passtextsize;
                 PS.Rules = rules;
             }
         } else switchDisplay();

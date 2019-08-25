@@ -385,11 +385,15 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         if (PS.selectedPosition.compareTo(Const.Empty.getSym()) == 0) {
             ArrayList<Proof> args = new ArrayList<>();
             for (Term t : PS.currentRule.Conclusions) {
+                if (TermHelper.wellformedSequents(t))
+                    t.normalize(PS.Variables); // Don't forget that sequents are brittle terms
                 Proof p = new Proof(t.Print(), "");
                 p.drawLine = false;
                 p.finished = true;
                 args.add(p);
             }
+            if (TermHelper.wellformedSequents(PS.currentRule.argument))
+                PS.currentRule.argument.normalize(PS.Variables); // Don't forget that sequents are brittle terms
             Proof p = new Proof(PS.currentRule.argument.Print(), PS.currentRule.Label);
             p.finished = true;
             p.antecedents = args;
@@ -428,11 +432,15 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
             Rule rule = new Rule(PS.currentRule.Label, temp, sub.apply(PS.currentRule.argument), PS.Variables);
             ArrayList<Proof> args = new ArrayList<>();
             for (Term t : rule.Conclusions) {
+                if (TermHelper.wellformedSequents(t))
+                    t.normalize(PS.Variables); // Don't forget that sequents are brittle terms
                 Proof p = new Proof(t.Print(), "");
                 p.drawLine = false;
                 p.finished = true;
                 args.add(p);
             }
+            if (TermHelper.wellformedSequents(rule.argument))
+                rule.argument.normalize(PS.Variables); // Don't forget that sequents are brittle terms
             Proof p = new Proof(rule.argument.Print(), rule.Label);
             p.finished = true;
             p.antecedents = args;

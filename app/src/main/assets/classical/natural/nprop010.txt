@@ -7,11 +7,12 @@ Variable: x
 Variable: y
 Variable: z
 Variable: w
-Problem: 1 ⊢(ε,⇒(⇒(¬(p),p),p))
+Problem: 1 ⊢(ε,⇒(⇒(p,q),⇒(⇒(¬(p),q),q)))
 Rule: 1 ⊢(cons(x,z),y) ⊢(z,⇒(x,y)) [⇒:I]
 Rule: 2 ⊢(w,y) ⊢(w,⇒(y,x)) ⊢(w,x) [⇒:E]
-Rule: 1 ⊢(cons(cons(y,z),x),w)  ⊢(cons(x,cons(y,z)),w) [shift:l]
 Rule: 1 ⊢(z,⊥) ⊢(z,x) [⊥:E]
-Rule: 1 ⊢(z,¬(x)) ⊢(z,⇒(x,⊥)) [¬:E]
 Rule: 1 ⊢(cons(¬(x),z),⊥) ⊢(z,x) [Contra]
 Rule: 0  ⊢(cons(x,y),cons(x,z)) [AX]
+Rule: 1 ⊢(z,⇒(x,⊥)) ⊢(z,¬(x)) [¬:def1]
+Rule: 1 ⊢(z,¬(x)) ⊢(z,⇒(x,⊥)) [¬:def2]
+Rule: 1 ⊢(cons(cons(y,z),x),w)  ⊢(cons(x,cons(y,z)),w) [shift:l]

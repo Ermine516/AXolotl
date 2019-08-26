@@ -140,6 +140,7 @@ public class MainActivity extends AxolotlSupportingFunctionality {
     private void UpdateProblemDisplay() {
         if (PS.mainActivityState == 0)
             updateProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), PS.problem.toArray(AxolotlMessagingAndIO.HashSetTermArray));
+        if (PS.problem.size() == 1) PS.selectedPosition = PS.problem.iterator().next().Print();
     }
 
     protected void switchDisplay() {

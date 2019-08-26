@@ -318,7 +318,12 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
     protected void updateProblemSideDisplay(LinearLayout sl, Term[] t) {
         sl.removeAllViewsInLayout();
         for (Term term : t) {
-            sl.addView(scrollTextSelectConstruct(term, new SideSelectionListener(), null, this, true));
+            HorizontalScrollView view = scrollTextSelectConstruct(term, new SideSelectionListener(), null, this, true);
+            if (t.length == 1) {
+                ((LinearLayout) view.getChildAt(0)).getChildAt(0).setBackgroundColor(Color.BLACK);
+                ((TextView) ((LinearLayout) view.getChildAt(0)).getChildAt(0)).setTextColor(Color.WHITE);
+            }
+            sl.addView(view);
         }
     }
 

@@ -257,7 +257,7 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
          * @author David M. Cerna
          */
         private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
-            private static final int SWIPE_DISTANCE_THRESHOLD = 75;
+            private static final int SWIPE_DISTANCE_THRESHOLD = 125;
             private static final int SWIPE_VELOCITY_THRESHOLD = 1000;
 
             /**

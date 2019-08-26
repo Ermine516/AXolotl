@@ -1,4 +1,5 @@
 Function: ⇒ 2 infix
+Function: ¬ 1
 Function: A 0
 Function: B 0
 Variable: x

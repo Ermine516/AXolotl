@@ -1,0 +1,18 @@
+Function: ⇒ 2 infix
+Function: ∧ 2 infix
+Function: ∨ 2 infix
+Function: p 0
+Function: q 0
+Function: r 0
+Variable: x
+Variable: y
+Variable: z
+Variable: w
+Problem: 1 ⊢(∧(∨(p,q),∨(p,r)),∨(p,∧(q,r)))
+Rule: 1 ⊢(w,cons(x,cons(y,z))) ⊢(w,cons(∨(x,y),z)) [∨:r]
+Rule: 2 ⊢(cons(x,z),w) ⊢(cons(y,z),w) ⊢(cons(∨(x,y),z),w) [∨:l]
+Rule: 2 ⊢(w,cons(x,z)) ⊢(w,cons(y,z)) ⊢(w,cons(∧(x,y),z)) [∧:r]
+Rule: 1 ⊢(cons(x,cons(y,z)),w) ⊢(cons(∧(x,y),z),w) [∧:l]
+Rule: 1 ⊢(w,cons(cons(y,z),x)) ⊢(w,cons(x,cons(y,z))) [shift:r]
+Rule: 1 ⊢(cons(cons(y,z),x),w)  ⊢(cons(x,cons(y,z)),w) [shift:l]
+Rule: 0 ⊢(cons(x,y),cons(x,z)) [AX]

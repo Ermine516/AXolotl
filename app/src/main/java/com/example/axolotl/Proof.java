@@ -18,7 +18,7 @@ public class Proof {
 
     static final int FORMULA_SIZE = 72;
     static final int LABEL_SIZE = 48;
-
+    static final android.graphics.Bitmap.Config COLOR_CODE = Bitmap.Config.RGB_565;
 
     ArrayList<Proof> antecedents;
     String formula;
@@ -68,7 +68,8 @@ public class Proof {
         //proof
         float downscale = 1;
         Bitmap proofPic = Proof.extractProof(PS).draw().first;
-        Bitmap bm1 = Bitmap.createBitmap(proofPic.getWidth() + (int)(500*downscale), proofPic.getHeight() + (int)(500*downscale), Bitmap.Config.ARGB_8888);
+        Bitmap bm1 = Bitmap.createBitmap(proofPic.getWidth() + (int) (500 * downscale), proofPic.getHeight() + (int) (500 * downscale), COLOR_CODE);
+        System.gc();
         Paint paint = new Paint();
         Canvas canvas = new Canvas(bm1);
         paint.setColor(Color.WHITE);
@@ -120,7 +121,11 @@ public class Proof {
             }
             curHor += next + (int)(50*downscale);
         }
-        Bitmap result = Bitmap.createBitmap(Math.max(curVert + (int)(250*downscale), bm1.getWidth()), curHor + bm1.getHeight(), Bitmap.Config.ARGB_8888);
+
+
+        Bitmap result = Bitmap.createBitmap(Math.max(curVert + (int) (250 * downscale), bm1.getWidth()), curHor + bm1.getHeight(), COLOR_CODE);
+        System.gc();
+
         canvas = new Canvas(result);
         paint.setColor(Color.WHITE);
         paint.setStyle(Paint.Style.FILL);
@@ -143,6 +148,8 @@ public class Proof {
         Bitmap proofHeader = drawText("Proof", FORMULA_SIZE*2).first;
         canvas.drawBitmap(proofHeader, (int)(50*downscale), (int)(50*downscale) + curHor, null);
         canvas.drawLine(0, (int)(50*downscale) + curHor + proofHeader.getHeight(), result.getWidth(), (int)(50*downscale) + curHor + proofHeader.getHeight(), paint);
+        System.gc();
+
         return result;
     }
 
@@ -236,8 +243,8 @@ public class Proof {
         Rect bounds1 = new Rect();
         String test = "`1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./~!@#$%^&*()_+QWERTYUIOP{}|ASDFGHJKL:\"ZXCVBNM<>?";
         paint.getTextBounds(test, 0, test.length(), bounds1);
-
-        Bitmap bm = Bitmap.createBitmap(bounds.left + bounds.width(), bounds1.bottom + bounds1.height(), Bitmap.Config.ARGB_8888);
+        System.gc();
+        Bitmap bm = Bitmap.createBitmap(bounds.left + bounds.width(), bounds1.bottom + bounds1.height(), COLOR_CODE);
         Canvas canvas = new Canvas(bm);
         paint.setColor(Color.WHITE);
         paint.setStyle(Paint.Style.FILL);
@@ -245,6 +252,7 @@ public class Proof {
 
         paint.setColor(Color.BLACK);
         canvas.drawText(ax, 0, bounds1.height(), paint);
+        System.gc();
         return Pair.create(bm, Pair.create(0f, (float) (bounds.width() + bounds.left)));
     }
 
@@ -256,14 +264,15 @@ public class Proof {
         Rect bounds1 = new Rect();
         String test = "`1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./~!@#$%^&*()_+QWERTYUIOP{}|ASDFGHJKL:\"ZXCVBNM<>?";
         paint.getTextBounds(test, 0, test.length(), bounds1);
-
-        Bitmap bm = Bitmap.createBitmap(bounds.left + bounds.width(), bounds1.bottom + bounds1.height(), Bitmap.Config.ARGB_8888);
+        System.gc();
+        Bitmap bm = Bitmap.createBitmap(bounds.left + bounds.width(), bounds1.bottom + bounds1.height(), COLOR_CODE);
         Canvas canvas = new Canvas(bm);
         paint.setColor(Color.WHITE);
         paint.setStyle(Paint.Style.FILL);
         canvas.drawPaint(paint);
         canvas.drawText(ax, 0, bounds1.height(), paint);
         Pair<Bitmap, Pair<Float, Float>> empty = Pair.create(bm, Pair.create(0f, (float) (bounds.width() + bounds.left)));
+        System.gc();
         return drawUnaryInference(empty, label, ax);
     }
 
@@ -304,7 +313,8 @@ public class Proof {
         //create Bitmap which fits everything
         int width = Math.round(offsetLeft) + bmOld.getWidth() + Math.round(offsetRight);
         int height = bmOld.getHeight() + der.getHeight();
-        Bitmap bm = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        System.gc();
+        Bitmap bm = Bitmap.createBitmap(width, height, COLOR_CODE);
         //paint it white
         Paint paint = new Paint();
         Canvas canvas = new Canvas(bm);
@@ -336,7 +346,7 @@ public class Proof {
         if (label != null && label.compareTo("") != 0) {
             canvas.drawBitmap(lab, (labelSide?startLine-lab.getWidth()-10:endLine+10), heightCons - lab.getHeight()/2f, null);
         }
-
+        System.gc();
         return Pair.create(bm, Pair.create(startCons, endCons));
     }
 
@@ -366,7 +376,8 @@ public class Proof {
         //create Bitmap which fits everything
         int width = Math.round(offsetLeft) + bmLeft.getWidth() + 50 + bmRight.getWidth() + Math.round(offsetRight);
         int height = Math.max(bmLeft.getHeight(), bmRight.getHeight()) + der.getHeight();
-        Bitmap bm = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        System.gc();
+        Bitmap bm = Bitmap.createBitmap(width, height, COLOR_CODE);
         //paint it white
         Paint paint = new Paint();
         Canvas canvas = new Canvas(bm);
@@ -401,7 +412,7 @@ public class Proof {
         if (label != null && label.compareTo("") != 0) {
             canvas.drawBitmap(lab, (labelSide?startLine-lab.getWidth()-10:endLine+10), heightCons - lab.getHeight()/2f, null);
         }
-
+        System.gc();
         return Pair.create(bm, Pair.create(startCons, endCons));
     }
 
@@ -527,7 +538,8 @@ public class Proof {
         }
         //create Bitmap which fits everything
         int width = Math.round(offsetLeft) + totalSize + Math.round(offsetRight);
-        Bitmap bm = Bitmap.createBitmap(width, height + der.getHeight(), Bitmap.Config.ARGB_8888);
+        System.gc();
+        Bitmap bm = Bitmap.createBitmap(width, height + der.getHeight(), COLOR_CODE);
         //paint it white
         Paint paint = new Paint();
         Canvas canvas = new Canvas(bm);
@@ -565,7 +577,7 @@ public class Proof {
         if(label != null) {
             canvas.drawBitmap(lab, (labelSide?startLine-lab.getWidth()-10:endLine+10), heightCons - lab.getHeight()/2f, null);
         }
-
+        System.gc();
         return Pair.create(bm, Pair.create(startCons, endCons));
     }
 }

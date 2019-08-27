@@ -26,6 +26,13 @@ import static com.example.axolotl.TermHelper.TermMatchWithVar;
 
 public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActivity {
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        System.gc();
+        Runtime.getRuntime().gc();
+    }
+
     /**
      * This is the top most class in the hierarchy and thus contains this essential field which may
      * be found in every activity.

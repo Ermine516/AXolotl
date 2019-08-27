@@ -116,8 +116,10 @@ class AxolotlMessagingAndIO {
                     parseFunctionSymbol(newPS, parts);
                 else if (parts[0].compareTo("Rule:") == 0)
                     foundProblemOrRule = parseRuleDefinition(newPS, parts);
-                else if (parts[0].compareTo("Problem:") == 0)
+                else if (parts[0].compareTo("Problem:") == 0) {
+                    System.out.print(file + ":");
                     foundProblemOrRule = parseProblemDefinition(newPS, parts);
+                }
                 else if (parts[0].compareTo("Variable:") == 0 && !foundProblemOrRule)
                     parsevariableSymbol(newPS, parts);
                 else throw new IOException();
@@ -176,6 +178,9 @@ class AxolotlMessagingAndIO {
                 throw new TermHelper().new FormatException();
             else PS.problem.add(temp);
         }
+        System.out.print(PS.problem.iterator().next().Print());
+        System.out.println();
+
         return true;
     }
 

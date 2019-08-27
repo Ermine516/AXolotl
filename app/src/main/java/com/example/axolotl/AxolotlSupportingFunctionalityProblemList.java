@@ -4,10 +4,12 @@ import android.content.res.AssetManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 
 /**
@@ -25,7 +27,7 @@ public abstract class AxolotlSupportingFunctionalityProblemList extends AxolotlS
     HashMap<String, String[]> problems;
     /**
      * This field contains the parsed (as in pretty printed term) associated with a given problem. We do not
-     * associate these strings with a particular logic or proof calculus being the  parsed problems are only
+     * associate these strings with a particular logic or proof calculus being that the  parsed problems are only
      * used for display reasons.
      */
     ArrayList<String> parsedProblems;
@@ -40,15 +42,15 @@ public abstract class AxolotlSupportingFunctionalityProblemList extends AxolotlS
     protected void addProblemList(AssetManager manager, LinearLayout ll, String directory) {
         ll.removeAllViewsInLayout();
         try {
-            for (int i = 0; i < Objects.requireNonNull(problems.get(directory)).length; i++) {
-                StringBuilder problemString = new StringBuilder();
-                ProblemState newPS = AxolotlMessagingAndIO.loadFile(manager.open(directory + "/" + Objects.requireNonNull(problems.get(directory))[i]), Objects.requireNonNull(problems.get(directory))[i], this);
-                Term[] succProb = newPS.problem.toArray(AxolotlMessagingAndIO.HashSetTermArray);
-                for (int j = 0; j < succProb.length; j++)
-                    if (j == succProb.length - 1) problemString.append(succProb[j].Print());
-                    else problemString.append(succProb[j].Print()).append(" , ");
-                parsedProblems.add(problemString.toString());
-                ll.addView(scrollTextSelectConstructString(problemString.toString(),
+            ArrayList<String> probs = new ArrayList<>();
+            InputStream is = manager.open(directory + "/" + "problem_manifest.txt");
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            String line;
+            while ((line = br.readLine()) != null) probs.add(line);
+            for (int i = 0; i < probs.size(); i++) {
+                String problemstatement = probs.get(i).split(":")[1];
+                parsedProblems.add(problemstatement);
+                ll.addView(scrollTextSelectConstructString(problemstatement,
                         new AxolotlSupportingListenersAndMethods.ProblemSelectionListener(problems.get(directory),
                                 parsedProblems, directory, PS.textSize, PS.observe), null, this, false));
             }

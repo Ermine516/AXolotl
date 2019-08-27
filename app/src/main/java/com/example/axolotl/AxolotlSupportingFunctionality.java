@@ -366,18 +366,18 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
      * @author Rafael Kiesl
      */
     protected void drawBitmap(Bitmap bm) {
-        Bitmap bm1 = Bitmap.createBitmap(bm.getWidth() + 500, bm.getHeight() + 500, Bitmap.Config.ARGB_8888);
-        Paint paint = new Paint();
-        Canvas canvas = new Canvas(bm1);
-        paint.setColor(Color.WHITE);
-        paint.setStyle(Paint.Style.FILL);
-        canvas.drawPaint(paint);
-
-        paint.setColor(Color.BLACK);
-        canvas.drawBitmap(bm, 250, 250, null);
+//        Bitmap bm1 = Bitmap.createBitmap(bm.getWidth() + 500, bm.getHeight() + 500, Bitmap.Config.ARGB_8888);
+//        Paint paint = new Paint();
+//        Canvas canvas = new Canvas(bm1);
+//        paint.setColor(Color.WHITE);
+//        paint.setStyle(Paint.Style.FILL);
+//        canvas.drawPaint(paint);
+//
+//        paint.setColor(Color.BLACK);
+//        canvas.drawBitmap(bm, 250, 250, null);
         TouchImageView myImage = findViewById(R.id.proofViz);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm1.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         InputStream is = new ByteArrayInputStream(baos.toByteArray());
         TileBitmapDrawable.attachTileBitmapDrawable(myImage, is, null, null);
     }

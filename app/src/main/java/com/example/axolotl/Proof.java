@@ -66,8 +66,9 @@ public class Proof {
 
     static Bitmap drawProblemSolution(ProblemState PS) {
         //proof
+        float downscale = 1;
         Bitmap proofPic = Proof.extractProof(PS).draw().first;
-        Bitmap bm1 = Bitmap.createBitmap(proofPic.getWidth() + 500, proofPic.getHeight() + 500, Bitmap.Config.ARGB_8888);
+        Bitmap bm1 = Bitmap.createBitmap(proofPic.getWidth() + (int)(500*downscale), proofPic.getHeight() + (int)(500*downscale), Bitmap.Config.ARGB_8888);
         Paint paint = new Paint();
         Canvas canvas = new Canvas(bm1);
         paint.setColor(Color.WHITE);
@@ -75,7 +76,7 @@ public class Proof {
         canvas.drawPaint(paint);
 
         paint.setColor(Color.BLACK);
-        canvas.drawBitmap(proofPic, 250, 250, null);
+        canvas.drawBitmap(proofPic, (int)(250*downscale), (int)(250*downscale), null);
 
         //rules
         Bitmap[] rules = new Bitmap[PS.Rules.size()];
@@ -105,43 +106,43 @@ public class Proof {
         int sideLength = (int)(Math.ceil(Math.sqrt(rules.length)));
         int[] startingPosVert = new int[sideLength];
         int[] startingPosHor = new int[sideLength];
-        int curVert = 250;
-        int curHor = 250;
+        int curVert = (int)(250*downscale);
+        int curHor = (int)(250*downscale);
         for(int i = 0; i < sideLength; i++) {
             startingPosVert[i] = curVert;
             startingPosHor[i] = curHor;
             if ((i * sideLength) < rules.length) {
-                curVert += rules[i * sideLength].getWidth() + 50;
+                curVert += rules[i * sideLength].getWidth() + (int)(50*downscale);
             }
             int next = 0;
             for(int j = 0; j < sideLength && sideLength*j + i < rules.length; j++) {
                 next = Math.max(next, rules[j*sideLength +i].getHeight());
             }
-            curHor += next + 50;
+            curHor += next + (int)(50*downscale);
         }
-        Bitmap result = Bitmap.createBitmap(Math.max(curVert + 250, bm1.getWidth()), curHor + bm1.getHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap result = Bitmap.createBitmap(Math.max(curVert + (int)(250*downscale), bm1.getWidth()), curHor + bm1.getHeight(), Bitmap.Config.ARGB_8888);
         canvas = new Canvas(result);
         paint.setColor(Color.WHITE);
         paint.setStyle(Paint.Style.FILL);
         canvas.drawPaint(paint);
 
         paint.setColor(Color.BLACK);
-        int startProof = Math.max(curVert + 250, bm1.getWidth())/2 - bm1.getWidth()/2;
+        int startProof = Math.max(curVert + (int)(250*downscale), bm1.getWidth())/2 - bm1.getWidth()/2;
         canvas.drawBitmap(bm1, startProof, curHor, null);
-        int startRules = Math.max(curVert + 250, bm1.getWidth())/2 - (curVert + 250)/2;
+        int startRules = Math.max(curVert + (int)(250*downscale), bm1.getWidth())/2 - (curVert + (int)(250*downscale))/2;
         for(int i = 0; i < sideLength; i++) {
             for(int j = 0; j < sideLength && i*sideLength + j < rules.length; j++) {
                 canvas.drawBitmap(rules[i*sideLength + j], startingPosVert[i] + startRules, startingPosHor[j], null);
             }
         }
         Bitmap ruleHeader = drawText("Rules", FORMULA_SIZE*2).first;
-        canvas.drawBitmap(ruleHeader, 50, 50, null);
+        canvas.drawBitmap(ruleHeader, (int)(50*downscale), (int)(50*downscale), null);
         paint.setColor(Color.BLACK);
         paint.setStrokeWidth(FORMULA_SIZE/10);
-        canvas.drawLine(0, 50 + ruleHeader.getHeight(), result.getWidth(), 50 + ruleHeader.getHeight(), paint);
+        canvas.drawLine(0, (int)(50*downscale) + ruleHeader.getHeight(), result.getWidth(), (int)(50*downscale) + ruleHeader.getHeight(), paint);
         Bitmap proofHeader = drawText("Proof", FORMULA_SIZE*2).first;
-        canvas.drawBitmap(proofHeader, 50, 50 + curHor, null);
-        canvas.drawLine(0, 50 + curHor + proofHeader.getHeight(), result.getWidth(), 50 + curHor + proofHeader.getHeight(), paint);
+        canvas.drawBitmap(proofHeader, (int)(50*downscale), (int)(50*downscale) + curHor, null);
+        canvas.drawLine(0, (int)(50*downscale) + curHor + proofHeader.getHeight(), result.getWidth(), (int)(50*downscale) + curHor + proofHeader.getHeight(), paint);
         return result;
     }
 

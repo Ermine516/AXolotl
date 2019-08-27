@@ -49,7 +49,13 @@ public class MainActivity extends AxolotlSupportingFunctionality {
             animate = 1;
         }
         if (PS.ActivityMode == 0) {
-            if (PS.mainActivityState == -1) setContentView(R.layout.app_main_on_load_bar_layout);
+            if (PS.mainActivityState == -1) {
+                try {
+                    setContentView(R.layout.app_main_on_load_bar_layout);
+                } catch (OutOfMemoryError e) {
+                    //  Probably should do something here
+                }
+            }
             else if (PS.mainActivityState == 0) {
                 setContentView(R.layout.app_main_bar_layout);
                 if (animate == 0) {
@@ -86,9 +92,14 @@ public class MainActivity extends AxolotlSupportingFunctionality {
             } else {
                 setContentView(R.layout.app_main_on_completion_bar_layout);
                 ImageView image = findViewById(R.id.Axolotlcompletion);
-                animation = (AnimationDrawable) AppCompatResources.getDrawable(this, R.drawable.on_completion_animation);
-                image.setImageDrawable(animation);
-                animation.start();
+                try {
+                    image.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.on_completion_animation));
+                    animation = (AnimationDrawable) AppCompatResources.getDrawable(this, R.drawable.on_completion_animation);
+                    image.setImageDrawable(animation);
+                    animation.start();
+                } catch (OutOfMemoryError e) {
+                    image.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.on_completion15));
+                }
             }
             ConstructActivity(savedInstanceState);
             if (PS.mainActivityState == 0) ActivityDecorate();

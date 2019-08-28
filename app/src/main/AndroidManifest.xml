@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.axolotl">
+    package="org.axolotlLogicSoftware.axolotl">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -21,29 +21,29 @@
         <activity
             android:name="net.rdrei.android.dirchooser.DirectoryChooserActivity" />
         <activity
-            android:name="com.example.axolotl.AboutActivity"
+            android:name="org.axolotlLogicSoftware.axolotl.AboutActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.example.axolotl.HelpActivity"
+            android:name="org.axolotlLogicSoftware.axolotl.HelpActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.example.axolotl.TermConstructActivity"
+            android:name="org.axolotlLogicSoftware.axolotl.TermConstructActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.example.axolotl.MatchDisplayActivity"
+            android:name="org.axolotlLogicSoftware.axolotl.MatchDisplayActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.example.axolotl.ProofDisplayActivity"
+            android:name="org.axolotlLogicSoftware.axolotl.ProofDisplayActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.example.axolotl.LogicalProblemsListActivity"
+            android:name="org.axolotlLogicSoftware.axolotl.LogicalProblemsListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.example.axolotl.TermMatchingProblemsListActivity"
+            android:name="org.axolotlLogicSoftware.axolotl.TermMatchingProblemsListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.example.axolotl.MainActivity"
+            android:name="org.axolotlLogicSoftware.axolotl.MainActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

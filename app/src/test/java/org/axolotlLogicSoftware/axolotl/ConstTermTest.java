@@ -1,4 +1,5 @@
-package com.example.axolotl;
+package org.axolotlLogicSoftware.axolotl;
+
 
 import org.junit.Test;
 

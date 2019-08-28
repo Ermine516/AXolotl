@@ -1,4 +1,4 @@
-package com.example.axolotl;
+package org.axolotlLogicSoftware.axolotl;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -76,10 +76,41 @@ public class LogicalProblemsListActivity extends AxolotlSupportingFunctionalityP
         }
         PS = ConstructActivity(savedInstanceState);
         problems = new HashMap<>();
+        String[] temp = new String[0];
+        int i = 0;
+        int j = 0;
         try {
-            problems.put(directory + HILBERTPROBLEMSLOCATION, this.getAssets().list(directory + HILBERTPROBLEMSLOCATION));
-            problems.put(directory + SEQUENTPROBLEMSLOCATION, this.getAssets().list(directory + SEQUENTPROBLEMSLOCATION));
-            problems.put(directory + NATURALPROBLEMSLOCATION, this.getAssets().list(directory + NATURALPROBLEMSLOCATION));
+            temp = this.getAssets().list(directory + HILBERTPROBLEMSLOCATION);
+            String[] cleaned = new String[temp.length - 1];
+            i = 0;
+            for (String s : temp)
+                if (s.compareTo("problem_manifest.txt") != 0) {
+                    cleaned[i] = temp[i + j];
+                    i++;
+                } else j = 1;
+            problems.put(directory + HILBERTPROBLEMSLOCATION, cleaned);
+            temp = this.getAssets().list(directory + SEQUENTPROBLEMSLOCATION);
+            cleaned = new String[temp.length - 1];
+            i = 0;
+            j = 0;
+            for (String s : temp)
+                if (s.compareTo("problem_manifest.txt") != 0) {
+                    cleaned[i] = temp[i + j];
+                    i++;
+                } else j = 1;
+
+            problems.put(directory + SEQUENTPROBLEMSLOCATION, cleaned);
+            temp = this.getAssets().list(directory + NATURALPROBLEMSLOCATION);
+            cleaned = new String[temp.length - 1];
+            i = 0;
+            j = 0;
+            for (String s : temp)
+                if (s.compareTo("problem_manifest.txt") != 0) {
+                    cleaned[i] = temp[i + j];
+                    i++;
+                } else j = 1;
+
+            problems.put(directory + NATURALPROBLEMSLOCATION, cleaned);
 
 
         } catch (IOException e) {

@@ -1,4 +1,4 @@
-package com.example.axolotl;
+package org.axolotlLogicSoftware.axolotl;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,7 +22,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static com.example.axolotl.TermHelper.TermMatchWithVar;
+import static org.axolotlLogicSoftware.axolotl.TermHelper.TermMatchWithVar;
 
 public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActivity {
 

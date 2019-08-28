@@ -1,4 +1,4 @@
-package com.example.axolotl;
+package org.axolotlLogicSoftware.axolotl;
 
 import android.content.res.AssetManager;
 import android.widget.LinearLayout;
@@ -47,6 +47,7 @@ public abstract class AxolotlSupportingFunctionalityProblemList extends AxolotlS
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             String line;
             while ((line = br.readLine()) != null) probs.add(line);
+            br.close();
             for (int i = 0; i < probs.size(); i++) {
                 String problemstatement = probs.get(i).split(":")[1];
                 parsedProblems.add(problemstatement);

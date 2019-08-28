@@ -1,4 +1,4 @@
-package com.example.axolotl;
+package org.axolotlLogicSoftware.axolotl;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,8 +19,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import static com.example.axolotl.AxolotlMessagingAndIO.PASSPROBLEMSTATE;
-import static com.example.axolotl.TermHelper.TermMatchWithVar;
+import static org.axolotlLogicSoftware.axolotl.AxolotlMessagingAndIO.PASSPROBLEMSTATE;
+import static org.axolotlLogicSoftware.axolotl.TermHelper.TermMatchWithVar;
 
 public class MainActivity extends AxolotlSupportingFunctionality {
     AnimationDrawable animation;

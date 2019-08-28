@@ -1,4 +1,4 @@
-package com.example.axolotl;
+package org.axolotlLogicSoftware.axolotl;
 
 import android.content.Intent;
 import android.os.Bundle;

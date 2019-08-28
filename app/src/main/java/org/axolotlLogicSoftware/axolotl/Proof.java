@@ -1,4 +1,4 @@
-package com.example.axolotl;
+package org.axolotlLogicSoftware.axolotl;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

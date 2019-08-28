@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MainActivity"
+    tools:context="org.axolotlLogicSoftware.axolotl.MainActivity"
     tools:showIn="@layout/app_main_bar_layout">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:minWidth="50dp"
-        tools:context=".MainActivity">
+        tools:context="org.axolotlLogicSoftware.axolotl.MainActivity">
 
         <TextView
             android:id="@+id/ProblemTag"

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".LogicalProblemsListActivity"
+    tools:context="org.axolotlLogicSoftware.axolotl.LogicalProblemsListActivity"
     tools:showIn="@layout/app_logical_problems_list_bar_layout">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:minWidth="50dp"
-        tools:context=".LogicalProblemsListActivity">
+        tools:context="org.axolotlLogicSoftware.axolotl.LogicalProblemsListActivity">
 
         <TextView
             android:id="@+id/hilberttag"

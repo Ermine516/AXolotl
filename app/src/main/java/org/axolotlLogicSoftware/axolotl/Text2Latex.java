@@ -1,4 +1,4 @@
-package com.example.axolotl;
+package org.axolotlLogicSoftware.axolotl;
 
 public class Text2Latex {
     static String[] sourceArray = new String[]{

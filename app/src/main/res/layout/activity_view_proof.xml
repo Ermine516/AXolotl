@@ -7,14 +7,14 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ProofDisplayActivity"
+    tools:context="org.axolotlLogicSoftware.axolotl.ProofDisplayActivity"
     tools:showIn="@layout/app_proof_bar_layout">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProofDisplayActivity">
+        tools:context="org.axolotlLogicSoftware.axolotl.ProofDisplayActivity">
 
     <com.diegocarloslima.byakugallery.lib.TouchImageView
         android:id="@+id/proofViz"

@@ -1,4 +1,4 @@
-package com.example.axolotl;
+package org.axolotlLogicSoftware.axolotl;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -16,8 +16,6 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-
-import static com.example.axolotl.AxolotlMessagingAndIO.PASSPROBLEMSTATE;
 
 
 public class TermConstructActivity extends AxolotlSupportingFunctionality {
@@ -121,7 +119,7 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
                 } else
                     intent = new Intent(TermConstructActivity.this, MatchDisplayActivity.class);
             }
-            intent.putExtra(PASSPROBLEMSTATE, PS);
+            intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, PS);
             TermConstructActivity.this.startActivity(intent);
             TermConstructActivity.this.finish();
             overridePendingTransition(0, 0);
@@ -216,7 +214,7 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
                         TermConstructActivity.this.swipeRightProblemStateUpdate();
                         intent = new Intent(TermConstructActivity.this, MainActivity.class);
                     }
-                    intent.putExtra(PASSPROBLEMSTATE, PS);
+                    intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, PS);
                     TermConstructActivity.this.startActivity(intent);
                     overridePendingTransition(0, 0);
                     // overridePendingTransition(R.anim.animation_enter, R.anim.animation_leave);

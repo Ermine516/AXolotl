@@ -1,4 +1,4 @@
-package com.example.axolotl;
+package org.axolotlLogicSoftware.axolotl;
 
 
 import android.content.Context;
@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import static com.example.axolotl.AxolotlMessagingAndIO.PASSPROBLEMSTATE;
+import static org.axolotlLogicSoftware.axolotl.AxolotlMessagingAndIO.PASSPROBLEMSTATE;
 
 public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
     @Override

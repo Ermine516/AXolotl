@@ -1,9 +1,10 @@
-package com.example.axolotl;
+package org.axolotlLogicSoftware.axolotl;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
+
 
 public class AboutActivity extends AxolotlSupportingFunctionality {
 

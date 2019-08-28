@@ -1,4 +1,4 @@
-package com.example.axolotl;
+package org.axolotlLogicSoftware.axolotl;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -44,7 +44,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 
-import static com.example.axolotl.AxolotlMessagingAndIO.PASSPROBLEMSTATE;
+import static org.axolotlLogicSoftware.axolotl.AxolotlMessagingAndIO.PASSPROBLEMSTATE;
 
 /**
  * This abstract class extends the abstract class AxolotlSupportingListenersAndMethods with methods essential for
@@ -518,7 +518,7 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         // Nothing selected
         // Gets a handle to the clipboard service.
         ClipboardManager clipboard = (ClipboardManager)
-                getSystemService(Context.CLIPBOARD_SERVICE);
+                getSystemService(CLIPBOARD_SERVICE);
         StringBuilder sb = new StringBuilder();
         sb.append("\\documentclass{article}\n" +
                 "\\usepackage[a2paper]{geometry}\n" +

@@ -7,14 +7,14 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".TermConstructActivity"
+    tools:context="org.axolotlLogicSoftware.axolotl.TermConstructActivity"
     tools:showIn="@layout/app_term_bar_layout">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/OuterLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MatchDisplayActivity">
+        tools:context="org.axolotlLogicSoftware.axolotl.MatchDisplayActivity">
 
         <TextView
             android:id="@+id/ruleInstanceTag2"

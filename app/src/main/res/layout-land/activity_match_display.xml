@@ -17,58 +17,27 @@
         android:layout_weight="13"
         tools:context="org.axolotlLogicSoftware.axolotl.MatchDisplayActivity">
 
-        <View
-            android:id="@+id/rightSiderRuleInstanceTagDivider2"
-            android:layout_width="3dp"
-            android:layout_height="0dp"
-            android:background="#DEAEAE"
-            app:layout_constraintBottom_toBottomOf="@+id/bottomRuleInstanceTagDivider2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/ruleInstanceTag2"
-            app:layout_constraintTop_toTopOf="@+id/bottomProblemTagDivider2" />
-
-        <View
-            android:id="@+id/leftSiderRuleInstanceTagDivider2"
-            android:layout_width="3dp"
-            android:layout_height="0dp"
-            android:background="#DEAEAE"
-            app:layout_constraintBottom_toBottomOf="@+id/bottomRuleInstanceTagDivider2"
-            app:layout_constraintEnd_toStartOf="@+id/ruleInstanceTag2"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/bottomProblemTagDivider2" />
-
-        <View
-            android:id="@+id/bottomRuleInstanceTagDivider2"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:background="#DEAEAE"
-            app:layout_constraintEnd_toEndOf="@+id/rightSiderRuleInstanceTagDivider2"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/leftSiderRuleInstanceTagDivider2"
-            app:layout_constraintTop_toBottomOf="@+id/ruleInstanceTag2" />
-
         <TextView
             android:id="@+id/ruleInstanceTag2"
-            android:layout_width="180dp"
-            android:layout_height="22dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:background="@color/LabelColor"
+            android:gravity="center"
             android:text="@string/RuleAppliedTag"
-            android:textColor="#000001"
-            android:textSize="18sp"
+            android:textColor="#FDFDFE"
+            android:textSize="24sp"
             app:layout_constrainedHeight="true"
             app:layout_constrainedWidth="true"
-            app:layout_constraintBottom_toTopOf="@+id/imageView2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/imageView2"
+            app:layout_constraintVertical_weight="1"
             app:layout_constraintTop_toBottomOf="@+id/unificationSymbol3" />
 
         <ScrollView
             android:id="@+id/RightSideTerm"
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="8dp"
             android:fadingEdge="none"
@@ -91,7 +60,7 @@
         <ScrollView
             android:id="@+id/LeftSideTerm"
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:fadingEdge="none"
             android:fillViewport="true"
@@ -129,7 +98,7 @@
         <HorizontalScrollView
             android:id="@+id/VariableDisplayScroll"
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="@+id/imageView2"
@@ -140,17 +109,16 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/VarTextview"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:freezesText="true"
                     android:gravity="center"
-                    android:minWidth="50dp"
                     android:textColor="@android:color/black"
                     android:textSize="34sp" />
             </LinearLayout>
@@ -159,7 +127,7 @@
         <HorizontalScrollView
             android:id="@+id/SubTermScrollView"
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="@+id/imageView2"
@@ -170,91 +138,35 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/SubTermTextView"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:freezesText="true"
                     android:gravity="center"
-                    android:minWidth="50dp"
                     android:textColor="@android:color/black"
                     android:textSize="34sp" />
             </LinearLayout>
         </HorizontalScrollView>
 
-        <View
-            android:id="@+id/leftSideProblemTagDivider3"
-            android:layout_width="3dp"
-            android:layout_height="0dp"
-            android:background="#DEAEAE"
-            app:layout_constraintBottom_toBottomOf="@+id/bottomProblemTagDivider3"
-            app:layout_constraintEnd_toStartOf="@+id/problemTag3"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/divider2"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <View
-            android:id="@+id/RightSideProblemTagDivider"
-            android:layout_width="3dp"
-            android:layout_height="0dp"
-            android:background="#DEAEAE"
-            app:layout_constraintBottom_toTopOf="@+id/bottomProblemTagDivider3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/problemTag3"
-            app:layout_constraintTop_toTopOf="@+id/divider2"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <View
-            android:id="@+id/bottomProblemTagDivider3"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:background="#DEAEAE"
-            app:layout_constraintEnd_toEndOf="@+id/RightSideProblemTagDivider"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/leftSideProblemTagDivider3"
-            app:layout_constraintTop_toBottomOf="@+id/problemTag3" />
-
         <TextView
             android:id="@+id/problemTag3"
-            android:layout_width="140dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:background="@color/LabelColor"
+            android:gravity="center"
             android:text="@string/UnifyTag"
-            android:textColor="#000001"
-            android:textSize="18sp"
+            android:textColor="#FDFDFE"
+            android:textSize="24sp"
             app:layout_constrainedHeight="true"
             app:layout_constrainedWidth="true"
-            app:layout_constraintBottom_toTopOf="@+id/unificationSymbol3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/divider2"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:background="#DEAEAE"
-            app:layout_constraintBottom_toTopOf="@+id/problemTag3"
-            app:layout_constraintEnd_toEndOf="@+id/RightSideProblemTagDivider"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/leftSideProblemTagDivider3" />
-
-        <View
-            android:id="@+id/bottomProblemTagDivider2"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:background="#DEAEAE"
-            app:layout_constraintBottom_toTopOf="@+id/ruleInstanceTag2"
-            app:layout_constraintEnd_toEndOf="@+id/rightSiderRuleInstanceTagDivider2"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/leftSiderRuleInstanceTagDivider2" />
 
         <ImageView
             android:id="@+id/imageView2"
@@ -262,13 +174,28 @@
             android:layout_height="40dp"
             android:scaleX="1.1"
             android:scaleY="1.1"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/placein"
             app:layout_constraintEnd_toStartOf="@+id/SubTermScrollView"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/VariableDisplayScroll"
             app:layout_constraintTop_toBottomOf="@+id/ruleInstanceTag2"
             android:contentDescription="@string/equal_sign"
             app:srcCompat="@drawable/equal" />
+
+        <TextView
+            android:id="@+id/placein"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:background="@color/LabelColor"
+            android:gravity="center"
+            android:text="@string/UnifyTag"
+            android:textColor="#FDFDFE"
+            android:textSize="24sp"
+            app:layout_constrainedHeight="true"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

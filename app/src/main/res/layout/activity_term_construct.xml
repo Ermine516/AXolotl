@@ -33,7 +33,7 @@
         <ScrollView
             android:id="@+id/RightSideTerm"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:fadeScrollbars="false"
@@ -43,10 +43,12 @@
             android:scrollbarAlwaysDrawHorizontalTrack="false"
             android:scrollbarAlwaysDrawVerticalTrack="true"
             android:scrollbarDefaultDelayBeforeFade="0"
+            android:scrollbarFadeDuration="0"
+            android:scrollbarSize="8dp"
             android:scrollbars="vertical|none"
             app:layout_constraintBottom_toTopOf="@+id/ruleInstanceTag2"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHeight_percent="35"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/problemTag3"
             app:layout_constraintWidth_max="wrap">
@@ -75,7 +77,7 @@
         <HorizontalScrollView
             android:id="@+id/TermSelectionDisplay"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="0dp"
             android:fadeScrollbars="false"
             android:hapticFeedbackEnabled="true"
             android:isScrollContainer="true"
@@ -87,9 +89,9 @@
             android:scrollbarSize="6dp"
             android:scrollbarStyle="insideOverlay"
             android:scrollbars="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/placein"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHeight_percent="20"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/FunctionSymbolTag">
 
@@ -111,7 +113,7 @@
         <HorizontalScrollView
             android:id="@+id/TermInstanceDisplay"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="4dp"
             android:fadeScrollbars="false"
@@ -121,7 +123,7 @@
             android:scrollbarAlwaysDrawHorizontalTrack="true"
             app:layout_constraintBottom_toTopOf="@+id/FunctionSymbolTag"
             app:layout_constraintEnd_toStartOf="@+id/UndoButtonTerm"
-            app:layout_constraintHorizontal_bias="0.2"
+            app:layout_constraintHeight_percent="20"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ruleInstanceTag2">
 
@@ -179,6 +181,20 @@
             android:focusable="true"
             app:srcCompat="@drawable/undo" />
 
+        <TextView
+            android:id="@+id/placein"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:background="@color/LabelColor"
+            android:gravity="center"
+            android:text="@string/UnifyTag"
+            android:textColor="#FDFDFE"
+            android:textSize="24sp"
+            app:layout_constrainedHeight="true"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nv"

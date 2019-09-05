@@ -43,6 +43,8 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
         FurtureProblemDisplay();
         UpdateTermDisplay();
         TermDisplayUpdate();
+        TextView placeInDisplay = this.findViewById(R.id.placein);
+        placeInDisplay.setText("Variable " + (PS.subPos + 1) + " of " + PS.Substitutions.size());
     }
 
     private void FurtureProblemDisplay() {
@@ -77,7 +79,7 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
                 String funcText = new Func(p.name, args, infix).Print();
                 TextView functext = new TextView(this);
                 functext.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.NO_GRAVITY));
-                functext.setTextSize(32);
+                functext.setTextSize(PS.textSize);
                 functext.setText(funcText);
                 functext.setPadding(40, 0, 40, 0);
                 functext.setOnClickListener(new SymbolSelectionListener());
@@ -91,7 +93,7 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
                 String funcText = new Const(cons).Print();
                 TextView functext = new TextView(this);
                 functext.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.NO_GRAVITY));
-                functext.setTextSize(32);
+                functext.setTextSize(PS.textSize);
                 functext.setText(funcText);
                 functext.setPadding(40, 0, 40, 0);
                 functext.setOnClickListener(new SymbolSelectionListener());

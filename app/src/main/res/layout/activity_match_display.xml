@@ -151,7 +151,7 @@
             android:fillViewport="true"
             android:scrollbarAlwaysDrawHorizontalTrack="true"
             android:scrollbarAlwaysDrawVerticalTrack="true"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/placein"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -204,6 +204,21 @@
             app:layout_constraintTop_toBottomOf="@+id/VariableDisplayScroll"
             android:contentDescription="@string/equal_sign"
             app:srcCompat="@drawable/equal" />
+
+        <TextView
+            android:id="@+id/placein"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:background="@color/LabelColor"
+            android:gravity="center"
+            android:text="@string/UnifyTag"
+            android:textColor="#FDFDFE"
+            android:textSize="24sp"
+            app:layout_constrainedHeight="true"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

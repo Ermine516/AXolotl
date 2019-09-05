@@ -26,6 +26,10 @@ public class Substitution implements Parcelable {
     };
     private ArrayList<SingletonSubstitution> replacements;
 
+    public int size() {
+        return replacements.size();
+    }
+
     Substitution() {
         replacements = new ArrayList<>();
     }

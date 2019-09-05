@@ -28,8 +28,14 @@ public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
     }
 
     protected void ActivityDecorate() {
+        TextView placeInDisplay = this.findViewById(R.id.placein);
+        placeInDisplay.setText("Variable " + (PS.subPos + 1) + " of " + PS.Substitutions.size());
+
         TextView varDisplay = this.findViewById(R.id.VarTextview);
+        varDisplay.setTextSize(PS.textSize);
         TextView subDisplay = this.findViewById(R.id.SubTermTextView);
+        subDisplay.setTextSize(PS.textSize);
+
         LinearLayout leftTerm = this.findViewById(R.id.LeftSideTermLayout);
         LinearLayout rightTerm = this.findViewById(R.id.RightSideTermLayout);
         leftTerm.removeAllViewsInLayout();

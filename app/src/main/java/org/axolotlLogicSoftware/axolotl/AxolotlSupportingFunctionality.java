@@ -132,7 +132,9 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
      * @author David M. Cerna
      */
     protected void addMenulisteners() {
-        LinearLayout ll = findViewById(R.id.nonclassicbuttonlayout);
+        LinearLayout ll = findViewById(R.id.resolution);
+        ll.setOnClickListener(new MenuOnClickListener());
+        ll = findViewById(R.id.nonclassicbuttonlayout);
         ll.setOnClickListener(new MenuOnClickListener());
         ll = findViewById(R.id.classicbuttonlayout);
         ll.setOnClickListener(new MenuOnClickListener());

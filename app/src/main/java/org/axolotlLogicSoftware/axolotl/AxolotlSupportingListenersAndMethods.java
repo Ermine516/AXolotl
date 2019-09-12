@@ -418,6 +418,9 @@ public abstract class AxolotlSupportingListenersAndMethods extends AppCompatActi
             } else if (id == R.id.nonclassicbuttonlayout) {
                 intent = new Intent(AxolotlSupportingListenersAndMethods.this, LogicalProblemsListActivity.class);
                 intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMLIST, 1);
+            } else if (id == R.id.resolution) {
+                intent = new Intent(AxolotlSupportingListenersAndMethods.this, TermMatchingProblemsListActivity.class);
+                intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMLIST, 1);
             } else if (id == R.id.Proofbuttonlayout)
                 intent = new Intent(AxolotlSupportingListenersAndMethods.this, ProofDisplayActivity.class);
 

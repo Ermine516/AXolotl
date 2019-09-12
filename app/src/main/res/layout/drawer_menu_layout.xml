@@ -245,6 +245,37 @@
                     android:title="@string/non_classical_logic" />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/resolution"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="32dp"
+                    android:contentDescription="@string/proof_button_menu_symbol"
+                    app:srcCompat="@drawable/classical" />
+
+                <TextView
+                    android:id="@+id/resolutiontext"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="28dp"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center_vertical"
+                    android:text="@string/Resolution"
+                    android:textColor="#FDFDFE"
+                    android:textSize="14sp"
+                    android:title="@string/Resolution" />
+
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

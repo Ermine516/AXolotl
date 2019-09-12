@@ -1,0 +1,22 @@
+Function: ∨ 2 infix
+Function: ¬ 1
+Function: ⊥ 0
+Function: a 0
+Function: b 0
+Function: c 0
+Function: d 0
+Variable: x
+Variable: y
+Variable: z
+Variable: w
+Problem: 1 ⊢(cons(∨(a,∨(b,∨(c,d))),cons(¬(a),cons(∨(¬(c),¬(d)),cons(∨(a,∨(c,¬(d))),cons(∨(c,¬(b)),¬(c)))))),ε)
+Rule: 1 ⊢(cons(y,cons(∨(x,y),cons(¬(x),w))),ε) ⊢(cons(∨(x,y),cons(¬(x),w)),ε) [res:l]
+Rule: 1 ⊢(cons(y,cons(x,cons(∨(¬(x),y),w))),ε) ⊢(cons(x,cons(∨(¬(x),y),w)),ε) [res:r]
+Rule: 1 ⊢(cons(∨(y,z),cons(∨(x,y),cons(∨(¬(x),z),w))),ε) ⊢(cons(∨(x,y),cons(∨(¬(x),z),w)),ε) [res]
+Rule: 1 ⊢(cons(∨(y,x),w),ε) ⊢(cons(∨(x,y),w),ε) [∨-C1]
+Rule: 1 ⊢(cons(∨(∨(y,x),z),w),ε) ⊢(cons(∨(∨(x,y),z),w),ε) [∨-C2]
+Rule: 1 ⊢(cons(∨(∨(x,y),z),w),ε) ⊢(cons(∨(x,∨(y,z)),w),ε) [∨-A]
+Rule: 1 ⊢(cons(cons(y,z),x),ε)  ⊢(cons(x,cons(y,z)),ε) [shift:l]
+Rule: 1 ⊢(cons(y,cons(x,z)),ε)  ⊢(cons(x,cons(y,z)),ε) [switch:l]
+Rule: 1 ⊢(w,ε) ⊢(cons(x,w),ε) [trash]
+Rule: 0 ⊢(cons(x,cons(¬(x),w)),ε) [solve]

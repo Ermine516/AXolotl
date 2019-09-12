@@ -76,9 +76,8 @@ public class LogicalProblemsListActivity extends AxolotlSupportingFunctionalityP
         }
         PS = ConstructActivity(savedInstanceState);
         problems = new HashMap<>();
-        String[] temp = new String[0];
-        int i = 0;
-        int j = 0;
+        String[] temp;
+        int i, j = 0;
         try {
             temp = this.getAssets().list(directory + HILBERTPROBLEMSLOCATION);
             String[] cleaned = new String[temp.length - 1];

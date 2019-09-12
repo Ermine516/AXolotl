@@ -255,6 +255,8 @@ public class MainActivity extends AxolotlSupportingFunctionality {
                             succTerm.normalize(PS.Variables); // Don't forget that sequents are brittle terms
                             PS.currentRule.argument.normalize(PS.Variables); // Don't forget that sequents are brittle terms
                         }
+                        System.out.println("normed" + succTerm.toString() + "   " + PS.currentRule.argument);
+                        System.out.println("normed? " + TermMatchWithVar(succTerm, PS.currentRule.argument, PS.Variables));
                         if (succTerm != null && TermMatchWithVar(succTerm, PS.currentRule.argument, PS.Variables)) {
                             PS.Substitutions = Substitution.substitutionConstruct(succTerm, PS.currentRule.argument, PS);
                             try {
@@ -268,6 +270,7 @@ public class MainActivity extends AxolotlSupportingFunctionality {
                                 }
                                 for (String s : singleSide)
                                     PS.Substitutions.varIsPartial(s);
+
                                 PS.subPos = 0;
                                 PS.MatchorConstruct = PS.Substitutions.partialOrNot();
                                 if (!PS.observe)

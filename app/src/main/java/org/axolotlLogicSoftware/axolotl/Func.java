@@ -198,7 +198,8 @@ public final class Func implements Term, Parcelable {
             }
             return ret;
         } else if (listTerms.size() == 1) {
-            if (var.contains(listTerms.get(0).getSym())) return listTerms.get(0);
+            if (var.contains(listTerms.get(0).getSym()) || listTerms.get(0).getSym().compareTo("ε") == 0)
+                return listTerms.get(0);
             else {
                 ArrayList<Term> argList = new ArrayList<>();
                 argList.add(listTerms.get(0));

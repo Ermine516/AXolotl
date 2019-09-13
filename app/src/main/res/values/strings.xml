@@ -37,7 +37,8 @@
     <string name="latex_proof">Latex Proof to Clipboard</string>
     <string name="about">About</string>
     <string name="members"><b>Members</b></string>
-    <string name="Resolution"><b>Resolution</b></string>
+    <string name="Resolution">Resolution</string>
+    <string name="tableau">Tableaux</string>
 
     <string name="about1">The development of this application was partially funded by the Linz Institute of
     Technology (<a href="https://www.jku.at/linz-institute-of-technology/">LIT</a>) SEED Project <a href="http://fmv.jku.at/logtechedu/">LOGTECHEDU</a>

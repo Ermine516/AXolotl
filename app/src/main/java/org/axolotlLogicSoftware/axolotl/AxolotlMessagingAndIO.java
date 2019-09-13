@@ -178,8 +178,8 @@ class AxolotlMessagingAndIO {
                 throw new TermHelper().new FormatException();
             else PS.problem.add(temp);
         }
-        // System.out.print(PS.problem.iterator().next().Print());
-        //   System.out.println();
+        //System.out.print(PS.problem.iterator().next().Print());
+        // System.out.println();
 
         return true;
     }

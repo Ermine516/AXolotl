@@ -1,0 +1,17 @@
+Function: ∨ 2 infix
+Function: ∧ 2 infix
+Function: ¬ 1
+Function: ⊥ 0
+Function: a 0
+Function: b 0
+Variable: x
+Variable: y
+Variable: z
+Variable: w
+Problem: 1 ⊢(∧(∨(a,∨(b,∨(c,d))),∧(¬(a),∧(∨(¬(c),¬(d)),∧(∨(a,∨(c,¬(d))),∧(∨(c,¬(b)),¬(c)))))),ε)
+Rule: 1 ⊢(cons(x,cons(y,w)),ε) ⊢(cons(∧(x,y),w),ε) [∧-decom]
+Rule: 2  ⊢(cons(x,w),ε)  ⊢(cons(y,w),ε) ⊢(cons(∨(x,y),w),ε)  [∨-decom]
+Rule: 1 ⊢(cons(cons(y,z),x),ε)  ⊢(cons(x,cons(y,z)),ε) [shift:l]
+Rule: 1 ⊢(cons(y,cons(x,z)),ε)  ⊢(cons(x,cons(y,z)),ε) [switch:l]
+Rule: 1 ⊢(w,ε) ⊢(cons(x,w),ε) [trash]
+Rule: 0 ⊢(cons(x,cons(¬(x),w)),ε) [close]

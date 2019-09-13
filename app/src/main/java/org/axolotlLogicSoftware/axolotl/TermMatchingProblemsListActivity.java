@@ -19,6 +19,10 @@ public class TermMatchingProblemsListActivity extends AxolotlSupportingFunctiona
      * Location of the Axolotl files associated with Resolution problems
      */
     public static final String RESOLUTIONPROBLEMS = "resolution";
+    /**
+     * Location of the Axolotl files associated with Tableaux problems
+     */
+    public static final String TABLEAUXPROBLEMS = "tableaux";
     String directory = "";
 
     @Override
@@ -32,6 +36,8 @@ public class TermMatchingProblemsListActivity extends AxolotlSupportingFunctiona
                     break;
                 case 1:
                     directory = RESOLUTIONPROBLEMS;
+                case 2:
+                    directory = TABLEAUXPROBLEMS;
                     break;
                 default: {
                     Intent intent = new Intent(TermMatchingProblemsListActivity.this, MainActivity.class);

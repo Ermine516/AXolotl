@@ -36,6 +36,7 @@ public class TermMatchingProblemsListActivity extends AxolotlSupportingFunctiona
                     break;
                 case 1:
                     directory = RESOLUTIONPROBLEMS;
+                    break;
                 case 2:
                     directory = TABLEAUXPROBLEMS;
                     break;
@@ -81,6 +82,7 @@ public class TermMatchingProblemsListActivity extends AxolotlSupportingFunctiona
     }
 
     protected void ActivityDecorate() {
+        System.out.println(directory);
         addProblemList(this.getAssets(), (LinearLayout) this.findViewById(R.id.TermMatchingProblemList), directory);
     }
 

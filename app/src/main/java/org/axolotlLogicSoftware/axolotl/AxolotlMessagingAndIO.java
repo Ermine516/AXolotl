@@ -50,34 +50,37 @@ class AxolotlMessagingAndIO {
      * @param ctx The activity from which  the request was made
      */
     static void OverflowMenuSelected(int id, Activity ctx) {
-        if (id == R.id.load) {
-            AxolotlMessagingAndIO.performFileSearch(ctx);
-        } else if (id == R.id.save) {
-            if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-                    ActivityCompat.requestPermissions(ctx, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
-            else
-                try {
-                    ((AxolotlSupportingListenersAndMethods) ctx).saveProof();
-                } catch (IOException e) {
-                    Toast.makeText(ctx, "Unable to Saved Proof to Gallery", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+        if (!((ctx instanceof MatchDisplayActivity) || (ctx instanceof TermConstructActivity))) {
+            if (id == R.id.load) {
+                AxolotlMessagingAndIO.performFileSearch(ctx);
+            } else if (id == R.id.save) {
+                if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                    ActivityCompat.requestPermissions(ctx, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                else
+                    try {
+                        ((AxolotlSupportingListenersAndMethods) ctx).saveProof();
+                    } catch (IOException e) {
+                        Toast.makeText(ctx, "Unable to Saved Proof to Gallery", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-        } else if (id == R.id.latex) {
-            ((AxolotlSupportingListenersAndMethods) ctx).copyLatexToClipboard();
-        } else if (id == R.id.help) {
-            Intent intent = new Intent(ctx, HelpActivity.class);
-            intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, ((AxolotlSupportingListenersAndMethods) ctx).PS);
-            ctx.startActivity(intent);
-            ctx.overridePendingTransition(0, 0);
-            ctx.finish();
-        } else if (id == R.id.about) {
-            Intent intent = new Intent(ctx, AboutActivity.class);
-            intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, ((AxolotlSupportingListenersAndMethods) ctx).PS);
-            ctx.startActivity(intent);
-            ctx.overridePendingTransition(0, 0);
-            ctx.finish();
-        }
+            } else if (id == R.id.latex) {
+                ((AxolotlSupportingListenersAndMethods) ctx).copyLatexToClipboard();
+            } else if (id == R.id.help) {
+                Intent intent = new Intent(ctx, HelpActivity.class);
+                intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, ((AxolotlSupportingListenersAndMethods) ctx).PS);
+                ctx.startActivity(intent);
+                ctx.overridePendingTransition(0, 0);
+                ctx.finish();
+            } else if (id == R.id.about) {
+                Intent intent = new Intent(ctx, AboutActivity.class);
+                intent.putExtra(AxolotlMessagingAndIO.PASSPROBLEMSTATE, ((AxolotlSupportingListenersAndMethods) ctx).PS);
+                ctx.startActivity(intent);
+                ctx.overridePendingTransition(0, 0);
+                ctx.finish();
+            }
+        } else Toast.makeText(ctx, "Option Disable during Observation", Toast.LENGTH_SHORT).show();
+
     }
 
     /**

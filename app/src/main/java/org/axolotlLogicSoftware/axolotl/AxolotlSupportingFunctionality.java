@@ -419,6 +419,8 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
      */
     protected void drawRuleFromSelection() {
         Term succTerm = ProblemState.getTermByString(PS.selectedPosition, PS.problem);
+        succTerm.normalize(PS.Variables);
+        PS.currentRule.argument.normalize(PS.Variables);
         Substitution sub = Substitution.substitutionConstruct(succTerm, PS.currentRule.argument, PS);
         try {
             sub = sub.clean();

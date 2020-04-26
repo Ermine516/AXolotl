@@ -87,12 +87,12 @@ public class Proof {
             for (Term t : rule.Conclusions) {
                 if (TermHelper.wellformedSequents(t))
                     t.normalize(PS.Variables); // Don't forget that sequents are brittle terms
-                Proof p = new Proof(t.Print(), "");
+                Proof p = new Proof(t.Print(new ArrayList<Term>(), TxtAdj.Std), "");
                 p.drawLine = false;
                 p.finished = true;
                 args.add(p);
             }
-            Proof p = new Proof(rule.argument.Print(), rule.Label);
+            Proof p = new Proof(rule.argument.Print(new ArrayList<Term>(), TxtAdj.Std), rule.Label);
             p.finished = true;
             p.antecedents = args;
             Pair<Bitmap, Pair<Float, Float>> bm = p.draw();
@@ -162,7 +162,7 @@ public class Proof {
             Term onlyOne = curSuccProblem.iterator().next();
             if (TermHelper.wellformedSequents(onlyOne))
                 onlyOne.normalize(PS.Variables); // Don't forget that sequents are brittle terms
-            return new Proof(onlyOne.Print(), "");
+            return new Proof(onlyOne.Print(new ArrayList<Term>(), TxtAdj.Std), "");
         }
 
         ArrayList<Proof> cur = new ArrayList<>();
@@ -178,7 +178,7 @@ public class Proof {
             //make a new proof with the formula that we just derived
             if (TermHelper.wellformedSequents(succSideApply))
                 succSideApply.normalize(PS.Variables);// Don't forget that sequents are brittle terms
-            Proof der = new Proof(succSideApply.Print(), laststep.rule.Label);
+            Proof der = new Proof(succSideApply.Print(new ArrayList<Term>(), TxtAdj.Std), laststep.rule.Label);
             der.setFinished(true);
 
             for (Term t : laststep.rule.Conclusions)
@@ -191,7 +191,8 @@ public class Proof {
                 for (Term s : anteSideApply) {
                     if (TermHelper.wellformedSequents(s))
                         s.normalize(PS.Variables); // Don't forget that sequents are brittle terms
-                    if (t.Print().compareTo(s.Print()) == 0) wasselected = true;
+                    if (t.Print(new ArrayList<Term>(), TxtAdj.Std).compareTo(s.Print(new ArrayList<Term>(), TxtAdj.Std)) == 0)
+                        wasselected = true;
                 }
                 if (!wasselected) newSuccProblem.add(t);
             }
@@ -204,15 +205,15 @@ public class Proof {
                 boolean availabe = false;
                 Proof instance = null;
                 for (Proof t : cur) {
-                    if (t.formula.compareTo(s.Print()) == 0) {
+                    if (t.formula.compareTo(s.Print(new ArrayList<Term>(), TxtAdj.Std)) == 0) {
                         availabe = true;
                         der.addAntecedent(t);
                         instance = t;
-                        map.put(s.Print(), t);
+                        map.put(s.Print(new ArrayList<Term>(), TxtAdj.Std), t);
                     }
                 }
                 if(!availabe) {
-                    Proof underived = new Proof(s.Print(), laststep.rule.Label);
+                    Proof underived = new Proof(s.Print(new ArrayList<Term>(), TxtAdj.Std), laststep.rule.Label);
                     underived.setFinished(false);
                     underivedProofs.add(underived);
                     der.addAntecedent(underived);

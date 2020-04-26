@@ -188,32 +188,7 @@ public final class Const implements Term, Parcelable {
         return hash;
     }
 
-    /**
-     * Provides the default printing style of a Const object.
-     * @return Const object as a String.
-     * @author David M. Cerna
-     */
-    public String Print() {
-        if (this.isEmptyList()) return "";
-        else return this.Sym;
-    }
 
-    /**
-     * Prints the Const in red if the term compare is equivalent to the given term. Furthermore, if
-     * compare is also labeled as a variable, i.e. isvar is true, then the Const is printed in bold
-     * red. Note that the empty list is print() as an empty string.
-     *
-     * @param compare The Term to be compared to the given Const object.
-     * @param isvar   If compare is a variable then isvar is true.
-     * @return Const object as a String which contains HTML code.
-     * @author David M. Cerna
-     */
-    public String Print(Term compare, boolean isvar) {
-        if (this.isEmptyList()) return "";
-        else if (compare.subTerms().size() == 0 && compare.getSym().compareTo(this.getSym()) == 0)
-            return FONTCOLOR + ((isvar) ? "<b>" : "") + Print() + ((isvar) ? "</b>" : "") + "</font>";
-        else return Print();
-    }
 
     /**
      * Prints the Const in red if the symbol of term compare is var and the Term t is equivalent to the given term.
@@ -224,40 +199,14 @@ public final class Const implements Term, Parcelable {
      * @return Const object as a String which contains HTML code.
      * @author David M. Cerna
      */
-    public String Print(String var, Term compare, Term t) {
+    public String Print(String var, Term compare, Term t, Adjustment adj) {
         if (this.isEmptyList()) return "";
         if (compare.subTerms().size() == 0 && compare.getSym().compareTo(var) == 0 && t.subTerms().size() == 0 && t.getSym().compareTo(this.getSym()) == 0)
-            return FONTCOLOR + Print() + "</font>";
-        else return Print();
+            return adj.apply(Print(new ArrayList<Term>(), TxtAdj.Std));
+        else return Print(new ArrayList<Term>(), TxtAdj.Std);
     }
 
-    /**
-     * A special version of the print function used when printing terms within a list structure.
-     * @return Const object as a String.
-     * @author David M. Cerna
-     */
-    public String PrintCons() {
-        if (this.isEmptyList()) return "";
-        else return this.Sym;
-    }
 
-    /**
-     * Prints the Const in red if the term compare is equivalent to the given term. Furthermore, if
-     * compare is also labeled as a variable, i.e. isvar is true, then the Const is printed in bold
-     * red. Note that the empty list is print() as an empty string. A special version of the print
-     * function used when printing terms within a list structure.
-     *
-     * @param compare The Term to be compared to the given Const object.
-     * @param isvar   If compare is a variable then isvar is true.
-     * @return Const object as a String which contains HTML code.
-     * @author David M. Cerna
-     */
-    public String PrintCons(Term compare, boolean isvar) {
-        if (this.isEmptyList()) return "";
-        else if (compare.subTerms().size() == 0 && compare.getSym().compareTo(this.getSym()) == 0)
-            return FONTCOLOR + ((isvar) ? "<b>" : "") + Print() + ((isvar) ? "</b>" : "") + "</font>";
-        else return Print();
-    }
 
     /**
      * Prints the Const in red if the symbol of term compare is var and the Term t is equivalent to the given term.
@@ -269,11 +218,8 @@ public final class Const implements Term, Parcelable {
      * @return Const object as a String which contains HTML code.
      * @author David M. Cerna
      */
-    public String PrintCons(String var, Term compare, Term t) {
-        if (this.isEmptyList()) return "";
-        else if (compare.subTerms().size() == 0 && compare.getSym().compareTo(var) == 0 && t.subTerms().size() == 0 && t.getSym().compareTo(this.getSym()) == 0)
-            return FONTCOLOR + Print() + "</font>";
-        else return Print();
+    public String PrintCons(String var, Term compare, Term t, Adjustment adj) {
+        return Print(var, compare, t, adj);
     }
 
 
@@ -284,11 +230,11 @@ public final class Const implements Term, Parcelable {
      * within the list terms
      * @author David M. Cerna
      */
-    public String PrintBold(ArrayList<Term> terms) {
+    public String Print(ArrayList<Term> terms, Adjustment adj) {
         for (Term t : terms)
             if (t.getSym().compareTo(this.getSym()) == 0)
-                return "<b>" + this.Print() + "</b>";
-        return this.Print();
+                return adj.apply(this.getSym());
+        return (this.isEmptyList()) ? "" : this.Sym;
     }
 
     /**
@@ -299,9 +245,8 @@ public final class Const implements Term, Parcelable {
      * within the list terms
      * @author David M. Cerna
      */
-    public String PrintConsBold(ArrayList<Term> terms) {
-        if (this.isEmptyList()) return "";
-        else return this.PrintBold(terms);
+    public String PrintCons(ArrayList<Term> terms, Adjustment adj) {
+        return Print(terms, adj);
     }
 
     /**

@@ -151,7 +151,8 @@ public class MainActivity extends AxolotlSupportingFunctionality {
     private void UpdateProblemDisplay() {
         if (PS.mainActivityState == 0)
             updateProblemSideDisplay((LinearLayout) this.findViewById(R.id.RightSideTermLayout), PS.problem.toArray(AxolotlMessagingAndIO.HashSetTermArray));
-        if (PS.problem.size() == 1) PS.selectedPosition = PS.problem.iterator().next().Print();
+        if (PS.problem.size() == 1)
+            PS.selectedPosition = PS.problem.iterator().next().Print(new ArrayList<Term>(), TxtAdj.Std);
     }
 
     protected void switchDisplay() {
@@ -201,7 +202,8 @@ public class MainActivity extends AxolotlSupportingFunctionality {
                     for (Term t : PS.problem) {
                         boolean wasselected = false;
                         for (Term s : anteSideApply)
-                            if (t.Print().compareTo(s.Print()) == 0) wasselected = true;
+                            if (t.Print(new ArrayList<Term>(), TxtAdj.Std).compareTo(s.Print(new ArrayList<Term>(), TxtAdj.Std)) == 0)
+                                wasselected = true;
                         if (!wasselected) newSuccProblem.add(t);
                     }
                     PS.problem = newSuccProblem;

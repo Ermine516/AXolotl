@@ -57,7 +57,7 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
         TextView td = this.findViewById(R.id.TermDisplay);
         td.setTextSize(PS.textSize);
         LinearLayout ltd = this.findViewById(R.id.TermInstancceLayout);
-        td.setText(PS.Substitutions.get(PS.subPos).replacement.Print());
+        td.setText(PS.Substitutions.get(PS.subPos).replacement.Print(new ArrayList<Term>(), TxtAdj.Std));
         int width = ((int) td.getPaint().measureText(td.getText().toString())) + 20;
         td.setWidth((width > 75) ? width : 75);
         ltd.setMinimumWidth((width > 75) ? width : 75);
@@ -76,7 +76,7 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
                     args.add(new Const(Const.Hole.getSym()));
                     arity--;
                 }
-                String funcText = new Func(p.name, args, infix).Print();
+                String funcText = new Func(p.name, args, infix).Print(new ArrayList<Term>(), TxtAdj.Std);
                 TextView functext = new TextView(this);
                 functext.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.NO_GRAVITY));
                 functext.setTextSize(PS.textSize);
@@ -90,7 +90,7 @@ public class TermConstructActivity extends AxolotlSupportingFunctionality {
         }
         for (String cons : PS.Constants) {
             if (ProblemState.isNotReserved(cons)) {
-                String funcText = new Const(cons).Print();
+                String funcText = new Const(cons).Print(new ArrayList<Term>(), TxtAdj.Std);
                 TextView functext = new TextView(this);
                 functext.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.NO_GRAVITY));
                 functext.setTextSize(PS.textSize);

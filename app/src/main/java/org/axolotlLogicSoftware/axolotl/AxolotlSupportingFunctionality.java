@@ -162,7 +162,8 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
         }
         HashSet<Term> newProblemsucc = new HashSet<>();
         for (Term t : PS.problem)
-            if (t.Print().compareTo(PS.selectedPosition) != 0) newProblemsucc.add(t);
+            if (t.Print(new ArrayList<Term>(), TxtAdj.Std).compareTo(PS.selectedPosition) != 0)
+                newProblemsucc.add(t);
             else newProblemsucc.addAll(PS.Substitutions.apply(PS.currentRule.Conclusions));
         PS.problem = newProblemsucc;
         for (Term t : PS.problem)
@@ -227,16 +228,16 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
     public HorizontalScrollView scrollTextSelectConstruct(Term text, View.OnClickListener lis, View.OnLongClickListener longLis, Context ctx, boolean gravity) {
         TextView TermText = new TextView(ctx);
         TermText.setTextSize(PS.textSize);
-        TermText.setText(Html.fromHtml(text.Print()));
+        TermText.setText(Html.fromHtml(text.Print(new ArrayList<Term>(), TxtAdj.Std)));
         if (gravity) TermText.setGravity(Gravity.CENTER);
         TermText.setFreezesText(true);
-        if (text.Print().compareTo(Const.Empty.getSym()) == 0 && PS.selectedPosition.compareTo(Const.Empty.getSym()) == 0) {
+        if (text.Print(new ArrayList<Term>(), TxtAdj.Std).compareTo(Const.Empty.getSym()) == 0 && PS.selectedPosition.compareTo(Const.Empty.getSym()) == 0) {
             TermText.setTextColor(Color.WHITE);
             TermText.setBackgroundColor(Color.BLACK);
-        } else if (PS.selectedPosition.compareTo("") != 0 && (text.Print().compareTo(PS.selectedPosition) == 0)) {
+        } else if (PS.selectedPosition.compareTo("") != 0 && (text.Print(new ArrayList<Term>(), TxtAdj.Std).compareTo(PS.selectedPosition) == 0)) {
             TermText.setTextColor(Color.WHITE);
             TermText.setBackgroundColor(Color.BLACK);
-        } else if (PS.currentRule.argument.getSym().compareTo(Const.HoleSelected.getSym()) != 0 && (text.Print().compareTo(PS.selectedPosition) == 0)) {
+        } else if (PS.currentRule.argument.getSym().compareTo(Const.HoleSelected.getSym()) != 0 && (text.Print(new ArrayList<Term>(), TxtAdj.Std).compareTo(PS.selectedPosition) == 0)) {
             TermText.setTextColor(Color.WHITE);
             TermText.setBackgroundColor(Color.BLACK);
         } else {
@@ -398,14 +399,14 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
             for (Term t : PS.currentRule.Conclusions) {
                 if (TermHelper.wellformedSequents(t))
                     t.normalize(PS.Variables); // Don't forget that sequents are brittle terms
-                Proof p = new Proof(t.Print(), "");
+                Proof p = new Proof(t.Print(new ArrayList<Term>(), TxtAdj.Std), "");
                 p.drawLine = false;
                 p.finished = true;
                 args.add(p);
             }
             if (TermHelper.wellformedSequents(PS.currentRule.argument))
                 PS.currentRule.argument.normalize(PS.Variables); // Don't forget that sequents are brittle terms
-            Proof p = new Proof(PS.currentRule.argument.Print(), PS.currentRule.Label);
+            Proof p = new Proof(PS.currentRule.argument.Print(new ArrayList<Term>(), TxtAdj.Std), PS.currentRule.Label);
             p.finished = true;
             p.antecedents = args;
             Pair<Bitmap, Pair<Float, Float>> bm = p.draw();
@@ -447,14 +448,14 @@ public abstract class AxolotlSupportingFunctionality extends AxolotlSupportingLi
             for (Term t : rule.Conclusions) {
                 if (TermHelper.wellformedSequents(t))
                     t.normalize(PS.Variables); // Don't forget that sequents are brittle terms
-                Proof p = new Proof(t.Print(), "");
+                Proof p = new Proof(t.Print(new ArrayList<Term>(), TxtAdj.Std), "");
                 p.drawLine = false;
                 p.finished = true;
                 args.add(p);
             }
             if (TermHelper.wellformedSequents(rule.argument))
                 rule.argument.normalize(PS.Variables); // Don't forget that sequents are brittle terms
-            Proof p = new Proof(rule.argument.Print(), rule.Label);
+            Proof p = new Proof(rule.argument.Print(new ArrayList<Term>(), TxtAdj.Std), rule.Label);
             p.finished = true;
             p.antecedents = args;
             Pair<Bitmap, Pair<Float, Float>> bm = p.draw();

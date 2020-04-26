@@ -45,7 +45,7 @@ public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
         ArrayList<String> anteStrings = new ArrayList<>();
         ArrayList<String> succStrings = new ArrayList<>();
         for (Term t : curSuccProblem) {
-            succStrings.add(t.Print());
+            succStrings.add(t.Print(new ArrayList<Term>(), TxtAdj.Std));
         }
         proof.add(Pair.create("", Pair.create(anteStrings, succStrings)));
 
@@ -58,13 +58,14 @@ public class ProofDisplayActivity extends AxolotlSupportingFunctionality {
             for (Term t : curSuccProblem) {
                 boolean wasselected = false;
                 for (Term s : anteSideApply)
-                    if (t.Print().compareTo(s.Print()) == 0) wasselected = true;
+                    if (t.Print(new ArrayList<Term>(), TxtAdj.Std).compareTo(s.Print(new ArrayList<Term>(), TxtAdj.Std)) == 0)
+                        wasselected = true;
                 if (!wasselected) newSuccProblem.add(t);
             }
             curSuccProblem = newSuccProblem;
             succStrings = new ArrayList<>();
             for (Term t : curSuccProblem) {
-                succStrings.add(t.Print());
+                succStrings.add(t.Print(new ArrayList<Term>(), TxtAdj.Std));
             }
             proof.add(Pair.create(laststep.rule.Label, Pair.create(anteStrings, succStrings)));
         }

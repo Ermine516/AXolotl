@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Rule implements Parcelable {
-    private static final String RULESYMBOL = Term.FONTCOLOR + "\u27A1</font>";
+    private static final String RULESYMBOL = TxtAdj.FONTCOLOR + "\u27A1</font>";
     String Label;
     ArrayList<Term> Conclusions;
     Term argument;
@@ -62,18 +62,18 @@ public class Rule implements Parcelable {
         if (rule != null && rule.Conclusions != null && rule.argument != null) {
             ArrayList<Term> varAsTerms = new ArrayList<>();
             for (String var : rule.variables) varAsTerms.add(new Const(var));
-            StringBuilder retString = new StringBuilder("Δ , ").append(rule.argument.PrintBold(varAsTerms));
+            StringBuilder retString = new StringBuilder("Δ , ").append(rule.argument.Print(varAsTerms, TxtAdj.Bold));
             if (rule.Conclusions.size() > 0) {
                 retString.append(" " + RULESYMBOL).append(" Δ ");
                 for (int i = 0; i < rule.Conclusions.size(); i++)
                     if (i == 0 && i != rule.Conclusions.size() - 1)
-                        retString.append(", ").append(rule.Conclusions.get(i).PrintBold(varAsTerms)).append(" , ");
+                        retString.append(", ").append(rule.Conclusions.get(i).Print(varAsTerms, TxtAdj.Bold)).append(" , ");
                     else if (0 == rule.Conclusions.size() - 1)
-                        retString.append(", ").append(rule.Conclusions.get(i).PrintBold(varAsTerms));
+                        retString.append(", ").append(rule.Conclusions.get(i).Print(varAsTerms, TxtAdj.Bold));
                     else if (i == rule.Conclusions.size() - 1)
-                        retString.append(rule.Conclusions.get(i).PrintBold(varAsTerms));
+                        retString.append(rule.Conclusions.get(i).Print(varAsTerms, TxtAdj.Bold));
                     else
-                        retString.append(rule.Conclusions.get(i).PrintBold(varAsTerms)).append(" , ");
+                        retString.append(rule.Conclusions.get(i).Print(varAsTerms, TxtAdj.Bold)).append(" , ");
             } else retString.append(" " + RULESYMBOL).append(" Δ");
             return retString.toString();
         } else return "";

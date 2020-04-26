@@ -117,7 +117,8 @@ public class ProblemState implements Parcelable {
 
     static Term getTermByString(String succSelectedPosition, HashSet<Term> succProblem) {
         for (Term t : succProblem)
-            if (t.Print().compareTo(succSelectedPosition) == 0) return t.Dup();
+            if (t.Print(new ArrayList<Term>(), TxtAdj.Std).compareTo(succSelectedPosition) == 0)
+                return t.Dup();
         return null;
     }
 
@@ -128,7 +129,8 @@ public class ProblemState implements Parcelable {
 
     Term getSelectedSuccTerm() {
         for (Term t : problem) {
-            if (t.Print().compareTo(selectedPosition) == 0) return t;
+            if (t.Print(new ArrayList<Term>(), TxtAdj.Std).compareTo(selectedPosition) == 0)
+                return t;
         }
         return null;
     }
@@ -152,7 +154,8 @@ public class ProblemState implements Parcelable {
     HashSet<Term> replaceSelectedSuccTerm(HashSet<Term> replacement) {
         HashSet<Term> succupdate = new HashSet<>();
         for (Term t : problem)
-            if (t.Print().compareTo(selectedPosition) != 0) succupdate.add(t);
+            if (t.Print(new ArrayList<Term>(), TxtAdj.Std).compareTo(selectedPosition) != 0)
+                succupdate.add(t);
             else succupdate.addAll(replacement);
         return succupdate;
     }

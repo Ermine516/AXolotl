@@ -14,10 +14,7 @@ import java.util.HashSet;
  * @author David M. Cerna
  */
 public final class Func implements Term, Parcelable {
-    /**
-     * When highlighting subterms we use the same color as end-gradiant for the action bar.
-     */
-    private static final String FONTCOLOR = "<font color=#EF4665>";
+
     /**
      * The symbol of the function. Inherited from Term
      */
@@ -125,7 +122,7 @@ public final class Func implements Term, Parcelable {
         for (int i = 0; i < this.Args.size(); i++) {
             if (!diff) newArgs.add(this.Args.get(i).replaceLeft(c, r));
             else newArgs.add(this.Args.get(i));
-            if (this.Args.get(i).Print().compareTo(newArgs.get(newArgs.size() - 1).Print()) != 0)
+            if (this.Args.get(i).Print(new ArrayList<Term>(), TxtAdj.Std).compareTo(newArgs.get(newArgs.size() - 1).Print(new ArrayList<Term>(), TxtAdj.Std)) != 0)
                 diff = true;
 
         }
@@ -234,147 +231,46 @@ public final class Func implements Term, Parcelable {
         } else return false;
 
     }
-
-    /**
-     * computes the hashcode of terms based on the direct subterms and there symbol
-     *
-     * @return A hashcode of the given term
-     * @author David M. Cerna
-     */
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 31 * hash + getSym().hashCode();
-        for (Term t : subTerms())
-            hash = 31 * hash + t.hashCode();
-        return hash;
-    }
-
     /**
      * Provides a default pretty printing of terms.
      * @return a term object as a pretty printed String.
      * @author David M. Cerna
      */
-    public String Print() {
-        if (this.getSym().compareTo("⊢") == 0)
-            return "(" + this.Args.get(0).Print() + " " + this.getSym() + " " + this.Args.get(1).Print() + ")";
+    public String Print(ArrayList<Term> terms, Adjustment adj) {
+        if (terms.contains(this)) return adj.apply(this.Print(new ArrayList<Term>(), TxtAdj.Std));
+        else if (this.getSym().compareTo("⊢") == 0)
+            return "(" + this.Args.get(0).Print(terms, adj) + " " + this.getSym() + " " + this.Args.get(1).Print(terms, adj) + ")";
         else if (this.getSym().compareTo("cons") == 0) {
-            String s = this.Args.get(1).PrintCons();
-            return this.Args.get(0).PrintCons() + ((s.compareTo("") != 0) ? " , " : "") + s;
+            String s = this.Args.get(1).PrintCons(terms, adj);
+            return this.Args.get(0).PrintCons(terms, adj) + ((s.compareTo("") != 0) ? " , " : "") + s;
         } else if (this.Args.size() == 2 && infix) {
             String s = "(";
-            s += this.Args.get(0).Print() + " " + this.getSym() + " " + this.Args.get(1).Print();
-            return s + ")";
-        } else {
-            StringBuilder s = new StringBuilder(Sym + "(");
-            int i = 0;
-            for (; i < (this.Args.size() - 1); i++) s.append(this.Args.get(i).Print()).append(",");
-            Term t = this.Args.get(i);
-            String ss = t.Print();
-            if (this.Args.size() > 0) s.append(ss).append(")");
-            return s.toString();
-        }
-
-    }
-
-    /**
-     * Provides a pretty printing of a term object which displays the subterms contained in terms
-     * bold using the html markup.
-     * @param terms a list of terms to print bold.
-     * @return a term object as a pretty printed String possibly containing HTML.
-     * @author David M. Cerna
-     */
-    public String PrintBold(ArrayList<Term> terms) {
-        if (this.getSym().compareTo("⊢") == 0)
-            return "(" + this.Args.get(0).PrintBold(terms) + " " + this.getSym() + " " + this.Args.get(1).PrintBold(terms) + ")";
-        else if (this.getSym().compareTo("cons") == 0) {
-            String s = this.Args.get(1).PrintConsBold(terms);
-            return this.Args.get(0).PrintConsBold(terms) + ((s.compareTo("") != 0) ? " , " : "") + s;
-        } else if (this.Args.size() == 2 && infix) {
-            String s = "(";
-            s += this.Args.get(0).PrintBold(terms) + " " + this.getSym() + " " + this.Args.get(1).PrintBold(terms);
+            s += this.Args.get(0).Print(terms, adj) + " " + this.getSym() + " " + this.Args.get(1).Print(terms, adj);
             return s + ")";
         } else {
             StringBuilder s = new StringBuilder(Sym + "(");
             int i = 0;
             for (; i < (this.Args.size() - 1); i++)
-                s.append(this.Args.get(i).PrintBold(terms)).append(",");
+                s.append(this.Args.get(i).Print(terms, adj)).append(",");
             Term t = this.Args.get(i);
-            String ss = t.PrintBold(terms);
+            String ss = t.Print(terms, adj);
             if (this.Args.size() > 0) s.append(ss).append(")");
-            for (Term tt : terms)
-                if (tt.PrintBold(terms).compareTo(s.toString()) == 0)
-                    return "<b>" + s.toString() + "</b>";
             return s.toString();
         }
-
     }
-
     /**
      * When pretty printing list terms the symbols should be dropped. This is a variant of the
      * print function which drops the cons symbol when printing list terms.
      * @return a pretty printed list term.
      * @author David M. Cerna
      */
-    public String PrintCons() {
+    public String PrintCons(ArrayList<Term> terms, Adjustment adj) {
         if (this.getSym().compareTo("cons") == 0) {
-            String s = this.Args.get(1).PrintCons();
-            return this.Args.get(0).PrintCons() + ((s.compareTo("") != 0) ? " , " : "") + s;
-        } else return this.Print();
+            String s = this.Args.get(1).PrintCons(terms, adj);
+            return this.Args.get(0).PrintCons(terms, adj) + ((s.compareTo("") != 0) ? " , " : "") + s;
+        } else return this.Print(terms, adj);
 
     }
-
-    /**
-     * Similar to printbold() except this version correctly prints list terms.
-     * @param terms a list of terms to print bold.
-     * @return a term object as a pretty printed String possibly containing HTML.
-     * @author David M. Cerna
-     */
-    public String PrintConsBold(ArrayList<Term> terms) {
-        if (this.getSym().compareTo("cons") == 0) {
-            String s = this.Args.get(1).PrintConsBold(terms);
-            return this.Args.get(0).PrintConsBold(terms) + ((s.compareTo("") != 0) ? " , " : "") + s;
-        } else return this.PrintBold(terms);
-
-    }
-
-    /**
-     * Prints the term using the FONTCOLOR markup if the term compare is equivalent to the given term.
-     * Furthermore, if compare is also labeled as a variable, i.e. isvar is true, then the Const is
-     * printed in bold using the FONTCOLOR markup as well as the bold markup. Note that the empty
-     * list is print() as an empty string.
-     *
-     * @param compare The Term to be compared to the given Const object.
-     * @param isvar   If compare is a variable then isvar is true.
-     * @return term object as a String which contains HTML code.
-     * @author David M. Cerna
-     */
-    public String Print(Term compare, boolean isvar) {
-        if (TermHelper.TermMatch(this, compare)) return FONTCOLOR + this.Print() + "</font>";
-        else {
-            if (this.getSym().compareTo("⊢") == 0)
-                return "(" + this.Args.get(0).Print(compare, isvar) + " " + this.getSym() + " " + this.Args.get(1).Print(compare, isvar) + ")";
-            else if (this.getSym().compareTo("cons") == 0) {
-                String s = this.Args.get(1).PrintCons(compare, isvar);
-                return this.Args.get(0).PrintCons(compare, isvar) + ((s.compareTo("") != 0) ? " , " : "") + s;
-
-            } else if (this.Args.size() == 2 && infix) {
-                String s = "(";
-                s += this.Args.get(0).Print(compare, isvar) + " " + this.getSym() + " " + this.Args.get(1).Print(compare, isvar);
-                return s + ")";
-            } else {
-                StringBuilder s = new StringBuilder(Sym + "(");
-                int i = 0;
-                for (; i < (this.Args.size() - 1); i++)
-                    s.append(this.Args.get(i).Print(compare, isvar)).append(",");
-                Term tt = this.Args.get(i);
-                String ss = tt.Print(compare, isvar);
-                if (this.Args.size() > 0) s.append(ss).append(")");
-                return s.toString();
-            }
-        }
-    }
-
     /**
      * Prints the term using the FONTCOLOR markup if the symbol of term compare is var and the Term
      * t is contained in the given term. Note that the empty list is printed using print() as an
@@ -386,29 +282,29 @@ public final class Func implements Term, Parcelable {
      * @return Const object as a String which contains HTML code.
      * @author David M. Cerna
      */
-    public String Print(String var, Term compare, Term t) {
+    public String Print(String var, Term compare, Term t, Adjustment adj) {
         if (compare.subTerms().size() == 0 && compare.getSym().compareTo(var) == 0 && TermHelper.TermMatch(this, t))
-            return FONTCOLOR + this.Print() + "</font>";
+            return adj.apply(this.Print(new ArrayList<Term>(), TxtAdj.Std));
         else {
             if (this.getSym().compareTo("⊢") == 0)
-                return "(" + this.Args.get(0).Print(var, compare.subTerms().get(0), t) + " " + this.getSym() + " " + this.Args.get(1).Print(var, compare.subTerms().get(1), t) + ")";
+                return "(" + this.Args.get(0).Print(var, compare.subTerms().get(0), t, adj) + " " + this.getSym() + " " + this.Args.get(1).Print(var, compare.subTerms().get(1), t, adj) + ")";
             else if (this.getSym().compareTo("cons") == 0) {
                 if (compare.subTerms().size() != 0) {
-                    String s = this.Args.get(1).PrintCons(var, compare.subTerms().get(1), t);
-                    return this.Args.get(0).PrintCons(var, compare.subTerms().get(0), t) + ((s.compareTo("") != 0) ? " , " : "") + s;
+                    String s = this.Args.get(1).PrintCons(var, compare.subTerms().get(1), t, adj);
+                    return this.Args.get(0).PrintCons(var, compare.subTerms().get(0), t, adj) + ((s.compareTo("") != 0) ? " , " : "") + s;
                 } else {
-                    String s = this.Args.get(1).PrintCons(var, compare, t);
-                    return this.Args.get(0).PrintCons(var, compare, t) + ((s.compareTo("") != 0) ? " , " : "") + s;
+                    String s = this.Args.get(1).PrintCons(var, compare, t, adj);
+                    return this.Args.get(0).PrintCons(var, compare, t, adj) + ((s.compareTo("") != 0) ? " , " : "") + s;
                 }
 
             } else if (this.Args.size() == 2 && infix) {
                 if (compare.subTerms().size() != 0) {
                     String s = "(";
-                    s += this.Args.get(0).Print(var, compare.subTerms().get(0), t) + " " + this.getSym() + " " + this.Args.get(1).Print(var, compare.subTerms().get(1), t);
+                    s += this.Args.get(0).Print(var, compare.subTerms().get(0), t, adj) + " " + this.getSym() + " " + this.Args.get(1).Print(var, compare.subTerms().get(1), t, adj);
                     return s + ")";
                 } else {
                     String s = "(";
-                    s += this.Args.get(0).Print(var, compare, t) + " " + this.getSym() + " " + this.Args.get(1).Print(var, compare, t);
+                    s += this.Args.get(0).Print(var, compare, t, adj) + " " + this.getSym() + " " + this.Args.get(1).Print(var, compare, t, adj);
                     return s + ")";
                 }
             } else {
@@ -416,18 +312,18 @@ public final class Func implements Term, Parcelable {
                     StringBuilder s = new StringBuilder(Sym + "(");
                     int i = 0;
                     for (; i < (this.Args.size() - 1); i++)
-                        s.append(this.Args.get(i).Print(var, compare.subTerms().get(i), t)).append(",");
+                        s.append(this.Args.get(i).Print(var, compare.subTerms().get(i), t, adj)).append(",");
                     Term tt = this.Args.get(i);
-                    String ss = tt.Print(var, compare.subTerms().get(i), t);
+                    String ss = tt.Print(var, compare.subTerms().get(i), t, adj);
                     if (this.Args.size() > 0) s.append(ss).append(")");
                     return s.toString();
                 } else {
                     StringBuilder s = new StringBuilder(Sym + "(");
                     int i = 0;
                     for (; i < (this.Args.size() - 1); i++)
-                        s.append(this.Args.get(i).Print(var, compare, t)).append(",");
+                        s.append(this.Args.get(i).Print(var, compare, t, adj)).append(",");
                     Term tt = this.Args.get(i);
-                    String ss = tt.Print(var, compare, t);
+                    String ss = tt.Print(var, compare, t, adj);
                     if (this.Args.size() > 0) s.append(ss).append(")");
                     return s.toString();
                 }
@@ -435,31 +331,6 @@ public final class Func implements Term, Parcelable {
             }
         }
     }
-
-    /**
-     * Prints the term using the FONTCOLOR markup if the term compare is equivalent to the given term.
-     * Furthermore, if compare is also labeled as a variable, i.e. isvar is true, then the Const is
-     * printed in bold using the FONTCOLOR markup as well as the bold markup. Note that the empty
-     * list is print() as an empty string.
-     *
-     * @param compare The Term to be compared to the given Const object.
-     * @param isvar   If compare is a variable then isvar is true.
-     * @return term object as a String which contains HTML code.
-     * @author David M. Cerna
-     */
-    public String PrintCons(Term compare, boolean isvar) {
-        if (this.getSym().compareTo("cons") == 0)
-            if (TermHelper.TermMatch(this, compare))
-                return FONTCOLOR + this.PrintCons() + "</font>";
-            else {
-                String s = this.Args.get(1).PrintCons(compare, isvar);
-                return this.Args.get(0).PrintCons(compare, isvar) + ((s.compareTo("") != 0) ? " , " : "") + s;
-            }
-        else if (TermHelper.TermMatch(this, compare))
-            return FONTCOLOR + this.Print() + "</font>";
-        else return this.Print(compare, isvar);
-    }
-
     /**
      * Prints the term list using the FONTCOLOR markup if the symbol of term compare is var and the Term
      * t is contained in the given term. Note that the empty list is printed using print() as an
@@ -470,41 +341,21 @@ public final class Func implements Term, Parcelable {
      * @return Const object as a String which contains HTML code.
      * @author David M. Cerna
      */
-    public String PrintCons(String var, Term compare, Term t) {
+    public String PrintCons(String var, Term compare, Term t, Adjustment adj) {
         if (this.getSym().compareTo("cons") == 0)
             if (compare.subTerms().size() == 0 && compare.getSym().compareTo(var) == 0 && TermHelper.TermMatch(this, t))
-                return FONTCOLOR + this.PrintCons() + "</font>";
+                return adj.apply(this.PrintCons(new ArrayList<Term>(), TxtAdj.Std));
             else {
                 if (compare.subTerms().size() != 0) {
-                    String s = this.Args.get(1).PrintCons(var, compare.subTerms().get(1), t);
-                    return this.Args.get(0).PrintCons(var, compare.subTerms().get(0), t) + ((s.compareTo("") != 0) ? " , " : "") + s;
+                    String s = this.Args.get(1).PrintCons(var, compare.subTerms().get(1), t, adj);
+                    return this.Args.get(0).PrintCons(var, compare.subTerms().get(0), t, adj) + ((s.compareTo("") != 0) ? " , " : "") + s;
                 } else {
-                    String s = this.Args.get(1).PrintCons(var, compare, t);
-                    return this.Args.get(0).PrintCons(var, compare, t) + ((s.compareTo("") != 0) ? " , " : "") + s;
+                    String s = this.Args.get(1).PrintCons(var, compare, t, adj);
+                    return this.Args.get(0).PrintCons(var, compare, t, adj) + ((s.compareTo("") != 0) ? " , " : "") + s;
                 }
             }
-        else if (compare.subTerms().size() == 0 && compare.getSym().compareTo(var) == 0 && TermHelper.TermMatch(this, t))
-            return FONTCOLOR + this.Print() + "</font>";
-        else return this.Print(var, compare, t);
+        else return this.Print(var, compare, t, adj);
     }
-
-
-    /**
-     * prints term object as a string. Mainly used internally.
-     * @return term object as a String
-     * @author David M. Cerna
-     */
-    public String toString() {
-        StringBuilder s = new StringBuilder(Sym + "(");
-        int i = 0;
-        for (; i < (this.Args.size() - 1); i++) s.append(this.Args.get(i).toString()).append(",");
-        Term t = this.Args.get(i);
-        String ss = t.toString();
-        if (this.Args.size() > 0) s.append(ss).append(")");
-        return s.toString();
-    }
-
-
     /**
      * Finds all the symbols and their associated arities within the given term.
      * @return A Hashmap of all the symbols occurring in the given term paired with the arities
@@ -531,6 +382,21 @@ public final class Func implements Term, Parcelable {
     }
 
     /**
+     * prints term object as a string. Mainly used internally.
+     *
+     * @return term object as a String
+     * @author David M. Cerna
+     */
+    public String toString() {
+        StringBuilder s = new StringBuilder(Sym + "(");
+        int i = 0;
+        for (; i < (this.Args.size() - 1); i++) s.append(this.Args.get(i).toString()).append(",");
+        Term t = this.Args.get(i);
+        String ss = t.toString();
+        if (this.Args.size() > 0) s.append(ss).append(")");
+        return s.toString();
+    }
+    /**
      * An inherited method which is unused.
      * @return The default value.
      * @author David M. Cerna
@@ -552,6 +418,20 @@ public final class Func implements Term, Parcelable {
         out.writeTypedList(this.subTerms());
     }
 
+    /**
+     * computes the hashcode of terms based on the direct subterms and there symbol
+     *
+     * @return A hashcode of the given term
+     * @author David M. Cerna
+     */
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + getSym().hashCode();
+        for (Term t : subTerms())
+            hash = 31 * hash + t.hashCode();
+        return hash;
+    }
 
 
 }

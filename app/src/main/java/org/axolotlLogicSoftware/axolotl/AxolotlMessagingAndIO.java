@@ -175,9 +175,9 @@ class AxolotlMessagingAndIO {
             Term temp = TermHelper.parse(parts[i], PS);
             if (!PS.isIndexed(temp) && !TermHelper.containsNestedSequents(temp))
                 throw new TermHelper().new FormatException();
-            else if (temp.Print().contains("⊢") && !TermHelper.wellformedSequents(temp))
+            else if (temp.Print(new ArrayList<Term>(), TxtAdj.Std).contains("⊢") && !TermHelper.wellformedSequents(temp))
                 throw new TermHelper().new FormatException();
-            else if (!temp.Print().contains("⊢") && !TermHelper.freeOfCons(temp))
+            else if (!temp.Print(new ArrayList<Term>(), TxtAdj.Std).contains("⊢") && !TermHelper.freeOfCons(temp))
                 throw new TermHelper().new FormatException();
             else PS.problem.add(temp);
         }
@@ -213,9 +213,9 @@ class AxolotlMessagingAndIO {
             succRule = TermHelper.parse(parts[i], PS);
             if (!PS.isIndexed(succRule) && !TermHelper.containsNestedSequents(succRule))
                 throw new TermHelper().new FormatException();
-            else if (succRule.Print().contains("⊢") && !TermHelper.wellformedSequents(succRule))
+            else if (succRule.Print(new ArrayList<Term>(), TxtAdj.Std).contains("⊢") && !TermHelper.wellformedSequents(succRule))
                 throw new TermHelper().new FormatException();
-            else if (!succRule.Print().contains("⊢") && !TermHelper.freeOfCons(succRule))
+            else if (!succRule.Print(new ArrayList<Term>(), TxtAdj.Std).contains("⊢") && !TermHelper.freeOfCons(succRule))
                 throw new TermHelper().new FormatException();
             else if (i != partsAjustedSize - 1) anteRule.add(succRule);
         }

@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import static org.axolotlLogicSoftware.axolotl.AxolotlMessagingAndIO.PASSPROBLEMSTATE;
 
 public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
@@ -26,7 +28,6 @@ public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
         PS = ConstructActivity(savedInstanceState);
         ActivityDecorate();
     }
-
     protected void ActivityDecorate() {
         TextView placeInDisplay = this.findViewById(R.id.placein);
         placeInDisplay.setText("Variable " + (PS.subPos + 1) + " of " + PS.Substitutions.size());
@@ -43,12 +44,14 @@ public class MatchDisplayActivity extends AxolotlSupportingFunctionality {
         String var = PS.Substitutions.get(PS.subPos).variable;
         Term succTerm = PS.getSelectedSuccTerm();
         succTerm.normalize(PS.Variables); // Don't forget that sequents are brittle terms
-        leftTerm.addView(scrollTextSelectConstructString(PS.currentRule.argument.Print(new Const(var), PS.Variables.contains(var)), null, null, this, true));
-        rightTerm.addView(scrollTextSelectConstructString(succTerm.Print(var, PS.currentRule.argument, PS.Substitutions.get(PS.subPos).replacement), null, null, this, true));
+        ArrayList<Term> ConstInput = new ArrayList<>();
+        ConstInput.add(new Const(var));
+        leftTerm.addView(scrollTextSelectConstructString(PS.currentRule.argument.Print(ConstInput, (PS.Variables.contains(var)) ? TxtAdj.BoldColor : TxtAdj.Color), null, null, this, true));
+        rightTerm.addView(scrollTextSelectConstructString(succTerm.Print(var, PS.currentRule.argument, PS.Substitutions.get(PS.subPos).replacement, TxtAdj.Color), null, null, this, true));
         varDisplay.setText(Html.fromHtml("<b>" + var + "</b>"));
         try {
-            if (PS.Substitutions.get(PS.subPos).replacement.Print().compareTo("") != 0)
-                subDisplay.setText(PS.Substitutions.get(PS.subPos).replacement.Print());
+            if (PS.Substitutions.get(PS.subPos).replacement.Print(new ArrayList<Term>(), TxtAdj.Std).compareTo("") != 0)
+                subDisplay.setText(PS.Substitutions.get(PS.subPos).replacement.Print(new ArrayList<Term>(), TxtAdj.Std));
             else subDisplay.setText("ε");
         } catch (NullPointerException e) {
             Toast.makeText(MatchDisplayActivity.this, "Unable to Display State", Toast.LENGTH_SHORT).show();

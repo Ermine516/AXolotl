@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 //General term Interface 
 public interface Term extends Parcelable {
-    String FONTCOLOR = "<font color=#EF4665>";
-
     Parcelable.Creator<Term> CREATOR = new Parcelable.Creator<Term>() {
 		public Term createFromParcel(Parcel in) {
 			String tempSym = in.readString();
@@ -24,21 +22,14 @@ public interface Term extends Parcelable {
 		}
     };
 
-    String Print();
 
-    String Print(Term t, boolean isvar);
+    String Print(ArrayList<Term> terms, Adjustment adj);
 
-    String Print(String var, Term compare, Term t);
+    String Print(String var, Term compare, Term t, Adjustment adj);
 
-    String PrintCons();
+    String PrintCons(ArrayList<Term> terms, Adjustment adj);
 
-    String PrintCons(Term t, boolean isvar);
-
-    String PrintCons(String var, Term compare, Term t);
-
-    String PrintBold(ArrayList<Term> terms);
-
-    String PrintConsBold(ArrayList<Term> terms);
+    String PrintCons(String var, Term compare, Term t, Adjustment adj);
 
     void normalize(HashSet<String> var);
 
